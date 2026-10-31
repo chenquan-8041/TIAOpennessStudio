@@ -1,0 +1,111 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Reusable table style (dark / UaExpert style)
+        Usage:
+            <DataGrid Style="{StaticResource AppDataGridStyle}" ... />
+        Built in:
+          - Consistent whole-row selection / hover highlight (avoids per-column highlight mismatch)
+          - Zebra striping (requires AlternationCount=2, already set by the style)
+          - No inner gridlines (rows are distinguished by striping, avoiding an "underline" under values)
+          - Header / cell / row colors all come from the theme's Grid*Brush resources
+        Optional column text styles:
+          - AppGridMutedTextStyle  secondary info (NodeId, timestamps, etc.)
+          - AppGridAccentTextStyle  emphasized values (numbers, etc.)
+    -->
+
+    <!-- Column header -->
+    <Style x:Key="AppDataGridColumnHeaderStyle" TargetType="DataGridColumnHeader">
+        <Setter Property="Background" Value="{DynamicResource GridHeaderBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource GridHeaderTextBrush}" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="BorderThickness" Value="0,0,1,1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource GridLineBrush}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <!-- Cell: transparent background so the whole-row background (controlled by RowStyle) shows through -->
+    <Style x:Key="AppDataGridCellStyle" TargetType="DataGridCell">
+        <Setter Property="Foreground" Value="{DynamicResource GridTextBrush}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="4,0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <!-- Selected-state text color (background controlled by the row), and drop the default cell focus dotted frame -->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource GridRowSelectedTextBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Row: striping / hover / selection are all controlled here to keep the whole row consistent -->
+    <Style x:Key="AppDataGridRowStyle" TargetType="DataGridRow">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource GridTextBrush}" />
+        <Setter Property="Background" Value="{DynamicResource GridRowBrush}" />
+        <Style.Triggers>
+            <Trigger Property="AlternationIndex" Value="1">
+                <Setter Property="Background" Value="{DynamicResource GridRowAltBrush}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource GridRowHoverBrush}" />
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource GridRowSelectedBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource GridRowSelectedTextBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- DataGrid body -->
+    <Style x:Key="AppDataGridStyle" TargetType="DataGrid">
+        <Setter Property="AutoGenerateColumns" Value="False" />
+        <Setter Property="CanUserAddRows" Value="False" />
+        <Setter Property="CanUserDeleteRows" Value="False" />
+        <Setter Property="CanUserResizeColumns" Value="True" />
+        <Setter Property="CanUserSortColumns" Value="True" />
+        <Setter Property="HeadersVisibility" Value="Column" />
+        <Setter Property="GridLinesVisibility" Value="None" />
+        <Setter Property="SelectionUnit" Value="FullRow" />
+        <Setter Property="RowHeight" Value="28" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="AlternationCount" Value="2" />
+        <Setter Property="Background" Value="{DynamicResource GridBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource GridTextBrush}" />
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource AppDataGridColumnHeaderStyle}" />
+        <Setter Property="CellStyle" Value="{StaticResource AppDataGridCellStyle}" />
+        <Setter Property="RowStyle" Value="{StaticResource AppDataGridRowStyle}" />
+        <!-- Note: do not set Resources via a Setter (Resources is not a dependency property and causes a XamlParseException).
+             Selection highlighting is fully handled by AppDataGridCellStyle's rewritten template + AppDataGridRowStyle triggers;
+             the system HighlightBrush is not referenced by the cell template, so no override is needed. -->
+    </Style>
+
+    <!-- Column text helper styles -->
+    <Style x:Key="AppGridMutedTextStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource GridMutedTextBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="AppGridAccentTextStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource GridAccentTextBrush}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+</ResourceDictionary>

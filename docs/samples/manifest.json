@@ -1,0 +1,272 @@
+{
+  "schema": 2,
+  "generated_at": "2026-10-31T13:54:09+08:00",
+  "summary": {
+    "count": 7,
+    "by_version": {
+      "15.1": 7
+    },
+    "by_language": {
+      "DB": 1,
+      "GRAPH": 1,
+      "LAD": 3,
+      "SCL": 1,
+      "UDT": 1
+    },
+    "by_provenance": {
+      "authored": 2,
+      "tia_export": 5
+    },
+    "by_status": {
+      "exported": 5,
+      "schema_valid": 2
+    },
+    "by_role": {
+      "reference": 6,
+      "template": 1
+    },
+    "features": {
+      "coil": 3,
+      "contact": 4,
+      "counter_ctu": 1,
+      "global_variable": 2,
+      "graph_branch": 1,
+      "graph_jump": 1,
+      "graph_sequence": 1,
+      "graph_transition": 1,
+      "interface_input": 4,
+      "interface_output": 4,
+      "interface_return": 3,
+      "interface_static": 3,
+      "interface_temp": 1,
+      "literal_constant": 2,
+      "local_variable": 3,
+      "move": 1,
+      "multi_network": 1,
+      "negated_contact": 3,
+      "or_branch": 2,
+      "pcontact": 1,
+      "set_reset": 1,
+      "single_network": 4,
+      "timer_tof": 1,
+      "timer_ton": 1,
+      "typed_constant": 1
+    },
+    "duplicates": 0
+  },
+  "samples": [
+    {
+      "id": "15.1.DB.DB_V0.1",
+      "path": "docs/samples/V15.1/DB/DB_V0.1.xml",
+      "version": "15.1",
+      "schema_bucket": "<=15.1",
+      "language": "DB",
+      "block_kind": "DB",
+      "provenance": "tia_export",
+      "status": "exported",
+      "role": "reference",
+      "features": [
+        "interface_static"
+      ],
+      "parts": [],
+      "networks": 0,
+      "size": 3260,
+      "sha256": "fd515e8adc1ae165b799741bbf18e4af809ad03fc6684b73f61d1ae379b93996",
+      "source_block": "TIA V15.1 export",
+      "notes": "Global DB sample.",
+      "duplicate_of": ""
+    },
+    {
+      "id": "15.1.GRAPH.graph_V0.1",
+      "path": "docs/samples/V15.1/GRAPH/graph_V0.1.xml",
+      "version": "15.1",
+      "schema_bucket": "<=15.1",
+      "language": "GRAPH",
+      "block_kind": "FB",
+      "provenance": "tia_export",
+      "status": "exported",
+      "role": "template",
+      "features": [
+        "contact",
+        "global_variable",
+        "graph_branch",
+        "graph_jump",
+        "graph_sequence",
+        "graph_transition",
+        "interface_input",
+        "interface_output",
+        "interface_static",
+        "single_network"
+      ],
+      "parts": [
+        "Contact",
+        "IlCoil",
+        "SvCoil",
+        "TrCoil"
+      ],
+      "networks": 1,
+      "size": 44177,
+      "sha256": "17a6322831861608652a26c5db19e8f92caa650babfb0f0bfcbea547a0ab93a3",
+      "source_block": "TIA V15.1 export",
+      "notes": "GRAPH baseline template; embedded directly by the csproj (Link=Templates/GRAPH_V15_1.xml); no copy in the repository.",
+      "duplicate_of": ""
+    },
+    {
+      "id": "15.1.LAD.LAD_V0.1",
+      "path": "docs/samples/V15.1/LAD/LAD_V0.1.xml",
+      "version": "15.1",
+      "schema_bucket": "<=15.1",
+      "language": "LAD",
+      "block_kind": "FC",
+      "provenance": "tia_export",
+      "status": "exported",
+      "role": "reference",
+      "features": [
+        "coil",
+        "contact",
+        "counter_ctu",
+        "global_variable",
+        "interface_return",
+        "literal_constant",
+        "move",
+        "multi_network",
+        "negated_contact",
+        "or_branch",
+        "pcontact",
+        "set_reset",
+        "timer_tof",
+        "timer_ton",
+        "typed_constant"
+      ],
+      "parts": [
+        "CTU",
+        "Coil",
+        "Contact",
+        "Move",
+        "NContact",
+        "O",
+        "PContact",
+        "Rs",
+        "Sr",
+        "TOF",
+        "TON"
+      ],
+      "networks": 12,
+      "size": 75590,
+      "sha256": "170663de36fe67d02ca6eb999efd85300818ee8f5581942b0c11a77de8b9966c",
+      "source_block": "TIA V15.1 export",
+      "notes": "12 networks covering contacts, coils, OR branch, latching, timers, counters, and Move; interface sections are empty (no local variables).",
+      "duplicate_of": ""
+    },
+    {
+      "id": "15.1.LAD.interface_io_contact_coil",
+      "path": "docs/samples/V15.1/LAD/interface_io_contact_coil.xml",
+      "version": "15.1",
+      "schema_bucket": "<=15.1",
+      "language": "LAD",
+      "block_kind": "FC",
+      "provenance": "authored",
+      "status": "schema_valid",
+      "role": "reference",
+      "features": [
+        "coil",
+        "contact",
+        "interface_input",
+        "interface_output",
+        "interface_return",
+        "local_variable",
+        "negated_contact",
+        "single_network"
+      ],
+      "parts": [
+        "Coil",
+        "Contact"
+      ],
+      "networks": 1,
+      "size": 4653,
+      "sha256": "bcfa170b41ee9edf42c80de2f155b1162410c7266cecf01efd10bbcc0319cce5",
+      "source_block": "",
+      "notes": "Hand-authored minimal FC: Input Start/Stop, Output Running; one network Start AND NOT Stop -> Running; all operands use Scope=LocalVariable. Validated against the V15.1 official XSD only, not compiled in TIA; verify before use.",
+      "duplicate_of": ""
+    },
+    {
+      "id": "15.1.LAD.interface_io_contact_coil_fb",
+      "path": "docs/samples/V15.1/LAD/interface_io_contact_coil_fb.xml",
+      "version": "15.1",
+      "schema_bucket": "<=15.1",
+      "language": "LAD",
+      "block_kind": "FB",
+      "provenance": "authored",
+      "status": "schema_valid",
+      "role": "reference",
+      "features": [
+        "coil",
+        "contact",
+        "interface_input",
+        "interface_output",
+        "interface_static",
+        "local_variable",
+        "negated_contact",
+        "or_branch",
+        "single_network"
+      ],
+      "parts": [
+        "Coil",
+        "Contact",
+        "O"
+      ],
+      "networks": 1,
+      "size": 5342,
+      "sha256": "312261a363b2ff2f117101853b2439c86603d8413d7a509aa51694e3a7371fd8",
+      "source_block": "",
+      "notes": "Hand-authored minimal FB: Input Start/Stop, Output Running, Static Mem; one network (Start OR Mem) AND NOT Stop -> Running; all four operands use Scope=LocalVariable, with an OR branch and a static member reference. Mem is only a static-member example and is not written in the network. Validated against the V15.1 official XSD only, not compiled in TIA; verify before use.",
+      "duplicate_of": ""
+    },
+    {
+      "id": "15.1.SCL.SCL_V0.1",
+      "path": "docs/samples/V15.1/SCL/SCL_V0.1.xml",
+      "version": "15.1",
+      "schema_bucket": "<=15.1",
+      "language": "SCL",
+      "block_kind": "FC",
+      "provenance": "tia_export",
+      "status": "exported",
+      "role": "reference",
+      "features": [
+        "interface_input",
+        "interface_output",
+        "interface_return",
+        "interface_temp",
+        "literal_constant",
+        "local_variable",
+        "single_network"
+      ],
+      "parts": [],
+      "networks": 1,
+      "size": 11436,
+      "sha256": "0950d7ab13d14cfb167e1fa3bd474671fbadca5d4ccb5533e98c58db69486d36",
+      "source_block": "TIA V15.1 export",
+      "notes": "",
+      "duplicate_of": ""
+    },
+    {
+      "id": "15.1.UDT.plcType_UDT",
+      "path": "docs/samples/V15.1/UDT/plcType_UDT.xml",
+      "version": "15.1",
+      "schema_bucket": "<=15.1",
+      "language": "UDT",
+      "block_kind": "UDT",
+      "provenance": "tia_export",
+      "status": "exported",
+      "role": "reference",
+      "features": [],
+      "parts": [],
+      "networks": 0,
+      "size": 3019,
+      "sha256": "24de0a4edde240a66a4a00616b4945fa0f2762944b0b3114811b68b1a1662dc1",
+      "source_block": "TIA V15.1 export",
+      "notes": "",
+      "duplicate_of": ""
+    }
+  ]
+}

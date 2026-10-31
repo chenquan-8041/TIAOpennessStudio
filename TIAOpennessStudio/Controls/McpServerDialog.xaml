@@ -1,0 +1,48 @@
+<Window x:Class="TIAOpennessStudio.Controls.McpServerDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MCP Server Configuration" Height="420" Width="480"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Background="{DynamicResource WindowBackgroundBrush}" Foreground="{DynamicResource TextBrush}">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Name -->
+        <TextBlock Grid.Row="0" Text="Server Name:" Margin="0,0,0,3" FontSize="{StaticResource FontSizeMd}"/>
+        <TextBox Grid.Row="1" x:Name="txtName" Margin="0,0,0,10" Padding="5" FontSize="{StaticResource FontSizeMd}"
+                 ToolTip="Display name for this MCP server"/>
+
+        <!-- URL -->
+        <TextBlock Grid.Row="2" Text="URL:" Margin="0,0,0,3" FontSize="{StaticResource FontSizeMd}"/>
+        <TextBox Grid.Row="3" x:Name="txtUrl" Margin="0,0,0,10" Padding="5" FontSize="{StaticResource FontSizeMd}"
+                 ToolTip="MCP server endpoint URL (e.g. http://localhost:8765)"/>
+
+        <!-- Timeout -->
+        <TextBlock Grid.Row="4" Text="Timeout (seconds):" Margin="0,0,0,3" FontSize="{StaticResource FontSizeMd}"/>
+        <TextBox Grid.Row="5" x:Name="txtTimeout" Margin="0,0,0,10" Padding="5" FontSize="{StaticResource FontSizeMd}"
+                 Text="30" ToolTip="Connection and request timeout in seconds"/>
+
+        <!-- Headers -->
+        <TextBlock Grid.Row="6" Text="Custom Headers (one per line, format: Key=Value):" Margin="0,0,0,3" FontSize="{StaticResource FontSizeMd}"/>
+        <TextBox Grid.Row="7" x:Name="txtHeaders" Margin="0,0,0,10" Padding="5" FontSize="{StaticResource FontSizeMd}"
+                 AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
+                 ToolTip="Optional HTTP headers, e.g. Authorization=Bearer token123"/>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="OK" Width="75" Height="28" Margin="0,0,10,0"
+                    Click="btnOk_Click" IsDefault="True"/>
+            <Button Content="Cancel" Width="75" Height="28" IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

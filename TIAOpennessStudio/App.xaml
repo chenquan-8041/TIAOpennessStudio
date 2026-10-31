@@ -1,0 +1,34 @@
+<prism:PrismApplication
+    x:Class="TIAOpennessStudio.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <prism:PrismApplication.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--  1. Theme (Lowest priority, provides base colors)  -->
+                <ResourceDictionary Source="Themes/Theme.Dark.xaml" />
+
+                <!--  2. Tokens (Common sizes, margins, radii)  -->
+                <ResourceDictionary Source="Styles/Tokens.xaml" />
+
+                <!--  3. Controls (Specific styles for buttons, inputs, etc.)  -->
+                <ResourceDictionary Source="Styles/Controls.Button.xaml" />
+                <ResourceDictionary Source="Styles/Controls.Input.xaml" />
+                <ResourceDictionary Source="Styles/Controls.Menu.xaml" />
+                <ResourceDictionary Source="Styles/Controls.ComboBox.xaml" />
+                <ResourceDictionary Source="Styles/Controls.Chat.xaml" />
+                <ResourceDictionary Source="Styles/Controls.Window.xaml" />
+                <ResourceDictionary Source="Styles/Controls.DataGrid.xaml" />
+
+                <!--  4. Agent Chat Styles (Trae style message blocks)  -->
+                <ResourceDictionary Source="Styles/Controls.AgentChat.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!--  Enlarge default scrollbar hit area and minimum thumb size globally  -->
+            <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarButtonHeightKey}">36</sys:Double>
+            <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}">36</sys:Double>
+        </ResourceDictionary>
+    </prism:PrismApplication.Resources>
+</prism:PrismApplication>

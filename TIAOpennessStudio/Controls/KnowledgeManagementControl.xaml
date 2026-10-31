@@ -1,0 +1,101 @@
+<UserControl
+    x:Class="TIAOpennessStudio.Controls.KnowledgeManagementControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    mc:Ignorable="d"
+    d:DesignHeight="600" d:DesignWidth="280">
+    <UserControl.Resources>
+        <!--  Localized at runtime by ApplyLanguage (the string resource is replaced in place)  -->
+        <sys:String x:Key="KbBrowseLabel">Browse</sys:String>
+    </UserControl.Resources>
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--  Title  -->
+        <TextBlock
+            x:Name="lblTitle"
+            Grid.Row="0"
+            Margin="0,0,0,8"
+            FontSize="{StaticResource FontSizeMd}"
+            FontWeight="SemiBold"
+            Foreground="{DynamicResource MutedTextBrush}"
+            Text="Knowledge Base" />
+
+        <!--  All knowledge bases (official + user) share the same list and template for consistent styling and selection effects  -->
+        <ListBox
+            x:Name="listUserLibs"
+            Grid.Row="1"
+            Background="Transparent"
+            BorderThickness="0"
+            Foreground="{DynamicResource TextBrush}"
+            HorizontalContentAlignment="Stretch"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            MouseDoubleClick="ListUserLibs_MouseDoubleClick">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Padding="6" Margin="0,2" Background="{DynamicResource ButtonHover}" CornerRadius="4">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,8,0" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextBrush}" />
+                                <TextBlock FontSize="{StaticResource FontSizeXs}" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource MutedTextBrush}">
+                                    <Run Text="{Binding Encryption}" />
+                                    <Run Text="  " /><Run Text="{Binding StatusText}" />
+                                </TextBlock>
+                            </StackPanel>
+                            <Button
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Padding="8,3"
+                                Style="{DynamicResource ModernButtonStyle}"
+                                Click="BtnOpenLib_Click"
+                                Tag="{Binding Id}"
+                                Content="{DynamicResource KbBrowseLabel}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!--  Action buttons  -->
+        <StackPanel Grid.Row="2" Margin="0,8,0,0">
+            <Button
+                x:Name="btnMount"
+                Margin="0,0,0,6"
+                Padding="6"
+                Style="{DynamicResource ModernButtonStyle}"
+                Click="BtnMount_Click"
+                Content="Mount Library (.kb)" />
+            <Button
+                x:Name="btnCreateEncrypted"
+                Margin="0,0,0,6"
+                Padding="6"
+                Style="{DynamicResource ModernButtonStyle}"
+                Click="BtnCreateEncrypted_Click"
+                Content="Create Encrypted Library from Markdown" />
+            <Button
+                x:Name="btnUnlock"
+                Margin="0,0,0,6"
+                Padding="6"
+                Style="{DynamicResource ModernButtonStyle}"
+                Click="BtnUnlock_Click"
+                Content="Unlock Selected (passphrase)" />
+            <Button
+                x:Name="btnUnmount"
+                Padding="6"
+                Style="{DynamicResource ModernButtonStyle}"
+                Click="BtnUnmount_Click"
+                Content="Remove Selected" />
+        </StackPanel>
+    </Grid>
+</UserControl>

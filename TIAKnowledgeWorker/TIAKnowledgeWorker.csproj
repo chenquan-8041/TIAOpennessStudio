@@ -1,0 +1,144 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <PlatformTarget>x64</PlatformTarget>
+    <AssemblyName>TIAKnowledgeWorker</AssemblyName>
+    <Deterministic>true</Deterministic>
+    <LangVersion>10.0</LangVersion>
+    <StartupObject>TIAKnowledgeWorker.Program</StartupObject>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- CopyLocal=false：与主程序一致，运行时不使用编译基线 DLL，改由 Program 里的
+         AssemblyResolve 从本机已安装 TIA 的 PublicAPI 目录加载对应版本。 -->
+    <Reference Include="Siemens.Engineering">
+      <HintPath Condition="Exists('Siemens.Engineering.dll')">Siemens.Engineering.dll</HintPath>
+      <HintPath Condition="!Exists('Siemens.Engineering.dll') and Exists('..\TIAOpennessStudio\Siemens.Engineering.dll')">..\TIAOpennessStudio\Siemens.Engineering.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.5" />
+    <PackageReference Include="System.Text.Json" Version="6.0.0" />
+  </ItemGroup>
+
+  <!-- Worker-specific source files -->
+  <ItemGroup>
+    <Compile Include="AppLogger.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="WorkerHost.cs" />
+    <Compile Include="TiaStaExecutor.cs" />
+    <Compile Include="KnowledgeCacheRuntime.cs" />
+    <Compile Include="WorkerUIService.cs" />
+  </ItemGroup>
+
+  <!-- Linked source files from main project: Models -->
+  <ItemGroup>
+    <Compile Include="..\TIAOpennessStudio\Models\Blocks\BlockSnapshot.cs" Link="Models\Blocks\BlockSnapshot.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\PlcKnowledgeModels.cs" Link="Models\PlcKnowledgeModels.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\ProjectKnowledgeCacheModels.cs" Link="Models\ProjectKnowledgeCacheModels.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\ProjectKnowledgeWorkerModels.cs" Link="Models\ProjectKnowledgeWorkerModels.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\ContextPack.cs" Link="Models\ContextPack.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\Dependency\PlcBlockDependencyRecord.cs" Link="Models\Dependency\PlcBlockDependencyRecord.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\Dependency\PlcCallEdge.cs" Link="Models\Dependency\PlcCallEdge.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\Dependency\PlcSymbolReference.cs" Link="Models\Dependency\PlcSymbolReference.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\Dependency\PlcSymbolDefinition.cs" Link="Models\Dependency\PlcSymbolDefinition.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\Dependency\PlcDependencyIndexSnapshot.cs" Link="Models\Dependency\PlcDependencyIndexSnapshot.cs" />
+  </ItemGroup>
+
+  <!-- Linked source files: NetworkKnowledge models -->
+  <ItemGroup>
+    <Compile Include="..\TIAOpennessStudio\Models\NetworkKnowledge\PlcNetworkDocument.cs" Link="Models\NetworkKnowledge\PlcNetworkDocument.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\NetworkKnowledge\AccessNode.cs" Link="Models\NetworkKnowledge\AccessNode.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\NetworkKnowledge\LogicPart.cs" Link="Models\NetworkKnowledge\LogicPart.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\NetworkKnowledge\WireEdge.cs" Link="Models\NetworkKnowledge\WireEdge.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\NetworkKnowledge\CallSiteNode.cs" Link="Models\NetworkKnowledge\CallSiteNode.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\NetworkKnowledge\ParameterBindingFact.cs" Link="Models\NetworkKnowledge\ParameterBindingFact.cs" />
+  </ItemGroup>
+
+  <!-- Linked source files: Service interfaces -->
+  <ItemGroup>
+    <Compile Include="..\TIAOpennessStudio\Services\Abstractions\ITiaOpennessService.cs" Link="Services\Abstractions\ITiaOpennessService.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Abstractions\IProjectIndexService.cs" Link="Services\Abstractions\IProjectIndexService.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Abstractions\IPlcKnowledgeIndexService.cs" Link="Services\Abstractions\IPlcKnowledgeIndexService.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Abstractions\IPlcProjectIndexingService.cs" Link="Services\Abstractions\IPlcProjectIndexingService.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Abstractions\IProjectKnowledgeCacheService.cs" Link="Services\Abstractions\IProjectKnowledgeCacheService.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Abstractions\IBlockVersionService.cs" Link="Services\Abstractions\IBlockVersionService.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Abstractions\IUIService.cs" Link="Services\Abstractions\IUIService.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Abstractions\INetworkDocumentStore.cs" Link="Services\Abstractions\INetworkDocumentStore.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Abstractions\IPlanningKnowledgeService.cs" Link="Services\Abstractions\IPlanningKnowledgeService.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Abstractions\IGlobalProgressService.cs" Link="Services\Abstractions\IGlobalProgressService.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Abstractions\OpennessDtos.cs" Link="Services\Abstractions\OpennessDtos.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\CrossReferenceModels.cs" Link="Services\CrossReferenceModels.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\ModelContextProtocol\CrossReferenceEntry.cs" Link="Services\ModelContextProtocol\CrossReferenceEntry.cs" />
+  </ItemGroup>
+
+  <!-- Linked source files: Service implementations (clean, no WPF/Prism deps) -->
+  <ItemGroup>
+    <Compile Include="..\TIAOpennessStudio\Services\OpennessService.cs" Link="Services\OpennessService.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\OpennessService.Dto.cs" Link="Services\OpennessService.Dto.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\TiaStaHost.cs" Link="Services\TiaStaHost.cs" />
+    <Compile Include="..\TIAOpennessStudio\Helpers\cImportBlock.cs" Link="Helpers\cImportBlock.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\ProjectIndexStore.cs" Link="Services\ProjectIndexStore.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Implementations\PlcProjectIndexingService.cs" Link="Services\PlcProjectIndexingService.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Implementations\PlcKnowledgeIndexService.cs" Link="Services\PlcKnowledgeIndexService.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Implementations\PlcKnowledgeIndexer.cs" Link="Services\PlcKnowledgeIndexer.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\PlcKnowledgeStore.cs" Link="Services\PlcKnowledgeStore.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\PlcKnowledgeStore.Write.cs" Link="Services\PlcKnowledgeStore.Write.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\PlcKnowledgeWriteRecords.cs" Link="Services\PlcKnowledgeWriteRecords.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Blocks\BlockSnapshotService.cs" Link="Services\Blocks\BlockSnapshotService.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Implementations\ProjectKnowledgeCacheService.cs" Link="Services\ProjectKnowledgeCacheService.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Implementations\BlockVersionService.cs" Link="Services\BlockVersionService.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\IndexModels.cs" Link="Services\IndexModels.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\TiaOpennessWhitelistService.cs" Link="Services\TiaOpennessWhitelistService.cs" />
+  </ItemGroup>
+
+  <!-- Linked source files: canonical Lad model + codecs + GRAPH JSON bridge (shared by indexing and RAG storage) -->
+  <ItemGroup>
+    <Compile Include="..\TIAOpennessStudio\LadRendering\Parser\GraphXmlParser.cs" Link="LadRendering\Parser\GraphXmlParser.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Builders\GraphJsonBridge.cs" Link="Services\Builders\GraphJsonBridge.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Builders\GraphSystemMembers.cs" Link="Services\Builders\GraphSystemMembers.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\Lad\LadNode.cs" Link="Models\Lad\LadNode.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\Lad\LadNetwork.cs" Link="Models\Lad\LadNetwork.cs" />
+    <Compile Include="..\TIAOpennessStudio\Models\Lad\LadSchemaFacts.cs" Link="Models\Lad\LadSchemaFacts.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Lad\LadBlockParser.cs" Link="Services\Lad\LadBlockParser.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Lad\LadJson.cs" Link="Services\Lad\LadJson.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Lad\LadTreeComparer.cs" Link="Services\Lad\LadTreeComparer.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Lad\Codecs\INetworkCodec.cs" Link="Services\Lad\Codecs\INetworkCodec.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Lad\Codecs\NetworkBodyCodec.cs" Link="Services\Lad\Codecs\NetworkBodyCodec.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Lad\Codecs\NetworkCodecRegistry.cs" Link="Services\Lad\Codecs\NetworkCodecRegistry.cs" />
+  </ItemGroup>
+
+  <!-- Additional dependencies pulled in by linked services -->
+  <ItemGroup>
+    <Compile Include="..\TIAOpennessStudio\Services\Constants.cs" Link="Services\Constants.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\TokenBudget.cs" Link="Services\TokenBudget.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\PlcKnowledgeCanonicalizer.cs" Link="Services\PlcKnowledgeCanonicalizer.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\PlcNetworkFactExtractor.cs" Link="Services\PlcNetworkFactExtractor.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\SclFactExtractor.cs" Link="Services\SclFactExtractor.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\TiaXmlParseHelper.cs" Link="Services\TiaXmlParseHelper.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\XmlAstVisitor.cs" Link="Services\XmlAstVisitor.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\PlcDependencyParser.cs" Link="Services\PlcDependencyParser.cs" />
+  </ItemGroup>
+
+  <!-- TiaVersionAdapter + minimal dependency chain so the shared OpennessService.BootstrapAsync compiles here. -->
+  <ItemGroup>
+    <Compile Include="..\TIAOpennessStudio\Services\Abstractions\ITiaVersionAdapter.cs" Link="Services\Abstractions\ITiaVersionAdapter.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Abstractions\ITiaApiPathResolver.cs" Link="Services\Abstractions\ITiaApiPathResolver.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Implementations\TiaVersionAdapter.cs" Link="Services\Implementations\TiaVersionAdapter.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Implementations\TiaApiPathResolver.cs" Link="Services\Implementations\TiaApiPathResolver.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\OpennessCapabilityProbe.cs" Link="Services\OpennessCapabilityProbe.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\OpennessCapabilityModels.cs" Link="Services\OpennessCapabilityModels.cs" />
+  </ItemGroup>
+
+</Project>

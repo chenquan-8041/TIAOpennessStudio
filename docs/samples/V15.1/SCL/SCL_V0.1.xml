@@ -1,0 +1,350 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Document>
+  <Engineering version="V15.1" />
+  <DocumentInfo>
+    <Created>2026-10-29T00:44:15.4088741Z</Created>
+    <ExportSetting>None</ExportSetting>
+    <InstalledProducts>
+      <Product>
+        <DisplayName>Totally Integrated Automation Portal</DisplayName>
+        <DisplayVersion>V15.1</DisplayVersion>
+      </Product>
+      <OptionPackage>
+        <DisplayName>TIA Portal Openness</DisplayName>
+        <DisplayVersion>V15.1</DisplayVersion>
+      </OptionPackage>
+      <Product>
+        <DisplayName>SINAMICS Startdrive Advanced</DisplayName>
+        <DisplayVersion>V15.1 Update1</DisplayVersion>
+      </Product>
+      <OptionPackage>
+        <DisplayName>G110M, G120, G120C, G120D, G120P</DisplayName>
+        <DisplayVersion>V15.1 Update1</DisplayVersion>
+      </OptionPackage>
+      <OptionPackage>
+        <DisplayName>G130, G150, S120, S150, SINAMICS MV, S210</DisplayName>
+        <DisplayVersion>V15.1 Update1</DisplayVersion>
+      </OptionPackage>
+      <Product>
+        <DisplayName>STEP 7 Professional</DisplayName>
+        <DisplayVersion>V15.1</DisplayVersion>
+      </Product>
+      <OptionPackage>
+        <DisplayName>SIMATIC Energy Suite</DisplayName>
+        <DisplayVersion>V15.1</DisplayVersion>
+      </OptionPackage>
+      <OptionPackage>
+        <DisplayName>STEP 7 Safety</DisplayName>
+        <DisplayVersion>V15.1</DisplayVersion>
+      </OptionPackage>
+      <Product>
+        <DisplayName>WinCC Advanced</DisplayName>
+        <DisplayVersion>V15.1</DisplayVersion>
+      </Product>
+      <OptionPackage>
+        <DisplayName>SIMATIC Visualization Architect</DisplayName>
+        <DisplayVersion>V15.1</DisplayVersion>
+      </OptionPackage>
+    </InstalledProducts>
+  </DocumentInfo>
+  <SW.Blocks.FC ID="0">
+    <AttributeList>
+      <CheckArrayLimits>False</CheckArrayLimits>
+      <ExtendedStatus>False</ExtendedStatus>
+      <Interface><Sections xmlns="http://www.siemens.com/automation/Openness/SW/Interface/v3">
+  <Section Name="Input">
+    <Member Name="RawValue" Datatype="Int" />
+    <Member Name="RawMin" Datatype="Int" />
+    <Member Name="RawMax" Datatype="Int" />
+    <Member Name="EngMin" Datatype="Real" />
+    <Member Name="EngMax" Datatype="Real" />
+  </Section>
+  <Section Name="Output">
+    <Member Name="ScaledValue" Datatype="Real" />
+  </Section>
+  <Section Name="InOut" />
+  <Section Name="Temp">
+    <Member Name="RawValueReal" Datatype="Real" />
+    <Member Name="RawMinReal" Datatype="Real" />
+    <Member Name="RawMaxReal" Datatype="Real" />
+    <Member Name="SpanRaw" Datatype="Real" />
+    <Member Name="SpanEng" Datatype="Real" />
+  </Section>
+  <Section Name="Constant" />
+  <Section Name="Return">
+    <Member Name="Ret_Val" Datatype="Void" />
+  </Section>
+</Sections></Interface>
+      <Name>V2_FC_Scaling</Name>
+      <Number>7</Number>
+      <ProgrammingLanguage>SCL</ProgrammingLanguage>
+      <SetENOAutomatically>False</SetENOAutomatically>
+    </AttributeList>
+    <ObjectList>
+      <MultilingualText ID="1" CompositionName="Comment">
+        <ObjectList>
+          <MultilingualTextItem ID="2" CompositionName="Items">
+            <AttributeList>
+              <Culture>zh-CN</Culture>
+              <Text />
+            </AttributeList>
+          </MultilingualTextItem>
+        </ObjectList>
+      </MultilingualText>
+      <SW.Blocks.CompileUnit ID="3" CompositionName="CompileUnits">
+        <AttributeList>
+          <NetworkSource><StructuredText xmlns="http://www.siemens.com/automation/Openness/SW/NetworkSource/StructuredText/v2">
+  <NewLine UId="21" />
+  <LineComment Inserted="true" UId="22">
+    <Text UId="23"> Convert to Real first to avoid 16-bit Int overflow on wide raw spans </Text>
+  </LineComment>
+  <NewLine UId="24" />
+  <Access Scope="LocalVariable" UId="25">
+    <Symbol UId="26">
+      <Component Name="RawValueReal" UId="27" />
+    </Symbol>
+  </Access>
+  <Blank UId="28" />
+  <Token Text=":=" UId="29" />
+  <Blank UId="30" />
+  <Access Scope="Call" UId="31">
+    <Instruction Name="INT_TO_REAL" UId="32">
+      <Token Text="(" UId="33" />
+      <NamelessParameter UId="34">
+        <Access Scope="LocalVariable" UId="35">
+          <Symbol UId="36">
+            <Component Name="RawValue" UId="37" />
+          </Symbol>
+        </Access>
+      </NamelessParameter>
+      <Token Text=")" UId="39" />
+    </Instruction>
+  </Access>
+  <Token Text=";" UId="40" />
+  <NewLine UId="41" />
+  <Access Scope="LocalVariable" UId="42">
+    <Symbol UId="43">
+      <Component Name="RawMinReal" UId="44" />
+    </Symbol>
+  </Access>
+  <Blank UId="45" />
+  <Token Text=":=" UId="46" />
+  <Blank UId="47" />
+  <Access Scope="Call" UId="48">
+    <Instruction Name="INT_TO_REAL" UId="49">
+      <Token Text="(" UId="50" />
+      <NamelessParameter UId="51">
+        <Access Scope="LocalVariable" UId="52">
+          <Symbol UId="53">
+            <Component Name="RawMin" UId="54" />
+          </Symbol>
+        </Access>
+      </NamelessParameter>
+      <Token Text=")" UId="56" />
+    </Instruction>
+  </Access>
+  <Token Text=";" UId="57" />
+  <NewLine UId="58" />
+  <Access Scope="LocalVariable" UId="59">
+    <Symbol UId="60">
+      <Component Name="RawMaxReal" UId="61" />
+    </Symbol>
+  </Access>
+  <Blank UId="62" />
+  <Token Text=":=" UId="63" />
+  <Blank UId="64" />
+  <Access Scope="Call" UId="65">
+    <Instruction Name="INT_TO_REAL" UId="66">
+      <Token Text="(" UId="67" />
+      <NamelessParameter UId="68">
+        <Access Scope="LocalVariable" UId="69">
+          <Symbol UId="70">
+            <Component Name="RawMax" UId="71" />
+          </Symbol>
+        </Access>
+      </NamelessParameter>
+      <Token Text=")" UId="73" />
+    </Instruction>
+  </Access>
+  <Token Text=";" UId="74" />
+  <NewLine Num="2" UId="75" />
+  <Access Scope="LocalVariable" UId="76">
+    <Symbol UId="77">
+      <Component Name="SpanRaw" UId="78" />
+    </Symbol>
+  </Access>
+  <Blank UId="79" />
+  <Token Text=":=" UId="80" />
+  <Blank UId="81" />
+  <Access Scope="LocalVariable" UId="82">
+    <Symbol UId="83">
+      <Component Name="RawMaxReal" UId="84" />
+    </Symbol>
+  </Access>
+  <Blank UId="85" />
+  <Token Text="-" UId="86" />
+  <Blank UId="87" />
+  <Access Scope="LocalVariable" UId="88">
+    <Symbol UId="89">
+      <Component Name="RawMinReal" UId="90" />
+    </Symbol>
+  </Access>
+  <Token Text=";" UId="91" />
+  <NewLine UId="92" />
+  <Access Scope="LocalVariable" UId="93">
+    <Symbol UId="94">
+      <Component Name="SpanEng" UId="95" />
+    </Symbol>
+  </Access>
+  <Blank UId="96" />
+  <Token Text=":=" UId="97" />
+  <Blank UId="98" />
+  <Access Scope="LocalVariable" UId="99">
+    <Symbol UId="100">
+      <Component Name="EngMax" UId="101" />
+    </Symbol>
+  </Access>
+  <Blank UId="102" />
+  <Token Text="-" UId="103" />
+  <Blank UId="104" />
+  <Access Scope="LocalVariable" UId="105">
+    <Symbol UId="106">
+      <Component Name="EngMin" UId="107" />
+    </Symbol>
+  </Access>
+  <Token Text=";" UId="108" />
+  <NewLine Num="2" UId="109" />
+  <LineComment Inserted="true" UId="110">
+    <Text UId="111"> Avoid division by zero: return EngMin for a degenerate (zero) span </Text>
+  </LineComment>
+  <NewLine UId="112" />
+  <Token Text="IF" UId="113" />
+  <Blank UId="114" />
+  <Access Scope="LocalVariable" UId="115">
+    <Symbol UId="116">
+      <Component Name="SpanRaw" UId="117" />
+    </Symbol>
+  </Access>
+  <Blank UId="118" />
+  <Token Text="&lt;&gt;" UId="119" />
+  <Blank UId="120" />
+  <Access Scope="LiteralConstant" UId="121">
+    <Constant UId="122">
+      <ConstantValue UId="124">0.0</ConstantValue>
+    </Constant>
+  </Access>
+  <Blank UId="125" />
+  <Token Text="THEN" UId="126" />
+  <NewLine UId="127" />
+  <Blank Num="4" UId="128" />
+  <Access Scope="LocalVariable" UId="129">
+    <Symbol UId="130">
+      <Component Name="ScaledValue" UId="131" />
+    </Symbol>
+  </Access>
+  <Blank UId="132" />
+  <Token Text=":=" UId="133" />
+  <Blank UId="134" />
+  <Access Scope="LocalVariable" UId="135">
+    <Symbol UId="136">
+      <Component Name="EngMin" UId="137" />
+    </Symbol>
+  </Access>
+  <Blank UId="138" />
+  <Token Text="+" UId="139" />
+  <Blank UId="140" />
+  <Token Text="(" UId="141" />
+  <Token Text="(" UId="142" />
+  <Access Scope="LocalVariable" UId="143">
+    <Symbol UId="144">
+      <Component Name="RawValueReal" UId="145" />
+    </Symbol>
+  </Access>
+  <Blank UId="146" />
+  <Token Text="-" UId="147" />
+  <Blank UId="148" />
+  <Access Scope="LocalVariable" UId="149">
+    <Symbol UId="150">
+      <Component Name="RawMinReal" UId="151" />
+    </Symbol>
+  </Access>
+  <Token Text=")" UId="152" />
+  <Blank UId="153" />
+  <Token Text="*" UId="154" />
+  <Blank UId="155" />
+  <Access Scope="LocalVariable" UId="156">
+    <Symbol UId="157">
+      <Component Name="SpanEng" UId="158" />
+    </Symbol>
+  </Access>
+  <Blank UId="159" />
+  <Token Text="/" UId="160" />
+  <Blank UId="161" />
+  <Access Scope="LocalVariable" UId="162">
+    <Symbol UId="163">
+      <Component Name="SpanRaw" UId="164" />
+    </Symbol>
+  </Access>
+  <Token Text=")" UId="165" />
+  <Token Text=";" UId="166" />
+  <NewLine UId="167" />
+  <Token Text="ELSE" UId="168" />
+  <NewLine UId="169" />
+  <Blank Num="4" UId="170" />
+  <Access Scope="LocalVariable" UId="171">
+    <Symbol UId="172">
+      <Component Name="ScaledValue" UId="173" />
+    </Symbol>
+  </Access>
+  <Blank UId="174" />
+  <Token Text=":=" UId="175" />
+  <Blank UId="176" />
+  <Access Scope="LocalVariable" UId="177">
+    <Symbol UId="178">
+      <Component Name="EngMin" UId="179" />
+    </Symbol>
+  </Access>
+  <Token Text=";" UId="180" />
+  <NewLine UId="181" />
+  <Token Text="END_IF" UId="182" />
+  <Token Text=";" UId="183" />
+  <NewLine UId="184" />
+</StructuredText></NetworkSource>
+          <ProgrammingLanguage>SCL</ProgrammingLanguage>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="4" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="5" CompositionName="Items">
+                <AttributeList>
+                  <Culture>zh-CN</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+          <MultilingualText ID="6" CompositionName="Title">
+            <ObjectList>
+              <MultilingualTextItem ID="7" CompositionName="Items">
+                <AttributeList>
+                  <Culture>zh-CN</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Blocks.CompileUnit>
+      <MultilingualText ID="8" CompositionName="Title">
+        <ObjectList>
+          <MultilingualTextItem ID="9" CompositionName="Items">
+            <AttributeList>
+              <Culture>zh-CN</Culture>
+              <Text>'Linear scaling of raw value to engineering range'</Text>
+            </AttributeList>
+          </MultilingualTextItem>
+        </ObjectList>
+      </MultilingualText>
+    </ObjectList>
+  </SW.Blocks.FC>
+</Document>

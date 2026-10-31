@@ -1,0 +1,69 @@
+<UserControl x:Class="TIAOpennessStudio.Controls.StatusBarControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TIAOpennessStudio.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="400">
+    <Grid Background="{DynamicResource StatusBarBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Status Text -->
+        <TextBlock x:Name="lblStatus" 
+                   Grid.Column="0"
+                   Text="Ready" 
+                   Foreground="{DynamicResource MutedTextBrush}" 
+                   FontSize="{StaticResource FontSizeSm}" 
+                   VerticalAlignment="Center" 
+                   Margin="10,0"
+                   TextTrimming="CharacterEllipsis"/>
+
+        <!-- Progress Indicator -->
+        <StackPanel x:Name="stackProgress" 
+                    Grid.Column="1" 
+                    Orientation="Horizontal" 
+                    Visibility="Collapsed"
+                    Margin="10,0">
+            <TextBlock x:Name="lblProgress" 
+                       Text="Processing..." 
+                       Foreground="{DynamicResource AccentBrush}" 
+                       FontSize="{StaticResource FontSizeSm}" 
+                       VerticalAlignment="Center"
+                       Margin="0,0,8,0"/>
+            <Ellipse x:Name="ellIndicator" 
+                     Width="12" Height="12" 
+                     Fill="{DynamicResource AccentBrush}"
+                     Opacity="0.5">
+                <Ellipse.RenderTransform>
+                    <RotateTransform x:Name="rotIndicator" CenterX="6" CenterY="6"/>
+                </Ellipse.RenderTransform>
+                <Ellipse.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard RepeatBehavior="Forever">
+                                <DoubleAnimation Storyboard.TargetName="rotIndicator"
+                                               Storyboard.TargetProperty="Angle"
+                                               From="0" To="360" Duration="0:0:1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Ellipse.Triggers>
+            </Ellipse>
+        </StackPanel>
+
+        <!-- Additional Info -->
+        <TextBlock x:Name="lblInfo" 
+                   Grid.Column="2"
+                   Text="" 
+                   Foreground="{DynamicResource InputHintBrush}" 
+                   FontSize="{StaticResource FontSizeSm}" 
+                   VerticalAlignment="Center" 
+                   Margin="10,0"
+                   TextTrimming="CharacterEllipsis"/>
+    </Grid>
+</UserControl>

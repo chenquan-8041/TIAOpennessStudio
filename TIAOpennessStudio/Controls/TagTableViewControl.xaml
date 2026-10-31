@@ -1,0 +1,53 @@
+<UserControl x:Class="TIAOpennessStudio.Controls.TagTableViewControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{DynamicResource CodePanelBrush}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Padding="10,8" Background="{DynamicResource SidebarBrush}" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BorderBrush}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="📋 " FontSize="{StaticResource FontSizeXl}" VerticalAlignment="Center"/>
+                <TextBlock x:Name="txtTableName" Text="Tag Table" FontSize="{StaticResource FontSizeXl}" FontWeight="SemiBold" 
+                           Foreground="{DynamicResource WindowTitleTextBrush}" VerticalAlignment="Center"/>
+                <TextBlock x:Name="txtTagCount" Text="" FontSize="{StaticResource FontSizeMd}" Margin="12,0,0,0"
+                           Foreground="{DynamicResource InputHintBrush}" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- DataGrid -->
+        <DataGrid Grid.Row="1" x:Name="dgTags"
+                  Style="{StaticResource AppDataGridStyle}"
+                  IsReadOnly="True"
+                  SelectionMode="Extended"
+                  FontFamily="Consolas"
+                  FontSize="{StaticResource FontSizeMd}"
+                  EnableRowVirtualization="True"
+                  EnableColumnVirtualization="True"
+                  VirtualizingPanel.IsVirtualizing="True"
+                  VirtualizingPanel.VirtualizationMode="Recycling"
+                  VirtualizingPanel.ScrollUnit="Pixel"
+                  ScrollViewer.CanContentScroll="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="colName" Header="Name" Binding="{Binding Name}" Width="200"/>
+                <DataGridTextColumn x:Name="colDataType" Header="Data Type" Binding="{Binding DataType}" Width="120"/>
+                <DataGridTextColumn x:Name="colConnection" Header="Connection" Binding="{Binding Connection}" Width="150" Visibility="Collapsed"/>
+                <DataGridTextColumn x:Name="colPlcName" Header="PLC Name" Binding="{Binding PlcName}" Width="150" Visibility="Collapsed"/>
+                <DataGridTextColumn x:Name="colPlcTag" Header="PLC Tag" Binding="{Binding PlcTag}" Width="150" Visibility="Collapsed"/>
+                <DataGridTextColumn x:Name="colAddress" Header="Address" Binding="{Binding LogicalAddress}" Width="100"/>
+                <DataGridTextColumn x:Name="colComment" Header="Comment" Binding="{Binding Comment}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Status bar -->
+        <Border Grid.Row="2" Padding="8,4" Background="{DynamicResource SidebarBrush}" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BorderBrush}">
+            <TextBlock x:Name="txtStatus" Text="Ready" FontSize="{StaticResource FontSizeSm}"
+                       Foreground="{DynamicResource InputHintBrush}"/>
+        </Border>
+    </Grid>
+</UserControl>

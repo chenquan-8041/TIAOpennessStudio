@@ -1,0 +1,391 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Xml.Linq;
+using TIAOpennessStudio.Models.Lad;
+using TIAOpennessStudio.Services.Lad.Codecs;
+
+namespace TIAOpennessStudio.Services.Builders
+{
+    /// <summary>
+    /// PLC global DB XML builder.
+    /// Covers Static members, data types, ExternalWritable, Chinese comments, and StartValue.
+    /// </summary>
+    public static class PlcGlobalDbXmlBuilder
+    {
+        private static XNamespace InterfaceNs => PlcBlockXmlHelpers.InterfaceNs;
+
+        public static XDocument BuildDocument(string dbName, int dbNumber, IEnumerable<PlcDbMemberDefinition> staticMembers, string memoryLayout = "Standard")
+        {
+            if (string.IsNullOrWhiteSpace(dbName))
+                throw new ArgumentException("DB name is required.", nameof(dbName));
+            if (dbNumber <= 0)
+                throw new ArgumentException("DB number must be greater than 0.", nameof(dbNumber));
+
+            var members = staticMembers?.ToArray() ?? throw new ArgumentNullException(nameof(staticMembers));
+            if (members.Length == 0)
+                throw new ArgumentException("Global DB requires at least one Static member.", nameof(staticMembers));
+            if (!PlcBlockXmlHelpers.DbMemberExternalWritable
+                && members.Any(m => m.ExternalWritable == true))
+            {
+                throw new ArgumentException(
+                    "ExternalWritable=true requires a TIA version that supports it; "
+                    + "the detected version does not emit member attributes for DBs.");
+            }
+            ValidateMembers(members);
+
+            return new XDocument(
+                new XDeclaration("1.0", "utf-8", null),
+                new XElement("Document",
+                    new XElement("Engineering", new XAttribute("version", TIAOpennessStudio.Services.Implementations.TiaVersionAdapter.CurrentEngineeringVersion)),
+                    new XElement("DocumentInfo",
+                        new XElement("Created", "2000-01-01T00:00:00.0000000Z"),
+                        new XElement("ExportSetting", "None"),
+                        new XElement("InstalledProducts")),
+                    new XElement("SW.Blocks.GlobalDB",
+                        new XAttribute("ID", "0"),
+                        new XElement("AttributeList",
+                            new XElement("Interface",
+                                new XElement(InterfaceNs + "Sections",
+                                    new XElement(InterfaceNs + "Section",
+                                        new XAttribute("Name", "Static"),
+                                        members.Select(BuildMember)))),
+                            PlcBlockXmlHelpers.BlockAttribute("MemoryLayout", NormalizeMemoryLayout(memoryLayout)),
+                            new XElement("Name", dbName),
+                            PlcBlockXmlHelpers.NamespaceElement(),
+                            new XElement("Number", dbNumber),
+                            new XElement("ProgrammingLanguage", "DB")))));
+        }
+
+        /// <summary>
+        /// Compose a global DB from the canonical Interface node tree (the read output of
+        /// export_block_ir). The whole tree (nested structs, start values, comments) is written back
+        /// instead of being flattened into name + datatype rows.
+        /// </summary>
+        public static XDocument BuildDocument(string dbName, int dbNumber, LadNode interfaceNode, string memoryLayout = "Standard")
+        {
+            if (string.IsNullOrWhiteSpace(dbName))
+                throw new ArgumentException("DB name is required.", nameof(dbName));
+            if (dbNumber <= 0)
+                throw new ArgumentException("DB number must be greater than 0.", nameof(dbNumber));
+            if (interfaceNode == null)
+                throw new ArgumentException("DB interface tree is required.", nameof(interfaceNode));
+            if (interfaceNode.Child("Sections") == null
+                && !string.Equals(interfaceNode.Kind, "Sections", StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("DB interface tree is missing 'Sections'.", nameof(interfaceNode));
+
+            // DB members follow the same version gate as UDTs: older versions reject the extra
+            // AttributeList entirely. True values fail closed; false/absent values are stripped.
+            interfaceNode = PlcBlockXmlHelpers.ApplyExternalWritablePolicy(
+                interfaceNode, PlcBlockXmlHelpers.DbMemberExternalWritable, out var hadExternalWritableTrue);
+            if (hadExternalWritableTrue && !PlcBlockXmlHelpers.DbMemberExternalWritable)
+            {
+                throw new ArgumentException(
+                    "The interface requests ExternalWritable=true, which the detected TIA version does not support for DBs.");
+            }
+
+            var schema = TIAOpennessStudio.Models.Lad.LadSchemaRegistry.Resolve(
+                TIAOpennessStudio.Services.Implementations.TiaVersionAdapter.CurrentMajorVersion);
+            var emittedInterface = NetworkBodyCodec.EmitInterface(interfaceNode, schema, schema);
+
+            return new XDocument(
+                new XDeclaration("1.0", "utf-8", null),
+                new XElement("Document",
+                    new XElement("Engineering", new XAttribute("version", TIAOpennessStudio.Services.Implementations.TiaVersionAdapter.CurrentEngineeringVersion)),
+                    new XElement("DocumentInfo",
+                        new XElement("Created", "2000-01-01T00:00:00.0000000Z"),
+                        new XElement("ExportSetting", "None"),
+                        new XElement("InstalledProducts")),
+                    new XElement("SW.Blocks.GlobalDB",
+                        new XAttribute("ID", "0"),
+                        new XElement("AttributeList",
+                            emittedInterface,
+                            PlcBlockXmlHelpers.BlockAttribute("MemoryLayout", NormalizeMemoryLayout(memoryLayout)),
+                            new XElement("Name", dbName),
+                            PlcBlockXmlHelpers.NamespaceElement(),
+                            new XElement("Number", dbNumber),
+                            new XElement("ProgrammingLanguage", "DB")))));
+        }
+
+        public static string BuildXml(string dbName, int dbNumber, LadNode interfaceNode, string memoryLayout = "Standard")
+        {
+            using var writer = new Utf8StringWriter();
+            BuildDocument(dbName, dbNumber, interfaceNode, memoryLayout).Save(writer, SaveOptions.None);
+            return writer.ToString();
+        }
+
+        public static string BuildXml(string dbName, int dbNumber, IEnumerable<PlcDbMemberDefinition> staticMembers, string memoryLayout = "Standard")
+        {
+            using var writer = new Utf8StringWriter();
+            BuildDocument(dbName, dbNumber, staticMembers, memoryLayout).Save(writer, SaveOptions.None);
+            return writer.ToString();
+        }
+
+        /// <summary>Only the two legal DB access modes are accepted; anything else fails closed.</summary>
+        private static string NormalizeMemoryLayout(string memoryLayout)
+        {
+            var text = (memoryLayout ?? "").Trim();
+            if (string.Equals(text, "Standard", StringComparison.OrdinalIgnoreCase)) return "Standard";
+            if (string.Equals(text, "Optimized", StringComparison.OrdinalIgnoreCase)) return "Optimized";
+            throw new ArgumentException(
+                "MemoryLayout must be 'Standard' or 'Optimized' (got '" + text + "').", nameof(memoryLayout));
+        }
+
+        public static JsonObject RunProbe(string fixtureDirectory, string reportDirectory)
+        {
+            Directory.CreateDirectory(reportDirectory);
+            var stamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            var goldenPath = Path.Combine(fixtureDirectory, "Sim_Data_roundtrip.xml", "Sim_Data.xml");
+            var generatedPath = Path.Combine(reportDirectory, "Sim_Data.minimal.generated_" + stamp + ".xml");
+            var jsonPath = Path.Combine(reportDirectory, "plc_global_db_builder_probe_" + stamp + ".json");
+            var mdPath = Path.Combine(reportDirectory, "plc_global_db_builder_probe_" + stamp + ".md");
+
+            var golden = AnalyzeGlobalDb(goldenPath, maxMembers: 25);
+            var probeMembers = ReadMembers(goldenPath)
+                .Take(25)
+                .Select(x => new PlcDbMemberDefinition(
+                    x.Name,
+                    x.Datatype,
+                    x.ExternalWritable,
+                    x.CommentZhCn,
+                    x.StartValue))
+                .ToArray();
+
+            File.WriteAllText(generatedPath, BuildXml("Sim_Data", 16, probeMembers), Encoding.UTF8);
+            var generated = AnalyzeGlobalDb(generatedPath, maxMembers: 25);
+            var semanticEqual = CompareSemantics(golden, generated);
+
+            var root = new JsonObject
+            {
+                ["timestamp"] = DateTime.Now.ToString("O"),
+                ["mode"] = "offline-plc-global-db-builder-probe",
+                ["goldenPath"] = goldenPath,
+                ["generatedPath"] = generatedPath,
+                ["safetyPolicy"] = new JsonObject
+                {
+                    ["tia"] = "离线生成和解析 GlobalDB XML，不连接 TIA Portal，不导入 PLC DB。",
+                    ["write"] = "只写 reports 目录下的生成样本和探针报告，不修改 TMP_EXPORT 或交付包。"
+                },
+                ["golden"] = golden,
+                ["generated"] = generated,
+                ["semanticEqual"] = semanticEqual,
+                ["ok"] = golden["ok"]?.GetValue<bool>() == true &&
+                       generated["ok"]?.GetValue<bool>() == true &&
+                       semanticEqual
+            };
+
+            File.WriteAllText(jsonPath, root.ToJsonString(new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            }), Encoding.UTF8);
+            File.WriteAllText(mdPath, BuildProbeMarkdown(root, jsonPath), Encoding.UTF8);
+            root["jsonPath"] = jsonPath;
+            root["markdownPath"] = mdPath;
+            return root;
+        }
+
+        public static JsonObject AnalyzeGlobalDb(string path, int maxMembers = int.MaxValue)
+        {
+            var root = new JsonObject
+            {
+                ["path"] = path,
+                ["exists"] = File.Exists(path)
+            };
+            if (!File.Exists(path))
+            {
+                root["ok"] = false;
+                root["error"] = "文件不存在。";
+                return root;
+            }
+
+            try
+            {
+                var doc = XDocument.Load(path, LoadOptions.PreserveWhitespace);
+                var db = doc.Descendants().FirstOrDefault(x => x.Name.LocalName == "SW.Blocks.GlobalDB");
+                var attrs = db?.Element("AttributeList");
+                var members = ReadMembers(path).Take(maxMembers).Select(MemberToJson).ToArray();
+
+                root["ok"] = db != null && attrs != null && members.Length > 0;
+                root["dbName"] = attrs?.Element("Name")?.Value ?? "";
+                root["number"] = attrs?.Element("Number")?.Value ?? "";
+                root["programmingLanguage"] = attrs?.Element("ProgrammingLanguage")?.Value ?? "";
+                root["memoryLayout"] = attrs?.Element("MemoryLayout")?.Value ?? "";
+                root["memberCount"] = members.Length;
+                root["members"] = new JsonArray(members);
+                return root;
+            }
+            catch (Exception ex)
+            {
+                root["ok"] = false;
+                root["error"] = ex.Message;
+                return root;
+            }
+        }
+
+        private static XElement BuildMember(PlcDbMemberDefinition member)
+        {
+            var element = new XElement(InterfaceNs + "Member",
+                new XAttribute("Name", member.Name),
+                new XAttribute("Datatype", member.Datatype));
+
+            var hasAttributes = member.ExternalWritable.HasValue && PlcBlockXmlHelpers.DbMemberExternalWritable;
+            if (hasAttributes)
+            {
+                element.Add(new XElement(InterfaceNs + "AttributeList",
+                    new XElement(InterfaceNs + "BooleanAttribute",
+                        new XAttribute("Name", "ExternalWritable"),
+                        new XAttribute("SystemDefined", "true"),
+                        member.ExternalWritable == true ? "true" : "false")));
+            }
+
+            if (!string.IsNullOrWhiteSpace(member.CommentZhCn))
+            {
+                element.Add(new XElement(InterfaceNs + "Comment",
+                    new XElement(InterfaceNs + "MultiLanguageText",
+                        new XAttribute("Lang", "zh-CN"),
+                        member.CommentZhCn)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(member.StartValue))
+            {
+                element.Add(new XElement(InterfaceNs + "StartValue", member.StartValue));
+            }
+
+            return element;
+        }
+
+        private static PlcDbMemberFact[] ReadMembers(string path)
+        {
+            var doc = XDocument.Load(path, LoadOptions.PreserveWhitespace);
+            return doc.Descendants()
+                .Where(x => x.Name.LocalName == "Section" && (x.Attribute("Name")?.Value ?? "") == "Static")
+                .SelectMany(x => x.Elements().Where(y => y.Name.LocalName == "Member"))
+                .Select(x => new PlcDbMemberFact(
+                    x.Attribute("Name")?.Value ?? "",
+                    x.Attribute("Datatype")?.Value ?? "",
+                    ReadExternalWritable(x),
+                    x.Descendants().FirstOrDefault(y => y.Name.LocalName == "MultiLanguageText" &&
+                                                        (y.Attribute("Lang")?.Value ?? "") == "zh-CN")?.Value ?? "",
+                    x.Elements().FirstOrDefault(y => y.Name.LocalName == "StartValue")?.Value ?? ""))
+                .ToArray();
+        }
+
+        private static bool? ReadExternalWritable(XElement member)
+        {
+            var attr = member.Descendants()
+                .FirstOrDefault(x => x.Name.LocalName == "BooleanAttribute" &&
+                                     (x.Attribute("Name")?.Value ?? "") == "ExternalWritable");
+            if (attr == null)
+                return null;
+            return string.Equals(attr.Value, "true", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static JsonObject MemberToJson(PlcDbMemberFact member)
+        {
+            return new JsonObject
+            {
+                ["name"] = member.Name,
+                ["datatype"] = member.Datatype,
+                ["externalWritable"] = member.ExternalWritable.HasValue ? JsonValue.Create(member.ExternalWritable.Value) : null,
+                ["commentZhCn"] = member.CommentZhCn,
+                ["startValue"] = member.StartValue
+            };
+        }
+
+        private static bool CompareSemantics(JsonObject golden, JsonObject generated)
+        {
+            return golden["dbName"]?.ToString() == generated["dbName"]?.ToString() &&
+                   golden["number"]?.ToString() == generated["number"]?.ToString() &&
+                   golden["programmingLanguage"]?.ToString() == generated["programmingLanguage"]?.ToString() &&
+                   golden["memoryLayout"]?.ToString() == generated["memoryLayout"]?.ToString() &&
+                   NormalizeMembers(golden).SequenceEqual(NormalizeMembers(generated), StringComparer.Ordinal);
+        }
+
+        private static string[] NormalizeMembers(JsonObject root)
+        {
+            return (root["members"] as JsonArray ?? new JsonArray())
+                .OfType<JsonObject>()
+                .Select(x => x["name"] + "|" + x["datatype"] + "|" + (x["externalWritable"]?.ToString() ?? "") + "|" + x["commentZhCn"] + "|" + x["startValue"])
+                .ToArray();
+        }
+
+        private static string BuildProbeMarkdown(JsonObject root, string jsonPath)
+        {
+            var md = new StringBuilder();
+            md.AppendLine("# PLC Global DB Builder Probe");
+            md.AppendLine();
+            md.AppendLine("Generated: " + root["timestamp"]);
+            md.AppendLine("JSON: " + jsonPath);
+            md.AppendLine();
+            md.AppendLine("## Safety");
+            md.AppendLine("- 离线生成和解析 GlobalDB XML，不连接 TIA Portal，不导入 PLC DB。");
+            md.AppendLine("- 只写 reports 目录下的生成样本和探针报告，不修改 TMP_EXPORT 或交付包。");
+            md.AppendLine();
+            md.AppendLine("## Summary");
+            md.AppendLine("- OK: " + root["ok"]);
+            md.AppendLine("- Semantic equal to golden first members: " + root["semanticEqual"]);
+            md.AppendLine("- Golden: " + root["goldenPath"]);
+            md.AppendLine("- Generated: " + root["generatedPath"]);
+            md.AppendLine();
+            if (root["generated"] is JsonObject generated && generated["members"] is JsonArray members)
+            {
+                md.AppendLine("## Generated Members");
+                foreach (var member in members.OfType<JsonObject>().Take(30))
+                {
+                    md.AppendLine("- " + member["name"] + ": " + member["datatype"] +
+                                  ", StartValue=" + (string.IsNullOrWhiteSpace(member["startValue"]?.ToString()) ? "<none>" : member["startValue"]) +
+                                  ", 注释=" + (string.IsNullOrWhiteSpace(member["commentZhCn"]?.ToString()) ? "<none>" : member["commentZhCn"]));
+                }
+            }
+
+            return md.ToString();
+        }
+
+        private static void ValidateMembers(IReadOnlyCollection<PlcDbMemberDefinition> members)
+        {
+            var duplicates = members.GroupBy(x => x.Name, StringComparer.OrdinalIgnoreCase)
+                .Where(x => x.Count() > 1)
+                .Select(x => x.Key)
+                .ToArray();
+            if (duplicates.Length > 0)
+                throw new ArgumentException("Duplicate DB member names: " + string.Join(", ", duplicates));
+
+            foreach (var member in members)
+            {
+                if (string.IsNullOrWhiteSpace(member.Name))
+                    throw new ArgumentException("DB member name is required.");
+                if (string.IsNullOrWhiteSpace(member.Datatype))
+                    throw new ArgumentException("DB member data type is required: " + member.Name);
+            }
+        }
+
+        private sealed class Utf8StringWriter : StringWriter
+        {
+            public override Encoding Encoding => Encoding.UTF8;
+        }
+
+        private sealed class PlcDbMemberFact
+        {
+            public PlcDbMemberFact(string name, string datatype, bool? externalWritable, string commentZhCn, string startValue)
+            {
+                Name = name;
+                Datatype = datatype;
+                ExternalWritable = externalWritable;
+                CommentZhCn = commentZhCn;
+                StartValue = startValue;
+            }
+
+            public string Name { get; }
+            public string Datatype { get; }
+            public bool? ExternalWritable { get; }
+            public string CommentZhCn { get; }
+            public string StartValue { get; }
+        }
+    }
+}

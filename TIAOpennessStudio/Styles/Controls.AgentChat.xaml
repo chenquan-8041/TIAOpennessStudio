@@ -1,0 +1,600 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TIAOpennessStudio.Controls"
+    xmlns:local="clr-namespace:TIAOpennessStudio"
+    xmlns:models="clr-namespace:TIAOpennessStudio.Models">
+
+    <!--  Converters used by templates inside this dictionary; declared explicitly to avoid StaticResource lookup failures across dictionaries  -->
+    <local:StringVisibilityConverter x:Key="StringVisibilityConverter" />
+    <local:ThoughtKindToBrushConverter x:Key="ThoughtKindToBrushConverter" />
+    <local:MarkdownToInlineConverter x:Key="MarkdownToInlineConverter" />
+
+    <!--
+        Agent card / text brushes are now provided uniformly by theme resources (Theme.Light.xaml / Theme.Dark.xaml):
+        - AgentCardBackgroundBrush, AgentCardSurfaceBrush, AgentCardCodeBrush
+        - AgentCardCodeHeaderBrush, AgentCardThoughtBodyBrush, AgentCardBorderBrush
+        - AgentTextThoughtBrush, AgentTextPrimaryBrush, AgentTextSecondaryBrush, AgentHoverBrush
+        Only a few theme-independent semantic colors (highlight / status indicators) are kept here.
+    -->
+    <SolidColorBrush x:Key="AgentHighlightGreenBrush" Color="#4CAF50" />
+    <SolidColorBrush x:Key="AgentHighlightRedBrush" Color="#F44336" />
+    <SolidColorBrush x:Key="AgentHighlightBlueBrush" Color="#2196F3" />
+    <SolidColorBrush x:Key="AgentStatusRunningBrush" Color="#FFC107" />
+    <SolidColorBrush x:Key="AgentStatusSuccessBrush" Color="#4CAF50" />
+    <SolidColorBrush x:Key="AgentStatusFailedBrush" Color="#F44336" />
+
+    <!--  Fonts  -->
+    <FontFamily x:Key="AgentFontFamily">Segoe UI, Microsoft YaHei UI</FontFamily>
+    <FontFamily x:Key="AgentCodeFontFamily">Cascadia Code, Consolas, Microsoft YaHei UI</FontFamily>
+
+    <!--  1. TextBlock template (plain Markdown text) - uses a TextBox so it can be selected  -->
+    <DataTemplate x:Key="TextBlockTemplate" DataType="{x:Type models:MessageTextBlock}">
+        <Border Padding="10,6" CornerRadius="8">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ContentPresenter, AncestorLevel=2}, Path=DataContext.Role}" Value="user">
+                            <Setter Property="Background" Value="{DynamicResource SidebarBrush}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+                            <Setter Property="BorderThickness" Value="1" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <Grid>
+                <TextBox
+                    BorderThickness="0"
+                    IsReadOnly="True"
+                    Text="{Binding Content, Mode=OneWay}"
+                    TextWrapping="Wrap">
+                    <TextBox.Style>
+                        <!--  Styling lives in the Style (not as local values) so the triggers below can actually override it  -->
+                        <Style TargetType="TextBox">
+                            <!--  Only the streaming path uses the plain TextBox: rebuilding rich text per token would flicker and lag  -->
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="FontFamily" Value="{StaticResource AgentFontFamily}" />
+                            <Setter Property="FontSize" Value="{StaticResource FontSizeLg}" />
+                            <Setter Property="Foreground" Value="{DynamicResource AgentTextPrimaryBrush}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsStreaming}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <!--  Plain text that is still streaming is dimmed to show it is still being thought out and generated  -->
+                                    <Setter Property="Foreground" Value="{DynamicResource AgentTextSecondaryBrush}" />
+                                </DataTrigger>
+                                <!--  When text looks like streaming code, change its style to distinguish it  -->
+                                <DataTrigger Binding="{Binding IsStreamingCode, FallbackValue=False}" Value="True">
+                                    <!--  Streaming code also uses a muted color; it only becomes color-highlighted once finally rendered  -->
+                                    <Setter Property="FontFamily" Value="{StaticResource AgentCodeFontFamily}" />
+                                    <Setter Property="Background" Value="{DynamicResource AgentCardCodeHeaderBrush}" />
+                                    <Setter Property="Padding" Value="8" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+                <!--  Finalized text: lightweight Markdown rendering (headings / bullets / bold / inline code)  -->
+                <controls:MarkdownRichText
+                    FontFamily="{StaticResource AgentFontFamily}"
+                    FontSize="{StaticResource FontSizeLg}"
+                    Foreground="{DynamicResource AgentTextPrimaryBrush}"
+                    Markdown="{Binding Content, Mode=OneWay}">
+                    <controls:MarkdownRichText.Style>
+                        <Style TargetType="controls:MarkdownRichText">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsStreaming}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls:MarkdownRichText.Style>
+                </controls:MarkdownRichText>
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <!--  2. ThoughtBlock template (collapsible chain of thought)  -->
+    <DataTemplate x:Key="ThoughtBlockTemplate" DataType="{x:Type models:ThoughtBlock}">
+        <Border
+            Margin="0,4"
+            Background="{DynamicResource ThoughtGradientBrush}"
+            BorderBrush="{DynamicResource AgentCardBorderBrush}"
+            BorderThickness="1"
+            CornerRadius="6">
+            <Grid>
+                <!--  Left indicator bar  -->
+                <Border
+                    Width="3"
+                    HorizontalAlignment="Left"
+                    Background="{Binding Kind, Converter={StaticResource ThoughtKindToBrushConverter}}"
+                    CornerRadius="6,0,0,6" />
+
+                <Expander
+                    Padding="8,8,8,8"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    IsExpanded="{Binding IsExpanded, Mode=TwoWay}">
+                    <Expander.Style>
+                        <Style TargetType="Expander">
+                            <Style.Triggers>
+                                <Trigger Property="IsExpanded" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="Opacity"
+                                                    From="0"
+                                                    To="1"
+                                                    Duration="0:0:0.2" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Expander.Style>
+
+                    <Expander.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--  Title and summary  -->
+                            <StackPanel
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontSize="{StaticResource FontSizeMd}"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource AgentTextThoughtBrush}"
+                                    Text="{Binding DataContext.ThoughtLabel, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                                <TextBlock
+                                    MaxWidth="400"
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="{StaticResource FontSizeSm}"
+                                    Foreground="{DynamicResource AgentTextThoughtBrush}"
+                                    Opacity="0.7"
+                                    Text="{Binding ContentPreview}"
+                                    TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+
+                            <!--  Char count and timestamp  -->
+                            <StackPanel
+                                Grid.Column="2"
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontSize="{StaticResource FontSizeXs}"
+                                    Foreground="{DynamicResource AgentTextThoughtBrush}"
+                                    Opacity="0.5"
+                                    Text="{Binding CharCount, StringFormat='({0} chars)'}" />
+                                <TextBlock
+                                    Margin="6,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="{StaticResource FontSizeXs}"
+                                    Foreground="{DynamicResource AgentTextThoughtBrush}"
+                                    Opacity="0.5"
+                                    Text="{Binding Timestamp, StringFormat='HH:mm'}" />
+                            </StackPanel>
+                        </Grid>
+                    </Expander.Header>
+
+                    <!--  Content area  -->
+                    <Border
+                        Margin="0,4,0,0"
+                        Padding="12,8"
+                        Background="{DynamicResource AgentCardThoughtBodyBrush}"
+                        CornerRadius="0,0,6,6">
+                        <FlowDocumentScrollViewer
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Document="{Binding Content, Converter={StaticResource MarkdownToInlineConverter}}"
+                            HorizontalScrollBarVisibility="Disabled"
+                            IsToolBarVisible="False"
+                            VerticalScrollBarVisibility="Disabled">
+                            <FlowDocumentScrollViewer.Resources>
+                                <Style TargetType="Paragraph">
+                                    <Setter Property="Margin" Value="0" />
+                                    <Setter Property="FontFamily" Value="{StaticResource AgentFontFamily}" />
+                                    <Setter Property="FontSize" Value="12" />
+                                    <Setter Property="Foreground" Value="{DynamicResource AgentTextThoughtBrush}" />
+                                </Style>
+                            </FlowDocumentScrollViewer.Resources>
+                        </FlowDocumentScrollViewer>
+                    </Border>
+                </Expander>
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <!--  3. FileChangeBlock template (file change card)  -->
+    <DataTemplate x:Key="FileChangeBlockTemplate" DataType="{x:Type models:FileChangeBlock}">
+        <Border
+            Margin="0,4"
+            Padding="12,8"
+            Background="{DynamicResource AgentCardBackgroundBrush}"
+            BorderBrush="{DynamicResource AgentCardBorderBrush}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Cursor="Hand">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!--  File icon  -->
+                <Border
+                    Grid.Column="0"
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" FontSize="{StaticResource FontSizeXxl}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value="📄" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Action}" Value="Added">
+                                            <Setter Property="Text" Value="✨" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Action}" Value="Deleted">
+                                            <Setter Property="Text" Value="🗑️" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Action}" Value="Modified">
+                                            <Setter Property="Text" Value="📝" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <!--  File info  -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock
+                        FontSize="{StaticResource FontSizeLg}"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource AgentTextPrimaryBrush}"
+                        Text="{Binding FileName}" />
+                    <TextBlock
+                        FontSize="{StaticResource FontSizeSm}"
+                        Foreground="{DynamicResource AgentTextSecondaryBrush}"
+                        Text="{Binding RelativePath}"
+                        TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+
+                <!--  Change stats  -->
+                <StackPanel
+                    Grid.Column="2"
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        Margin="0,0,8,0"
+                        FontFamily="{StaticResource AgentCodeFontFamily}"
+                        FontSize="{StaticResource FontSizeMd}"
+                        Foreground="{DynamicResource AgentHighlightGreenBrush}">
+                        <Run Text="+" /><Run Text="{Binding LinesAdded, Mode=OneWay}" />
+                    </TextBlock>
+                    <TextBlock
+                        FontFamily="{StaticResource AgentCodeFontFamily}"
+                        FontSize="{StaticResource FontSizeMd}"
+                        Foreground="{DynamicResource AgentHighlightRedBrush}">
+                        <Run Text="-" /><Run Text="{Binding LinesRemoved, Mode=OneWay}" />
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <!--
+        4. CommandExecutionBlock template - reused here as the "tool call card".
+        Status: Running=yellow  Success=green  Failed=red, dot + text.
+        The first line of CommandText is by convention the tool name; following lines (if any) are input arguments.
+        Output is filled in after the tool completes and is expanded by default.
+    -->
+    <DataTemplate x:Key="CommandExecutionBlockTemplate" DataType="{x:Type models:CommandExecutionBlock}">
+        <Border
+            Margin="0,4"
+            Padding="10,6"
+            Background="{DynamicResource AgentCardCodeBrush}"
+            BorderBrush="{DynamicResource AgentCardBorderBrush}"
+            BorderThickness="1"
+            CornerRadius="6">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!--  Header: status dot + "Tool" label + tool name + status text  -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <Ellipse
+                        Width="8"
+                        Height="8"
+                        Margin="0,0,6,0"
+                        VerticalAlignment="Center">
+                        <Ellipse.Style>
+                            <Style TargetType="Ellipse">
+                                <Setter Property="Fill" Value="{DynamicResource AgentStatusRunningBrush}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Status}" Value="Success">
+                                        <Setter Property="Fill" Value="{DynamicResource AgentStatusSuccessBrush}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="Failed">
+                                        <Setter Property="Fill" Value="{DynamicResource AgentStatusFailedBrush}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Ellipse.Style>
+                    </Ellipse>
+                    <TextBlock
+                        Margin="0,0,8,0"
+                        VerticalAlignment="Center"
+                        FontSize="{StaticResource FontSizeSm}"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource AgentTextSecondaryBrush}"
+                        Text="🔧 Tool" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource AgentCodeFontFamily}"
+                        FontSize="{StaticResource FontSizeMd}"
+                        Foreground="{DynamicResource AgentTextPrimaryBrush}"
+                        Text="{Binding CommandText}"
+                        TextTrimming="CharacterEllipsis" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        FontSize="{StaticResource FontSizeXs}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="{DynamicResource AgentStatusRunningBrush}" />
+                                <Setter Property="Text" Value="• running…" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Status}" Value="Success">
+                                        <Setter Property="Foreground" Value="{DynamicResource AgentStatusSuccessBrush}" />
+                                        <Setter Property="Text" Value="• done" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="Failed">
+                                        <Setter Property="Foreground" Value="{DynamicResource AgentStatusFailedBrush}" />
+                                        <Setter Property="Text" Value="• failed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+
+                <!--  Output area: shown when Output is present, expanded by default  -->
+                <Border
+                    Grid.Row="1"
+                    Margin="0,6,0,0"
+                    Padding="8,6"
+                    Background="{DynamicResource AgentCardCodeHeaderBrush}"
+                    CornerRadius="4"
+                    Visibility="{Binding Output, Converter={StaticResource StringVisibilityConverter}}">
+                    <TextBlock
+                        MaxHeight="180"
+                        FontFamily="{StaticResource AgentCodeFontFamily}"
+                        FontSize="{StaticResource FontSizeSm}"
+                        Foreground="{DynamicResource AgentTextSecondaryBrush}"
+                        Text="{Binding Output}"
+                        TextWrapping="Wrap" />
+                </Border>
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <!--  5. ContextRefBlock template (context reference)  -->
+    <DataTemplate x:Key="ContextRefBlockTemplate" DataType="{x:Type models:ContextRefBlock}">
+        <Border
+            Margin="2"
+            Padding="6,3"
+            Background="{DynamicResource AgentCardSurfaceBrush}"
+            BorderBrush="{DynamicResource AgentCardBorderBrush}"
+            BorderThickness="1"
+            CornerRadius="4"
+            Cursor="Hand">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="0,0,4,0"
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource FontSizeMd}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="📎" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RefType}" Value="Variable">
+                                    <Setter Property="Text" Value="🔤" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RefType}" Value="Function">
+                                    <Setter Property="Text" Value="🔧" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RefType}" Value="Udt">
+                                    <Setter Property="Text" Value="📦" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource FontSizeMd}"
+                    Foreground="{DynamicResource AgentHighlightBlueBrush}"
+                    Text="{Binding Name}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <!--  6. AgentStatusBlock template (status block)  -->
+    <DataTemplate x:Key="AgentStatusBlockTemplate" DataType="{x:Type models:AgentStatusBlock}">
+        <Border
+            Margin="0,2"
+            Padding="12,6"
+            HorizontalAlignment="Left"
+            Background="{DynamicResource AgentCardSurfaceBrush}"
+            CornerRadius="16">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="0,0,6,0"
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource FontSizeXs}"
+                    Text="●">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{DynamicResource AgentStatusRunningBrush}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Status}" Value="completed">
+                                    <Setter Property="Foreground" Value="{DynamicResource AgentStatusSuccessBrush}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="failed">
+                                    <Setter Property="Foreground" Value="{DynamicResource AgentStatusFailedBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource FontSizeMd}"
+                    Foreground="{DynamicResource AgentTextSecondaryBrush}"
+                    Text="{Binding Message}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <!--  7.5. PlanProgressBlock template (long-task job progress bar)  -->
+    <DataTemplate x:Key="PlanProgressBlockTemplate" DataType="{x:Type models:PlanProgressBlock}">
+        <Border Margin="0,4" Padding="12,8" Background="{DynamicResource AgentCardSurfaceBrush}" CornerRadius="8">
+            <StackPanel>
+                <TextBlock FontSize="{StaticResource FontSizeMd}" Foreground="{DynamicResource AgentTextSecondaryBrush}" Text="{Binding DisplayText}" TextTrimming="CharacterEllipsis" />
+                <ProgressBar Height="6" Margin="0,6,0,0" Minimum="0" Maximum="1" Value="{Binding Progress}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <!--  7. CodeBlock template (code block) - syntax highlighting via AvalonEdit  -->
+    <DataTemplate x:Key="CodeBlockTemplate" DataType="{x:Type models:CodeBlock}">
+        <controls:CodeBlockControl
+            Code="{Binding Code}"
+            FileName="{Binding FileName}"
+            Language="{Binding Language}" />
+    </DataTemplate>
+
+    <!--  8. DeliveryBlock template (block delivery manifest table)  -->
+    <DataTemplate x:Key="DeliveryBlockTemplate" DataType="{x:Type models:DeliveryBlock}">
+        <Border Margin="0,4" Background="{DynamicResource AgentCardBackgroundBrush}"
+                BorderBrush="{DynamicResource AgentCardBorderBrush}" BorderThickness="1" CornerRadius="8">
+            <StackPanel Margin="12,10">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontSize="{StaticResource FontSizeLg}" FontWeight="SemiBold"
+                               Foreground="{DynamicResource AgentTextPrimaryBrush}" Text="📦 本次交付" />
+                    <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" FontSize="{StaticResource FontSizeSm}"
+                               Foreground="{DynamicResource AgentTextSecondaryBrush}"
+                               Text="{Binding Summary}" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+
+                <!--  Table header  -->
+                <Grid Margin="0,10,0,2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="0.8*" />
+                        <ColumnDefinition Width="0.8*" />
+                        <ColumnDefinition Width="2.2*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" FontSize="{StaticResource FontSizeSm}" Foreground="{DynamicResource AgentTextSecondaryBrush}" Text="块名" />
+                    <TextBlock Grid.Column="1" FontSize="{StaticResource FontSizeSm}" Foreground="{DynamicResource AgentTextSecondaryBrush}" Text="类型" />
+                    <TextBlock Grid.Column="2" FontSize="{StaticResource FontSizeSm}" Foreground="{DynamicResource AgentTextSecondaryBrush}" Text="语言" />
+                    <TextBlock Grid.Column="3" FontSize="{StaticResource FontSizeSm}" Foreground="{DynamicResource AgentTextSecondaryBrush}" Text="状态" />
+                </Grid>
+
+                <!--  Data rows  -->
+                <ItemsControl ItemsSource="{Binding Items}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:DeliveryItem}">
+                            <Border Padding="0,7" BorderBrush="{DynamicResource AgentCardBorderBrush}" BorderThickness="0,0,0,1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="0.8*" />
+                                        <ColumnDefinition Width="0.8*" />
+                                        <ColumnDefinition Width="2.2*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" FontFamily="{StaticResource AgentCodeFontFamily}" FontSize="{StaticResource FontSizeMd}"
+                                               Foreground="{DynamicResource AgentTextPrimaryBrush}" Text="{Binding Name}" />
+                                    <TextBlock Grid.Column="1" FontSize="{StaticResource FontSizeMd}" Foreground="{DynamicResource AgentTextPrimaryBrush}" Text="{Binding Type}" />
+                                    <TextBlock Grid.Column="2" FontSize="{StaticResource FontSizeMd}" Foreground="{DynamicResource AgentTextPrimaryBrush}" Text="{Binding Language}" />
+                                    <StackPanel Grid.Column="3" Orientation="Horizontal">
+                                        <Ellipse Width="8" Height="8" VerticalAlignment="Center">
+                                            <Ellipse.Style>
+                                                <Style TargetType="Ellipse">
+                                                    <Setter Property="Fill" Value="{DynamicResource AgentStatusFailedBrush}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Written">
+                                                            <Setter Property="Fill" Value="{DynamicResource AgentStatusSuccessBrush}" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="PreparedNotWritten">
+                                                            <Setter Property="Fill" Value="{DynamicResource AgentStatusRunningBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Ellipse.Style>
+                                        </Ellipse>
+                                        <TextBlock Margin="6,0,0,0" VerticalAlignment="Center" FontSize="{StaticResource FontSizeMd}"
+                                                   Foreground="{DynamicResource AgentTextSecondaryBrush}" Text="{Binding StatusText}" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <!--  Default template  -->
+    <DataTemplate x:Key="DefaultBlockTemplate">
+        <Border
+            Margin="0,2"
+            Padding="8,4"
+            Background="{DynamicResource AgentCardBackgroundBrush}"
+            BorderBrush="{DynamicResource AgentCardBorderBrush}"
+            BorderThickness="1"
+            CornerRadius="4">
+            <TextBlock
+                FontSize="{StaticResource FontSizeMd}"
+                Foreground="{DynamicResource AgentTextPrimaryBrush}"
+                Text="{Binding}"
+                TextWrapping="Wrap" />
+        </Border>
+    </DataTemplate>
+
+    <!--  MessageBlockTemplateSelector instance  -->
+    <controls:MessageBlockTemplateSelector
+        x:Key="MessageBlockSelector"
+        CodeTemplate="{StaticResource CodeBlockTemplate}"
+        CommandTemplate="{StaticResource CommandExecutionBlockTemplate}"
+        ContextRefTemplate="{StaticResource ContextRefBlockTemplate}"
+        DefaultTemplate="{StaticResource DefaultBlockTemplate}"
+        DeliveryTemplate="{StaticResource DeliveryBlockTemplate}"
+        FileChangeTemplate="{StaticResource FileChangeBlockTemplate}"
+        StatusTemplate="{StaticResource AgentStatusBlockTemplate}"
+        ProgressTemplate="{StaticResource PlanProgressBlockTemplate}"
+        TextTemplate="{StaticResource TextBlockTemplate}"
+        ThoughtTemplate="{StaticResource ThoughtBlockTemplate}" />
+
+</ResourceDictionary>

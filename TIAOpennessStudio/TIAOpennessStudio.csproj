@@ -1,0 +1,104 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+    <PlatformTarget>x64</PlatformTarget>
+    <ApplicationIcon>codeGenerator.ico</ApplicationIcon>
+    <AssemblyName>TIAOpennessStudio</AssemblyName>
+    <Deterministic>true</Deterministic>
+    <StartupObject>TIAOpennessStudio.Program</StartupObject>
+    <LangVersion>10.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- CopyLocal=false：不要把编译基线（V15.1）的 DLL 复制进 bin，否则 CLR 会优先绑定这份副本，
+         Program 里的 AssemblyResolve 永远不会触发，等于固定死在编译版本上。
+         运行时由 TiaApiPathResolver + AssemblyResolve 加载本机已安装 TIA 的 PublicAPI DLL。 -->
+    <Reference Include="Siemens.Engineering">
+      <HintPath>$(MSBuildThisFileDirectory)Siemens.Engineering.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Security" />
+
+    <Reference Include="System.Web" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
+    <PackageReference Include="DiffPlex" Version="1.9.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.5" />
+    <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.4.372.106" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.4.372.106" />
+    <PackageReference Include="QuikGraph" Version="2.5.0" />
+    <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
+    <PackageReference Include="System.Text.Json" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Block templates are embedded straight from the sample library under docs/samples/.
+         Never copy a template into the project: one file, one source of truth.
+         A future per-version template is added the same way:
+         Include="..\docs\samples\V<ver>\GRAPH\<file>.xml" Link="Templates\GRAPH_V<ver>.xml" -->
+    <EmbeddedResource Include="..\docs\samples\V15.1\GRAPH\graph_V0.1.xml"
+                      Link="Templates\GRAPH_V15_1.xml" />
+    <Content Include="Ressources\*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <!-- 官方加密知识库：随发行包放到程序目录 Knowledge\*.kb，启动自动无感加载。
+         用通配符而非固定文件名：文件不存在时不报错（官方库为可选发行内容）。 -->
+    <Content Include="Knowledge\*.kb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="MainWindow.xaml" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Tools\**" />
+    <EmbeddedResource Remove="Tools\**" />
+    <Page Remove="Tools\**" />
+    <None Remove="Tools\**" />
+  </ItemGroup>
+
+</Project>

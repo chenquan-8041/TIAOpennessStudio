@@ -1,0 +1,1181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Document>
+  <Engineering version="V15.1" />
+  <DocumentInfo>
+    <Created>2026-10-28T05:52:19.4336428Z</Created>
+    <ExportSetting>None</ExportSetting>
+    <InstalledProducts>
+      <Product>
+        <DisplayName>Totally Integrated Automation Portal</DisplayName>
+        <DisplayVersion>V15.1</DisplayVersion>
+      </Product>
+      <OptionPackage>
+        <DisplayName>TIA Portal Openness</DisplayName>
+        <DisplayVersion>V15.1</DisplayVersion>
+      </OptionPackage>
+      <Product>
+        <DisplayName>SINAMICS Startdrive Advanced</DisplayName>
+        <DisplayVersion>V15.1 Update1</DisplayVersion>
+      </Product>
+      <OptionPackage>
+        <DisplayName>G110M, G120, G120C, G120D, G120P</DisplayName>
+        <DisplayVersion>V15.1 Update1</DisplayVersion>
+      </OptionPackage>
+      <OptionPackage>
+        <DisplayName>G130, G150, S120, S150, SINAMICS MV, S210</DisplayName>
+        <DisplayVersion>V15.1 Update1</DisplayVersion>
+      </OptionPackage>
+      <Product>
+        <DisplayName>STEP 7 Professional</DisplayName>
+        <DisplayVersion>V15.1</DisplayVersion>
+      </Product>
+      <OptionPackage>
+        <DisplayName>SIMATIC Energy Suite</DisplayName>
+        <DisplayVersion>V15.1</DisplayVersion>
+      </OptionPackage>
+      <OptionPackage>
+        <DisplayName>STEP 7 Safety</DisplayName>
+        <DisplayVersion>V15.1</DisplayVersion>
+      </OptionPackage>
+      <Product>
+        <DisplayName>WinCC Advanced</DisplayName>
+        <DisplayVersion>V15.1</DisplayVersion>
+      </Product>
+      <OptionPackage>
+        <DisplayName>SIMATIC Visualization Architect</DisplayName>
+        <DisplayVersion>V15.1</DisplayVersion>
+      </OptionPackage>
+    </InstalledProducts>
+  </DocumentInfo>
+  <SW.Blocks.FB ID="0">
+    <AttributeList>
+      <Interface><Sections xmlns="http://www.siemens.com/automation/Openness/SW/Interface/v3">
+  <Section Name="Input">
+    <Member Name="OFF_SQ" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">关闭顺控器</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="INIT_SQ" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">将顺序设置为初始状态</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="ACK_EF" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">确认所有的错误和故障</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="S_PREV" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">在S_NO输出参数中显示前导步</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="S_NEXT" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">在S_NO输出参数中显示后续步。</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="SW_AUTO" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">自动模式</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="SW_TAP" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">半自动/转换条件切换</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="SW_TOP" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">半自动/忽略转换条件</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="SW_MAN" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">手动模式</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="S_SEL" Datatype="Int">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">选择要在 S_NO中输出的步。</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">0</StartValue>
+    </Member>
+    <Member Name="S_ON" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">激活S_NO 中显示的步。</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="S_OFF" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">取消激活 S_NO 中标识的步</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="T_PUSH" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">允许在半自动模式下跳过转换条件。</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+  </Section>
+  <Section Name="Output">
+    <Member Name="S_NO" Datatype="Int">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">步编号</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">0</StartValue>
+    </Member>
+    <Member Name="S_MORE" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">更多步可用，并可在S_NO中显示。</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="S_ACTIVE" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">在S_NO 中显示的步是激活的。</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="ERR_FLT" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">互锁条件或监控条件组出错</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="AUTO_ON" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">当前为自动模式</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="TAP_ON" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">已启用SW_TAP模式。</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="TOP_ON" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">启用半自动模式/忽略转换条件。</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+    <Member Name="MAN_ON" Datatype="Bool">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">已启用手动模式。</MultiLanguageText>
+      </Comment>
+      <StartValue Informative="true">false</StartValue>
+    </Member>
+  </Section>
+  <Section Name="InOut" />
+  <Section Name="Static">
+    <Member Name="Trans1" Datatype="GraphTransition" Version="1.0">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">转换结构</MultiLanguageText>
+      </Comment>
+      <Sections>
+        <Section Name="None">
+          <Member Name="TNO" Datatype="Int">
+            <StartValue Informative="true">1</StartValue>
+          </Member>
+        </Section>
+      </Sections>
+    </Member>
+    <Member Name="Trans2" Datatype="GraphTransition" Version="1.0">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">转换结构</MultiLanguageText>
+      </Comment>
+      <Sections>
+        <Section Name="None">
+          <Member Name="TNO" Datatype="Int">
+            <StartValue Informative="true">2</StartValue>
+          </Member>
+        </Section>
+      </Sections>
+    </Member>
+    <Member Name="Trans3" Datatype="GraphTransition" Version="1.0">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">转换结构</MultiLanguageText>
+      </Comment>
+      <Sections>
+        <Section Name="None">
+          <Member Name="TNO" Datatype="Int">
+            <StartValue Informative="true">3</StartValue>
+          </Member>
+        </Section>
+      </Sections>
+    </Member>
+    <Member Name="Trans4" Datatype="GraphTransition" Version="1.0">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">转换结构</MultiLanguageText>
+      </Comment>
+      <Sections>
+        <Section Name="None">
+          <Member Name="TNO" Datatype="Int">
+            <StartValue Informative="true">4</StartValue>
+          </Member>
+        </Section>
+      </Sections>
+    </Member>
+    <Member Name="Trans5" Datatype="GraphTransition" Version="1.0">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">转换结构</MultiLanguageText>
+      </Comment>
+      <Sections>
+        <Section Name="None">
+          <Member Name="TNO" Datatype="Int">
+            <StartValue Informative="true">5</StartValue>
+          </Member>
+        </Section>
+      </Sections>
+    </Member>
+    <Member Name="S" Datatype="GraphStep" Version="1.0">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">步结构</MultiLanguageText>
+      </Comment>
+      <Sections>
+        <Section Name="None">
+          <Member Name="SNO" Datatype="Int">
+            <StartValue Informative="true">1</StartValue>
+          </Member>
+        </Section>
+      </Sections>
+    </Member>
+    <Member Name="Step2" Datatype="GraphStep" Version="1.0">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">步结构</MultiLanguageText>
+      </Comment>
+      <Sections>
+        <Section Name="None">
+          <Member Name="SNO" Datatype="Int">
+            <StartValue Informative="true">2</StartValue>
+          </Member>
+        </Section>
+      </Sections>
+    </Member>
+    <Member Name="Step3" Datatype="GraphStep" Version="1.0">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">步结构</MultiLanguageText>
+      </Comment>
+      <Sections>
+        <Section Name="None">
+          <Member Name="SNO" Datatype="Int">
+            <StartValue Informative="true">3</StartValue>
+          </Member>
+        </Section>
+      </Sections>
+    </Member>
+    <Member Name="Step4" Datatype="GraphStep" Version="1.0">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">步结构</MultiLanguageText>
+      </Comment>
+      <Sections>
+        <Section Name="None">
+          <Member Name="SNO" Datatype="Int">
+            <StartValue Informative="true">4</StartValue>
+          </Member>
+        </Section>
+      </Sections>
+    </Member>
+    <Member Name="Step5" Datatype="GraphStep" Version="1.0">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">步结构</MultiLanguageText>
+      </Comment>
+      <Sections>
+        <Section Name="None">
+          <Member Name="SNO" Datatype="Int">
+            <StartValue Informative="true">5</StartValue>
+          </Member>
+        </Section>
+      </Sections>
+    </Member>
+    <Member Name="S_DISPLAY" Datatype="Int">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">输出参数 S_NO 的内部显示</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="S_SEL_OLD" Datatype="Int">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">S_SEL 中的上一个值</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="S_DISPIDX" Datatype="Byte">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">S_NO 中步的索引</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="T_DISPIDX" Datatype="Byte">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">T_NO中转换条件的索引。</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="MOP" Datatype="Struct">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">模式</MultiLanguageText>
+      </Comment>
+      <Member Name="AUTO" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：自动模式</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">true</StartValue>
+      </Member>
+      <Member Name="MAN" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：手动模式</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="TAP" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：半自动模式/手动切换</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="TOP" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：半自动模式/忽略转换条件</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="ACK_S" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">请求：确认在参数S_NO 中显示的步。</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="REG_S" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">请求：记录 S_NO 中标识的步</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="T_PREV" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">请求：输出 T_NO 中上一个有效的转换条件</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="T_NEXT" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">请求：输出 T_NO 中下一个有效的转换条件</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="LOCK" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：激活互锁条件</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">true</StartValue>
+      </Member>
+      <Member Name="SUP" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：激活监控条件</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">true</StartValue>
+      </Member>
+      <Member Name="ACKREQ" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：需要进行确认</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">true</StartValue>
+      </Member>
+      <Member Name="SSKIP" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：启用“忽略步”</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="OFF" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">请求：取消激活所有步</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="INIT" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">请求：将顺控器置位为初始状态</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">true</StartValue>
+      </Member>
+      <Member Name="HALT" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：顺控器已停止</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="TMS_HALT" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：暂停所有内部定时器</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="OPS_ZERO" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：将所有由 N、L 和 D 处理的操作数设置为 0</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="SACT_DISP" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：仅显示活动步</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">true</StartValue>
+      </Member>
+      <Member Name="SEF_DISP" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：仅显示有错误的步和被中断的步。</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="SALL_DISP" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：显示所有步</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="S_PREV" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">请求：在参数 S_NO 中输出前导步。</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="S_NEXT" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">请求：显示 S_NO 中的下一步 (NEXT_STEP)</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="S_SELOK" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">请求：从 SE_SEL 在 S_NO 处输出步编号</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="S_ON" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">请求：激活 S_NO 中标识的步</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="S_OFF" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">请求：取消激活 S_NO 中标识的步</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="T_PUSH" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">请求：启用转换条件进行切换</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="REG" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">请求：记录所有互锁条件和监控错误</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="ACK" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">请求：确认所有互锁条件和监控错误</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="IL_PERM" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：总是处理所有互锁条件</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="T_PERM" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态： 总是处理所有转化条件</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="ILP_MAN" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">状态：手动模式下总是处理所有互锁条件</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+    </Member>
+    <Member Name="TICKS" Datatype="Struct">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">时钟速度</MultiLanguageText>
+      </Comment>
+      <Member Name="DELTA" Datatype="Time">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">循环间的时差</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">T#0ms</StartValue>
+      </Member>
+      <Member Name="OLD" Datatype="Time">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">上一次循环中的 10 ms 时钟计数值</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">T#0ms</StartValue>
+      </Member>
+      <Member Name="NEW" Datatype="Time">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">循环中时钟计数值为 10 ms</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">T#0ms</StartValue>
+      </Member>
+    </Member>
+    <Member Name="SQ_FLAGS" Datatype="Struct">
+      <Comment Informative="true">
+        <MultiLanguageText Lang="zh-CN">顺序位存储器</MultiLanguageText>
+      </Comment>
+      <Member Name="ERR_FLT" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">互锁条件和监控条件组出错</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="ERROR" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">互锁条件组错误</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="FAULT" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">监视组错误</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="RT_FAIL" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">运行错误</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="NO_SNO" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">未找到所请求的步号</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="NF_OFL" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">溢出：ON 或 OFF 请求过多</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="SA_OFL" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">溢出：活动步过多。</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="TV_OFL" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">溢出：有效的转换条件过多</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="MSG_OFL" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">溢出：对于 ALARM_S 没有足够的系统资源</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="NO_SWI" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">在此循环中请勿切换</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="CYC_OP" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">初始化之后，循环顺序执行</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="AS_MSG" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">通过指令激活或取消激活运行期间报警。</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">true</StartValue>
+      </Member>
+      <Member Name="AS_SEND" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">通过 WR_USMSG 发送报警或仅显示诊断缓冲区中。</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="SQ_BUSY" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">用于顺序处理的内部边沿存储位。</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="SA_BUSY" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">用于顺序处理的内部边沿存储位。</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+      <Member Name="AS_SIG" Datatype="Bool">
+        <Comment Informative="true">
+          <MultiLanguageText Lang="zh-CN">用于处理 Alarm_S 和 Alarm_SQ 报警的边沿存储位。</MultiLanguageText>
+        </Comment>
+        <StartValue Informative="true">false</StartValue>
+      </Member>
+    </Member>
+  </Section>
+  <Section Name="Temp" />
+  <Section Name="Constant" />
+</Sections></Interface>
+      <Name>练习_graph</Name>
+      <Number>2</Number>
+      <ProgrammingLanguage>GRAPH</ProgrammingLanguage>
+    </AttributeList>
+    <ObjectList>
+      <MultilingualText ID="1" CompositionName="Comment">
+        <ObjectList>
+          <MultilingualTextItem ID="2" CompositionName="Items">
+            <AttributeList>
+              <Culture>zh-CN</Culture>
+              <Text />
+            </AttributeList>
+          </MultilingualTextItem>
+        </ObjectList>
+      </MultilingualText>
+      <SW.Blocks.CompileUnit ID="3" CompositionName="CompileUnits">
+        <AttributeList>
+          <NetworkSource><Graph xmlns="http://www.siemens.com/automation/Openness/SW/NetworkSource/Graph/v4">
+  <PreOperations>
+    <PermanentOperation ProgrammingLanguage="LAD" />
+  </PreOperations>
+  <Sequence>
+    <Title />
+    <Comment>
+      <MultiLanguageText Lang="zh-CN" />
+    </Comment>
+    <Steps>
+      <Step Number="1" Init="true" Name="S">
+        <Actions>
+          <Action />
+        </Actions>
+        <Supervisions>
+          <Supervision ProgrammingLanguage="LAD">
+            <FlgNet>
+              <Parts>
+                <Part Name="SvCoil" UId="21" />
+              </Parts>
+              <Wires>
+                <Wire UId="22">
+                  <Powerrail />
+                  <NameCon UId="21" Name="in" />
+                </Wire>
+              </Wires>
+            </FlgNet>
+          </Supervision>
+        </Supervisions>
+        <Interlocks>
+          <Interlock ProgrammingLanguage="LAD">
+            <FlgNet>
+              <Parts>
+                <Part Name="IlCoil" UId="21" />
+              </Parts>
+              <Wires>
+                <Wire UId="22">
+                  <Powerrail />
+                  <NameCon UId="21" Name="in" />
+                </Wire>
+              </Wires>
+            </FlgNet>
+          </Interlock>
+        </Interlocks>
+      </Step>
+      <Step Number="2" Init="false" Name="Step2">
+        <Actions>
+          <Action Qualifier="N">
+            <Token Text="&quot;h1&quot;" />
+            <Token Text="&#xA;" />
+          </Action>
+          <Action Qualifier="D">
+            <Token Text="&quot;节拍超时1&quot;" />
+            <Token Text="," />
+            <Token Text=" " />
+            <Token Text="5000" />
+            <Token Text="&#xA;" />
+          </Action>
+          <Action />
+        </Actions>
+        <Supervisions>
+          <Supervision ProgrammingLanguage="LAD">
+            <FlgNet>
+              <Parts>
+                <Part Name="SvCoil" UId="21" />
+              </Parts>
+              <Wires>
+                <Wire UId="22">
+                  <Powerrail />
+                  <NameCon UId="21" Name="in" />
+                </Wire>
+              </Wires>
+            </FlgNet>
+          </Supervision>
+        </Supervisions>
+        <Interlocks>
+          <Interlock ProgrammingLanguage="LAD">
+            <FlgNet>
+              <Parts>
+                <Part Name="IlCoil" UId="21" />
+              </Parts>
+              <Wires>
+                <Wire UId="22">
+                  <Powerrail />
+                  <NameCon UId="21" Name="in" />
+                </Wire>
+              </Wires>
+            </FlgNet>
+          </Interlock>
+        </Interlocks>
+      </Step>
+      <Step Number="3" Init="false" Name="Step3">
+        <Actions>
+          <Action Qualifier="N">
+            <Token Text="&quot;h2&quot;" />
+            <Token Text="&#xA;" />
+          </Action>
+          <Action Qualifier="D">
+            <Token Text="&quot;节拍超时2&quot;" />
+            <Token Text="," />
+            <Token Text="5000" />
+            <Token Text="&#xA;" />
+          </Action>
+          <Action />
+        </Actions>
+        <Supervisions>
+          <Supervision ProgrammingLanguage="LAD">
+            <FlgNet>
+              <Parts>
+                <Part Name="SvCoil" UId="21" />
+              </Parts>
+              <Wires>
+                <Wire UId="22">
+                  <Powerrail />
+                  <NameCon UId="21" Name="in" />
+                </Wire>
+              </Wires>
+            </FlgNet>
+          </Supervision>
+        </Supervisions>
+        <Interlocks>
+          <Interlock ProgrammingLanguage="LAD">
+            <FlgNet>
+              <Parts>
+                <Part Name="IlCoil" UId="21" />
+              </Parts>
+              <Wires>
+                <Wire UId="22">
+                  <Powerrail />
+                  <NameCon UId="21" Name="in" />
+                </Wire>
+              </Wires>
+            </FlgNet>
+          </Interlock>
+        </Interlocks>
+      </Step>
+      <Step Number="4" Init="false" Name="Step4">
+        <Actions>
+          <Action Qualifier="N">
+            <Token Text="&quot;h3&quot;" />
+            <Token Text="&#xA;" />
+          </Action>
+          <Action Qualifier="D">
+            <Token Text="&quot;节拍超时3&quot;" />
+            <Token Text="," />
+            <Token Text="5000" />
+            <Token Text="&#xA;" />
+          </Action>
+          <Action />
+        </Actions>
+        <Supervisions>
+          <Supervision ProgrammingLanguage="LAD">
+            <FlgNet>
+              <Parts>
+                <Part Name="SvCoil" UId="21" />
+              </Parts>
+              <Wires>
+                <Wire UId="22">
+                  <Powerrail />
+                  <NameCon UId="21" Name="in" />
+                </Wire>
+              </Wires>
+            </FlgNet>
+          </Supervision>
+        </Supervisions>
+        <Interlocks>
+          <Interlock ProgrammingLanguage="LAD">
+            <FlgNet>
+              <Parts>
+                <Part Name="IlCoil" UId="21" />
+              </Parts>
+              <Wires>
+                <Wire UId="22">
+                  <Powerrail />
+                  <NameCon UId="21" Name="in" />
+                </Wire>
+              </Wires>
+            </FlgNet>
+          </Interlock>
+        </Interlocks>
+      </Step>
+      <Step Number="5" Init="false" Name="Step5">
+        <Actions>
+          <Action Qualifier="D">
+            <Token Text="&quot;节拍超时4&quot;" />
+            <Token Text="," />
+            <Token Text="5000" />
+            <Token Text="&#xA;" />
+          </Action>
+          <Action Qualifier="N">
+            <Token Text="&quot;h4&quot;" />
+            <Token Text="&#xA;" />
+          </Action>
+          <Action />
+        </Actions>
+        <Supervisions>
+          <Supervision ProgrammingLanguage="LAD">
+            <FlgNet>
+              <Parts>
+                <Part Name="SvCoil" UId="21" />
+              </Parts>
+              <Wires>
+                <Wire UId="22">
+                  <Powerrail />
+                  <NameCon UId="21" Name="in" />
+                </Wire>
+              </Wires>
+            </FlgNet>
+          </Supervision>
+        </Supervisions>
+        <Interlocks>
+          <Interlock ProgrammingLanguage="LAD">
+            <FlgNet>
+              <Parts>
+                <Part Name="IlCoil" UId="21" />
+              </Parts>
+              <Wires>
+                <Wire UId="22">
+                  <Powerrail />
+                  <NameCon UId="21" Name="in" />
+                </Wire>
+              </Wires>
+            </FlgNet>
+          </Interlock>
+        </Interlocks>
+      </Step>
+    </Steps>
+    <Transitions>
+      <Transition IsMissing="false" Name="Trans1" Number="1" ProgrammingLanguage="LAD">
+        <FlgNet>
+          <Parts>
+            <Access Scope="GlobalVariable" UId="21">
+              <Symbol>
+                <Component Name="自动模式" />
+              </Symbol>
+            </Access>
+            <Part Name="Contact" UId="22" />
+            <Part Name="TrCoil" UId="23" />
+          </Parts>
+          <Wires>
+            <Wire UId="24">
+              <Powerrail />
+              <NameCon UId="22" Name="in" />
+            </Wire>
+            <Wire UId="25">
+              <IdentCon UId="21" />
+              <NameCon UId="22" Name="operand" />
+            </Wire>
+            <Wire UId="26">
+              <NameCon UId="22" Name="out" />
+              <NameCon UId="23" Name="in" />
+            </Wire>
+          </Wires>
+        </FlgNet>
+      </Transition>
+      <Transition IsMissing="false" Name="Trans2" Number="2" ProgrammingLanguage="LAD">
+        <FlgNet>
+          <Parts>
+            <Access Scope="GlobalVariable" UId="21">
+              <Symbol>
+                <Component Name="节拍超时1" />
+              </Symbol>
+            </Access>
+            <Part Name="Contact" UId="22" />
+            <Part Name="TrCoil" UId="23" />
+          </Parts>
+          <Wires>
+            <Wire UId="24">
+              <Powerrail />
+              <NameCon UId="22" Name="in" />
+            </Wire>
+            <Wire UId="25">
+              <IdentCon UId="21" />
+              <NameCon UId="22" Name="operand" />
+            </Wire>
+            <Wire UId="26">
+              <NameCon UId="22" Name="out" />
+              <NameCon UId="23" Name="in" />
+            </Wire>
+          </Wires>
+        </FlgNet>
+      </Transition>
+      <Transition IsMissing="false" Name="Trans3" Number="3" ProgrammingLanguage="LAD">
+        <FlgNet>
+          <Parts>
+            <Access Scope="GlobalVariable" UId="21">
+              <Symbol>
+                <Component Name="节拍超时2" />
+              </Symbol>
+            </Access>
+            <Part Name="Contact" UId="22" />
+            <Part Name="TrCoil" UId="23" />
+          </Parts>
+          <Wires>
+            <Wire UId="24">
+              <Powerrail />
+              <NameCon UId="22" Name="in" />
+            </Wire>
+            <Wire UId="25">
+              <IdentCon UId="21" />
+              <NameCon UId="22" Name="operand" />
+            </Wire>
+            <Wire UId="26">
+              <NameCon UId="22" Name="out" />
+              <NameCon UId="23" Name="in" />
+            </Wire>
+          </Wires>
+        </FlgNet>
+      </Transition>
+      <Transition IsMissing="false" Name="Trans4" Number="4" ProgrammingLanguage="LAD">
+        <FlgNet>
+          <Parts>
+            <Access Scope="GlobalVariable" UId="21">
+              <Symbol>
+                <Component Name="节拍超时3" />
+              </Symbol>
+            </Access>
+            <Part Name="Contact" UId="22" />
+            <Part Name="TrCoil" UId="23" />
+          </Parts>
+          <Wires>
+            <Wire UId="24">
+              <Powerrail />
+              <NameCon UId="22" Name="in" />
+            </Wire>
+            <Wire UId="25">
+              <IdentCon UId="21" />
+              <NameCon UId="22" Name="operand" />
+            </Wire>
+            <Wire UId="26">
+              <NameCon UId="22" Name="out" />
+              <NameCon UId="23" Name="in" />
+            </Wire>
+          </Wires>
+        </FlgNet>
+      </Transition>
+      <Transition IsMissing="false" Name="Trans5" Number="5" ProgrammingLanguage="LAD">
+        <FlgNet>
+          <Parts>
+            <Access Scope="GlobalVariable" UId="21">
+              <Symbol>
+                <Component Name="节拍超时4" />
+              </Symbol>
+            </Access>
+            <Part Name="Contact" UId="22" />
+            <Part Name="TrCoil" UId="23" />
+          </Parts>
+          <Wires>
+            <Wire UId="24">
+              <Powerrail />
+              <NameCon UId="22" Name="in" />
+            </Wire>
+            <Wire UId="25">
+              <IdentCon UId="21" />
+              <NameCon UId="22" Name="operand" />
+            </Wire>
+            <Wire UId="26">
+              <NameCon UId="22" Name="out" />
+              <NameCon UId="23" Name="in" />
+            </Wire>
+          </Wires>
+        </FlgNet>
+      </Transition>
+    </Transitions>
+    <Branches />
+    <Connections>
+      <Connection>
+        <NodeFrom>
+          <StepRef Number="1" />
+        </NodeFrom>
+        <NodeTo>
+          <TransitionRef Number="1" />
+        </NodeTo>
+        <LinkType>Direct</LinkType>
+      </Connection>
+      <Connection>
+        <NodeFrom>
+          <StepRef Number="2" />
+        </NodeFrom>
+        <NodeTo>
+          <TransitionRef Number="2" />
+        </NodeTo>
+        <LinkType>Direct</LinkType>
+      </Connection>
+      <Connection>
+        <NodeFrom>
+          <TransitionRef Number="1" />
+        </NodeFrom>
+        <NodeTo>
+          <StepRef Number="2" />
+        </NodeTo>
+        <LinkType>Direct</LinkType>
+      </Connection>
+      <Connection>
+        <NodeFrom>
+          <StepRef Number="3" />
+        </NodeFrom>
+        <NodeTo>
+          <TransitionRef Number="3" />
+        </NodeTo>
+        <LinkType>Direct</LinkType>
+      </Connection>
+      <Connection>
+        <NodeFrom>
+          <TransitionRef Number="2" />
+        </NodeFrom>
+        <NodeTo>
+          <StepRef Number="3" />
+        </NodeTo>
+        <LinkType>Direct</LinkType>
+      </Connection>
+      <Connection>
+        <NodeFrom>
+          <StepRef Number="4" />
+        </NodeFrom>
+        <NodeTo>
+          <TransitionRef Number="4" />
+        </NodeTo>
+        <LinkType>Direct</LinkType>
+      </Connection>
+      <Connection>
+        <NodeFrom>
+          <TransitionRef Number="3" />
+        </NodeFrom>
+        <NodeTo>
+          <StepRef Number="4" />
+        </NodeTo>
+        <LinkType>Direct</LinkType>
+      </Connection>
+      <Connection>
+        <NodeFrom>
+          <StepRef Number="5" />
+        </NodeFrom>
+        <NodeTo>
+          <TransitionRef Number="5" />
+        </NodeTo>
+        <LinkType>Direct</LinkType>
+      </Connection>
+      <Connection>
+        <NodeFrom>
+          <TransitionRef Number="4" />
+        </NodeFrom>
+        <NodeTo>
+          <StepRef Number="5" />
+        </NodeTo>
+        <LinkType>Direct</LinkType>
+      </Connection>
+      <Connection>
+        <NodeFrom>
+          <TransitionRef Number="5" />
+        </NodeFrom>
+        <NodeTo>
+          <StepRef Number="1" />
+        </NodeTo>
+        <LinkType>Jump</LinkType>
+      </Connection>
+    </Connections>
+  </Sequence>
+  <PostOperations>
+    <PermanentOperation ProgrammingLanguage="LAD" />
+  </PostOperations>
+  <AlarmsSettings>
+    <AlarmSupervisionCategories>
+      <AlarmSupervisionCategory Id="1" DisplayClass="0" />
+      <AlarmSupervisionCategory Id="2" DisplayClass="0" />
+      <AlarmSupervisionCategory Id="3" DisplayClass="0" />
+      <AlarmSupervisionCategory Id="4" DisplayClass="0" />
+      <AlarmSupervisionCategory Id="5" DisplayClass="0" />
+      <AlarmSupervisionCategory Id="6" DisplayClass="0" />
+      <AlarmSupervisionCategory Id="7" DisplayClass="0" />
+      <AlarmSupervisionCategory Id="8" DisplayClass="0" />
+    </AlarmSupervisionCategories>
+    <AlarmInterlockCategory Id="1" />
+    <AlarmSubcategory1Interlock Id="0" />
+    <AlarmSubcategory2Interlock Id="0" />
+    <AlarmCategorySupervision Id="1" />
+    <AlarmSubcategory1Supervision Id="0" />
+    <AlarmSubcategory2Supervision Id="0" />
+    <AlarmWarningCategory Id="0" />
+    <AlarmSubcategory1Warning Id="0" />
+    <AlarmSubcategory2Warning Id="0" />
+  </AlarmsSettings>
+</Graph></NetworkSource>
+          <ProgrammingLanguage>GRAPH</ProgrammingLanguage>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="4" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="5" CompositionName="Items">
+                <AttributeList>
+                  <Culture>zh-CN</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+          <MultilingualText ID="6" CompositionName="Title">
+            <ObjectList>
+              <MultilingualTextItem ID="7" CompositionName="Items">
+                <AttributeList>
+                  <Culture>zh-CN</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Blocks.CompileUnit>
+      <MultilingualText ID="8" CompositionName="Title">
+        <ObjectList>
+          <MultilingualTextItem ID="9" CompositionName="Items">
+            <AttributeList>
+              <Culture>zh-CN</Culture>
+              <Text />
+            </AttributeList>
+          </MultilingualTextItem>
+        </ObjectList>
+      </MultilingualText>
+    </ObjectList>
+  </SW.Blocks.FB>
+</Document>

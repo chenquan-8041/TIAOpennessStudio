@@ -1,0 +1,38 @@
+<UserControl x:Class="TIAOpennessStudio.Controls.PreferencesCardControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20" Width="600" HorizontalAlignment="Left">
+
+            <!-- TIA Openness Whitelist Card -->
+            <Border Style="{DynamicResource CardBorderStyle}" Margin="0,0,0,15" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="TIA Openness Whitelist" FontSize="{StaticResource FontSizeXxl}" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" Margin="0,0,0,15"/>
+
+                    <TextBlock FontSize="{StaticResource FontSizeSm}" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,10" TextWrapping="Wrap"
+                               Text="Register this application in the Siemens TIA Portal Openness whitelist so it can attach to TIA Portal. Requires Administrator privileges."/>
+
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="TIA Portal Version" FontSize="{StaticResource FontSizeMd}" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,5"/>
+                        <ComboBox x:Name="cmbTiaVersion" Width="200" HorizontalAlignment="Left" IsEditable="True"/>
+                    </StackPanel>
+
+                    <TextBlock x:Name="txtNoTiaDetected" FontSize="{StaticResource FontSizeSm}" Foreground="{DynamicResource MutedTextBrush}"
+                               Margin="0,0,0,10" TextWrapping="Wrap" Visibility="Collapsed"
+                               Text="No installed TIA Portal version detected in the registry. You can type a version manually (e.g. 18.0)."/>
+
+                    <TextBlock x:Name="txtWhitelistAdminWarning" FontSize="{StaticResource FontSizeSm}" Foreground="{DynamicResource WarningBrush}"
+                               Margin="0,0,0,10" TextWrapping="Wrap" Visibility="Collapsed"
+                               Text="Administrator privileges are required. Please restart the application as Administrator."/>
+
+                    <Button x:Name="btnRegisterWhitelist" Content="Register in Whitelist" Width="160" Height="30"
+                            HorizontalAlignment="Left" Click="OnRegisterWhitelist"/>
+
+                    <TextBlock x:Name="txtWhitelistResult" FontSize="{StaticResource FontSizeSm}" Foreground="{DynamicResource MutedTextBrush}"
+                               Margin="0,10,0,0" TextWrapping="Wrap" Visibility="Collapsed"/>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

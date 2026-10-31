@@ -1,0 +1,232 @@
+<UserControl x:Class="TIAOpennessStudio.Controls.DependencyAnalysisControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:TIAOpennessStudio.ViewModels"
+             xmlns:dep="clr-namespace:TIAOpennessStudio.Models.Dependency"
+             xmlns:helpers="clr-namespace:TIAOpennessStudio.Helpers"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:DependencyAnalysisViewModel}"
+             d:DesignHeight="500" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <helpers:BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <!-- Call chain node template -->
+        <HierarchicalDataTemplate DataType="{x:Type dep:CallChainNode}"
+                                  ItemsSource="{Binding Children}">
+            <StackPanel Orientation="Horizontal" Margin="2">
+                <TextBlock Text="{Binding BlockName}" FontWeight="SemiBold" />
+                <TextBlock Text=" [" Foreground="{DynamicResource MutedTextBrush}" />
+                <TextBlock Text="{Binding BlockType}" Foreground="{DynamicResource GridAccentTextBrush}" />
+                <TextBlock Text="] " Foreground="{DynamicResource MutedTextBrush}" />
+                <TextBlock Text="net:" Foreground="{DynamicResource InputHintBrush}" FontSize="{StaticResource FontSizeSm}" />
+                <TextBlock Text="{Binding NetworkIndex}" Foreground="{DynamicResource InputHintBrush}" FontSize="{StaticResource FontSizeSm}" />
+                <TextBlock Text=" d:" Foreground="{DynamicResource InputHintBrush}" FontSize="{StaticResource FontSizeSm}" />
+                <TextBlock Text="{Binding Depth}" Foreground="{DynamicResource InputHintBrush}" FontSize="{StaticResource FontSizeSm}" />
+            </StackPanel>
+        </HierarchicalDataTemplate>
+
+        <!-- Variable impact node template -->
+        <DataTemplate DataType="{x:Type dep:VariableImpactNode}">
+            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="4,2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" MinWidth="130" />
+                        <ColumnDefinition Width="Auto" MinWidth="55" />
+                        <ColumnDefinition Width="Auto" MinWidth="55" />
+                        <ColumnDefinition Width="Auto" MinWidth="65" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="{Binding BlockName}" FontWeight="SemiBold" />
+                    <TextBlock Grid.Column="1" Text="{Binding BlockType}" Foreground="{DynamicResource GridAccentTextBrush}" />
+                    <TextBlock Grid.Column="2" Text="{Binding AccessKind}" FontWeight="SemiBold">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding AccessKind}" Value="Write">
+                                        <Setter Property="Foreground" Value="{DynamicResource ThoughtWarningBrush}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding AccessKind}" Value="Read">
+                                        <Setter Property="Foreground" Value="{DynamicResource GridAccentTextBrush}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding AccessKind}" Value="Caller">
+                                        <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding AccessKind}" Value="Callee">
+                                        <Setter Property="Foreground" Value="{DynamicResource ThoughtCreativeBrush}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <TextBlock Grid.Column="3" Foreground="{DynamicResource MutedTextBrush}" FontSize="{StaticResource FontSizeSm}">
+                        <Run Text="net:" /><Run Text="{Binding NetworkIndex, Mode=OneWay}" />
+                        <Run Text=" d:" /><Run Text="{Binding Depth, Mode=OneWay}" />
+                    </TextBlock>
+                    <TextBlock Grid.Column="4" Foreground="{DynamicResource InputHintBrush}" FontSize="{StaticResource FontSizeSm}" TextTrimming="CharacterEllipsis"
+                               Text="{Binding CanonicalPath, Mode=OneWay}" />
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Row 0: Query Input -->
+        <Border Grid.Row="0" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8" Margin="0,0,0,8">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Block name input -->
+                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,0,0,4">
+                    <TextBlock Text="Block:" VerticalAlignment="Center" Width="50" />
+                    <TextBox Text="{Binding BlockName, UpdateSourceTrigger=PropertyChanged}"
+                             Width="200" Height="24" VerticalContentAlignment="Center"
+                             ToolTip="Block name (e.g. FB_Main)" />
+                    <Button Command="{Binding AnalyzeCallChainCommand}"
+                            Content="Call Chain" Height="24" Margin="8,0,0,0" Padding="12,0" />
+                </StackPanel>
+
+                <!-- Variable path input -->
+                <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock Text="Variable:" VerticalAlignment="Center" Width="50" />
+                    <TextBox Text="{Binding VariablePath, UpdateSourceTrigger=PropertyChanged}"
+                             Width="280" Height="24" VerticalContentAlignment="Center"
+                             ToolTip="Variable path (e.g. DB_Main.Motor.Speed)" />
+                    <Button Command="{Binding AnalyzeVariableCommand}"
+                            Content="Impact" Height="24" Margin="8,0,0,0" Padding="12,0" />
+                </StackPanel>
+
+                <!-- Options -->
+                <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                        <TextBlock Text="Depth:" VerticalAlignment="Center" Width="42" FontSize="{StaticResource FontSizeSm}" />
+                        <TextBox Text="{Binding MaxDepth, UpdateSourceTrigger=PropertyChanged}"
+                                 Width="36" Height="20" FontSize="{StaticResource FontSizeSm}" VerticalContentAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                        <CheckBox IsChecked="{Binding IncludeCallers}" Content="Callers" FontSize="{StaticResource FontSizeSm}"
+                                  VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <CheckBox IsChecked="{Binding IncludeCallees}" Content="Callees" FontSize="{StaticResource FontSizeSm}"
+                                  VerticalAlignment="Center" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Row 1: Summary bar -->
+        <Border Grid.Row="1" Background="{DynamicResource GridHeaderBrush}" Padding="6,3" Margin="0,0,0,4"
+                Visibility="{Binding HasResults, Converter={StaticResource BoolToVis}}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="{StaticResource FontSizeSm}">
+                    <Run Text="Nodes: " /><Run Text="{Binding TotalNodes, Mode=OneWay}" FontWeight="Bold" />
+                    <Run Text="  Depth: " /><Run Text="{Binding MaxDepthReached, Mode=OneWay}" FontWeight="Bold" />
+                    <Run Text="  Truncated: " /><Run Text="{Binding WasTruncated, Mode=OneWay}" FontWeight="Bold" />
+                </TextBlock>
+                <TextBlock FontSize="{StaticResource FontSizeSm}" Foreground="{DynamicResource MutedTextBrush}" Margin="16,0,0,0"
+                           Text="{Binding ResultNote, Mode=OneWay}" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+        </Border>
+
+        <!-- Row 2: Results -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Call chain callees -->
+            <Border Grid.Column="0" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="4" Margin="0,0,4,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Callees ▼" FontWeight="Bold"
+                               Background="{DynamicResource GridHeaderBrush}" Padding="6,3" FontSize="{StaticResource FontSizeMd}" />
+                    <TreeView Grid.Row="1" x:Name="treeCallChain"
+                              ItemsSource="{Binding CallChainCallees}"
+                              BorderThickness="0" Margin="4">
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="TreeViewItem">
+                                <Setter Property="IsExpanded" Value="True" />
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                    </TreeView>
+                </Grid>
+            </Border>
+
+            <!-- Right side: Callers + Impact -->
+            <Grid Grid.Column="1" Margin="4,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Call chain callers -->
+                <Border Grid.Row="0" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="4" Margin="0,0,0,4">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Callers ▲" FontWeight="Bold"
+                                   Background="{DynamicResource GridHeaderBrush}" Padding="6,3" FontSize="{StaticResource FontSizeMd}" />
+                        <TreeView Grid.Row="1" x:Name="treeCallers"
+                                  ItemsSource="{Binding CallChainCallers}"
+                                  BorderThickness="0" Margin="4" MaxHeight="160">
+                            <TreeView.ItemContainerStyle>
+                                <Style TargetType="TreeViewItem">
+                                    <Setter Property="IsExpanded" Value="True" />
+                                </Style>
+                            </TreeView.ItemContainerStyle>
+                        </TreeView>
+                    </Grid>
+                </Border>
+
+                <!-- Variable impact -->
+                <Border Grid.Row="2" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="4">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Variable Impact" FontWeight="Bold"
+                                   Background="{DynamicResource GridHeaderBrush}" Padding="6,3" FontSize="{StaticResource FontSizeMd}" />
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding ImpactNodes}" Margin="4" />
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Row 3: Status bar -->
+        <Border Grid.Row="3" Background="{DynamicResource GridHeaderBrush}" Padding="6,3" Margin="0,6,0,0">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding StatusText, Mode=OneWay}" FontSize="{StaticResource FontSizeSm}" Foreground="{DynamicResource MutedTextBrush}"
+                           TextTrimming="CharacterEllipsis" />
+                <TextBlock Text=" (Analyzing...)" FontSize="{StaticResource FontSizeSm}" Foreground="{DynamicResource GridAccentTextBrush}"
+                           Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

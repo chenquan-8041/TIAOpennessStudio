@@ -1,0 +1,108 @@
+<UserControl x:Class="TIAOpennessStudio.Controls.McpManagementControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="120"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title Bar -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,5">
+            <TextBlock Text="MCP Servers" FontWeight="Bold" VerticalAlignment="Center" FontSize="{StaticResource FontSizeMd}" Foreground="{DynamicResource TextBrush}"/>
+            <Button Content="+" Margin="10,0,0,0" Command="{Binding AddServerCommand}" Width="28" Height="28" Padding="4,0" ToolTip="Add Server"/>
+            <Button Content="&#x270E;" Margin="4,0,0,0" Command="{Binding EditServerCommand}" Width="28" Height="28" Padding="4,0" ToolTip="Edit Server"/>
+            <Button Content="&#x2715;" Margin="4,0,0,0" Command="{Binding RemoveServerCommand}" Width="28" Height="28" Padding="4,0" ToolTip="Remove Server"/>
+            <Button Content="&#x21BB;" Margin="4,0,0,0" Command="{Binding RefreshCommand}" Width="28" Height="28" Padding="4,0" ToolTip="Refresh"/>
+        </StackPanel>
+
+        <!-- Server List -->
+        <ListBox Grid.Row="1" ItemsSource="{Binding Servers}" SelectedItem="{Binding SelectedServer}" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="8" Height="8" Margin="0,0,6,0">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Setter Property="Fill" Value="{DynamicResource NeutralBrush}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                            <Setter Property="Fill" Value="{DynamicResource SuccessBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
+                        <TextBlock Text="{Binding Url}" Foreground="{DynamicResource MutedTextBrush}" Margin="8,0,0,0" VerticalAlignment="Center" FontSize="{StaticResource FontSizeXs}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!-- Connect/Disconnect Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,5,0,5">
+            <Button Content="Connect" Command="{Binding ConnectCommand}" Width="80" Height="28" Margin="0,0,8,0"/>
+            <Button Content="Disconnect" Command="{Binding DisconnectCommand}" Width="96" Height="28"/>
+            <Button Content="Test" Command="{Binding TestToolCommand}" Width="60" Height="28" Margin="8,0,0,0"/>
+        </StackPanel>
+
+        <!-- Search Box -->
+        <Grid Grid.Row="3" Margin="0,0,0,5">
+            <TextBox x:Name="txtSearch" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" FontSize="{StaticResource FontSizeSm}" Padding="20,4,4,4"/>
+            <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="{StaticResource FontSizeMd}"
+                       Foreground="{DynamicResource MutedTextBrush}"
+                       VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0"
+                       IsHitTestVisible="False"/>
+            <TextBlock Text="Search tools..." FontSize="{StaticResource FontSizeSm}"
+                       Foreground="{DynamicResource MutedTextBrush}"
+                       VerticalAlignment="Center" Margin="22,0,0,0"
+                       IsHitTestVisible="False">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text, ElementName=txtSearch}" Value="">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+
+        <!-- Tools List -->
+        <ListBox Grid.Row="4" x:Name="lstTools" ItemsSource="{Binding Tools}" SelectedItem="{Binding SelectedTool}" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}"
+                 MouseDoubleClick="ToolsList_MouseDoubleClick">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="0,2">
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="{StaticResource FontSizeSm}" Foreground="{DynamicResource TextBrush}"/>
+                        <TextBlock Text="{Binding Description}" Foreground="{DynamicResource MutedTextBrush}" FontSize="{StaticResource FontSizeXs}" TextTrimming="CharacterEllipsis" MaxWidth="220"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!-- Status Bar -->
+        <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,5,0,0">
+            <ProgressBar IsIndeterminate="{Binding IsLoading}" Width="100" Height="16" Margin="0,0,8,0">
+                <ProgressBar.Style>
+                    <Style TargetType="ProgressBar">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ProgressBar.Style>
+            </ProgressBar>
+            <TextBlock Text="{Binding StatusMessage}" FontSize="{StaticResource FontSizeXs}" Foreground="{DynamicResource MutedTextBrush}" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,231 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Custom ComboBox theme.
+        Goals:
+        1. No reliance on SystemColors.* or ComboBox.Background corners that WPF hides by default;
+        all visuals go through {DynamicResource ...} so they follow theme switches automatically
+        2. Supports both IsEditable=false (read-only, e.g. ModelSelector) and IsEditable=true
+        (editable, e.g. the AI Config Provider selector)
+        3. Visually consistent with the project's other Button/Input styles (corner radius 4 / Padding / Hover highlight)
+    -->
+
+    <!--  ToggleButton: the dropdown arrow button on the right side of the ComboBox  -->
+    <ControlTemplate x:Key="AppComboBoxToggleButtonTemplate" TargetType="ToggleButton">
+        <Border
+            x:Name="Bd"
+            Background="{TemplateBinding Background}"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            CornerRadius="4"
+            SnapsToDevicePixels="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Path
+                    x:Name="Arrow"
+                    Grid.Column="1"
+                    Width="8"
+                    Height="6"
+                    Margin="0,0,8,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Data="M 0 0 L 4 4 L 8 0 Z"
+                    Fill="{DynamicResource TextBrush}" />
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ButtonHover}" />
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ButtonHover}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="Arrow" Property="Fill" Value="{DynamicResource SoftTextBrush}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!--  Embedded TextBox style for edit mode  -->
+    <Style x:Key="AppComboBoxEditableTextBoxStyle" TargetType="TextBox">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="AllowDrop" Value="True" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource ControlFocusVisualStyle}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource TextBrush}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource AccentBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <ScrollViewer
+                        x:Name="PART_ContentHost"
+                        Background="Transparent"
+                        Focusable="False"
+                        HorizontalScrollBarVisibility="Hidden"
+                        VerticalScrollBarVisibility="Hidden" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  Dropdown item ComboBoxItem style  -->
+    <Style x:Key="AppComboBoxItemStyle" TargetType="ComboBoxItem">
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBoxItem">
+                    <Border
+                        x:Name="Bd"
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        SnapsToDevicePixels="True">
+                        <ContentPresenter
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            SnapsToDevicePixels="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ButtonHover}" />
+                        </Trigger>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource SoftTextBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--
+        ComboBox template.
+        WPF ComboBox internal PARTs:
+        - PART_DropDownToggle (or ToggleButton): the whole control is the button (uses the ToggleButton template)
+        - PART_EditableTextBox: the input box in edit mode
+        - PART_Popup + ItemsPresenter: the dropdown list
+        Here a Grid overlays the ToggleButton (background + arrow) with the ContentPresenter / TextBox.
+    -->
+    <ControlTemplate x:Key="AppComboBoxControlTemplate" TargetType="ComboBox">
+        <Grid x:Name="MainGrid" SnapsToDevicePixels="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Whole click area: ToggleButton spans both columns, providing the background and arrow  -->
+            <ToggleButton
+                x:Name="ToggleButton"
+                Grid.ColumnSpan="2"
+                Margin="0"
+                Padding="0"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                ClickMode="Press"
+                Focusable="False"
+                IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                Template="{StaticResource AppComboBoxToggleButtonTemplate}" />
+
+            <!--  Show current selection (read-only mode)  -->
+            <ContentPresenter
+                x:Name="ContentSite"
+                Grid.Column="0"
+                Margin="{TemplateBinding Padding}"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="{TemplateBinding SelectionBoxItem}"
+                ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
+                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                IsHitTestVisible="False" />
+
+            <!--  Edit-mode TextBox (shown only when IsEditable=true)  -->
+            <TextBox
+                x:Name="PART_EditableTextBox"
+                Grid.Column="0"
+                Margin="{TemplateBinding Padding}"
+                VerticalAlignment="Center"
+                IsReadOnly="{TemplateBinding IsReadOnly}"
+                Style="{StaticResource AppComboBoxEditableTextBoxStyle}"
+                Visibility="Hidden" />
+
+            <!--  Dropdown Popup  -->
+            <Popup
+                x:Name="PART_Popup"
+                AllowsTransparency="True"
+                Focusable="False"
+                IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                Placement="Bottom"
+                PopupAnimation="Slide">
+                <Border
+                    x:Name="DropDownBorder"
+                    MinWidth="{Binding ActualWidth, ElementName=MainGrid}"
+                    MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                    Background="{DynamicResource PanelBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    SnapsToDevicePixels="True">
+                    <ScrollViewer
+                        HorizontalScrollBarVisibility="Disabled"
+                        SnapsToDevicePixels="True"
+                        VerticalScrollBarVisibility="Auto">
+                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    </ScrollViewer>
+                </Border>
+            </Popup>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsEditable" Value="True">
+                <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden" />
+                <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible" />
+            </Trigger>
+            <Trigger Property="HasItems" Value="False">
+                <Setter TargetName="DropDownBorder" Property="MinHeight" Value="80" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource SoftTextBrush}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!--  Default (implicit) ComboBox style - makes all ComboBoxes follow automatically  -->
+    <Style TargetType="ComboBox">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="8,3,28,3" />
+        <Setter Property="MinHeight" Value="26" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="Template" Value="{StaticResource AppComboBoxControlTemplate}" />
+        <Setter Property="ItemContainerStyle" Value="{StaticResource AppComboBoxItemStyle}" />
+    </Style>
+
+    <!--  Named version; use Style="{StaticResource AppComboBoxStyle}" where an explicit style is needed  -->
+    <Style
+        x:Key="AppComboBoxStyle"
+        BasedOn="{StaticResource {x:Type ComboBox}}"
+        TargetType="ComboBox" />
+
+</ResourceDictionary>

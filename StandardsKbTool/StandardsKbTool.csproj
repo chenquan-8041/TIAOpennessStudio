@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>10.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>StandardsKbTool</AssemblyName>
+    <RootNamespace>StandardsKbTool</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Management" />
+  </ItemGroup>
+
+  <!-- 复用主项目里已经写好并编译通过的加解密/导入/打包源码，保证与运行时逻辑完全一致 -->
+  <ItemGroup>
+    <Compile Include="..\TIAOpennessStudio\Services\Standards\StandardsKeyProvider.cs" Link="Standards\StandardsKeyProvider.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Standards\StandardsKnowledgeStore.cs" Link="Standards\StandardsKnowledgeStore.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Standards\StandardsPackager.cs" Link="Standards\StandardsPackager.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Standards\StandardsMarkdownImporter.cs" Link="Standards\StandardsMarkdownImporter.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Standards\StandardsPolicyInjector.cs" Link="Standards\StandardsPolicyInjector.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Standards\IStandardsSecretProvider.cs" Link="Standards\IStandardsSecretProvider.cs" />
+    <Compile Include="..\TIAOpennessStudio\Services\Standards\SecretProviders.cs" Link="Standards\SecretProviders.cs" />
+  </ItemGroup>
+
+</Project>

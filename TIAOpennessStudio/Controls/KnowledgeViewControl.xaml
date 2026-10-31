@@ -1,0 +1,92 @@
+<UserControl x:Class="TIAOpennessStudio.Controls.KnowledgeViewControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{DynamicResource CodePanelBrush}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Padding="10,8" Background="{DynamicResource SidebarBrush}" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BorderBrush}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="📚 " FontSize="{StaticResource FontSizeXl}" VerticalAlignment="Center"/>
+                <TextBlock x:Name="txtKbName" Text="Knowledge Base" FontSize="{StaticResource FontSizeXl}" FontWeight="SemiBold"
+                           Foreground="{DynamicResource WindowTitleTextBrush}" VerticalAlignment="Center"/>
+                <TextBlock x:Name="txtRuleCount" Text="" FontSize="{StaticResource FontSizeMd}" Margin="12,0,0,0"
+                           Foreground="{DynamicResource InputHintBrush}" VerticalAlignment="Center"/>
+                <TextBox x:Name="txtFilter" Width="180" Margin="16,0,0,0" VerticalAlignment="Center"
+                         VerticalContentAlignment="Center" Padding="4,2"
+                         Background="{DynamicResource InputBackgroundBrush}"
+                         Foreground="{DynamicResource TextBrush}"
+                         BorderBrush="{DynamicResource BorderBrush}"
+                         TextChanged="TxtFilter_TextChanged"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content: rule list on the left, detail on the right -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" MinWidth="260"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="3*" MinWidth="260"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Rule table -->
+            <DataGrid Grid.Column="0" x:Name="dgRules"
+                      Style="{StaticResource AppDataGridStyle}"
+                      IsReadOnly="True"
+                      SelectionMode="Single"
+                      FontSize="{StaticResource FontSizeMd}"
+                      AutoGenerateColumns="False"
+                      EnableRowVirtualization="True"
+                      VirtualizingPanel.IsVirtualizing="True"
+                      VirtualizingPanel.VirtualizationMode="Recycling"
+                      ScrollViewer.CanContentScroll="True"
+                      SelectionChanged="DgRules_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding RuleId}" Width="80"/>
+                    <DataGridTextColumn x:Name="colCategory" Header="Category" Binding="{Binding Category}" Width="90"/>
+                    <DataGridTextColumn x:Name="colScope" Header="Scope" Binding="{Binding Scope}" Width="70"/>
+                    <DataGridTextColumn x:Name="colTitle" Header="Title" Binding="{Binding Title}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Center" VerticalAlignment="Stretch"
+                          Background="{DynamicResource BorderBrush}"/>
+
+            <!-- Detail -->
+            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" Padding="12,8">
+                <StackPanel x:Name="pnlDetail">
+                    <TextBlock x:Name="dTitle" FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap"
+                               Foreground="{DynamicResource WindowTitleTextBrush}"/>
+                    <TextBlock x:Name="dMeta" FontSize="{StaticResource FontSizeSm}" Margin="0,4,0,10"
+                               Foreground="{DynamicResource InputHintBrush}"/>
+                    <TextBlock x:Name="lblContent" Text="Content" FontSize="{StaticResource FontSizeMd}" FontWeight="SemiBold" Margin="0,0,0,4"
+                               Foreground="{DynamicResource MutedTextBrush}"/>
+                    <!-- Use TextBlock to prevent selection/copy (content anti-copy); ContextMenu cleared to remove right-click copy -->
+                    <TextBlock x:Name="dContent" TextWrapping="Wrap"
+                               Foreground="{DynamicResource TextBrush}"
+                               ContextMenu="{x:Null}"
+                               FontSize="{StaticResource FontSizeMd}" Margin="0,0,0,12"/>
+                    <TextBlock x:Name="lblExamples" Text="Example" FontSize="{StaticResource FontSizeMd}" FontWeight="SemiBold" Margin="0,0,0,4"
+                               Foreground="{DynamicResource MutedTextBrush}"/>
+                    <Border x:Name="dExamplesBox" Background="{DynamicResource InputBackgroundBrush}" Padding="6">
+                        <TextBlock x:Name="dExamples" TextWrapping="Wrap"
+                                   Foreground="{DynamicResource TextBrush}"
+                                   ContextMenu="{x:Null}"
+                                   FontFamily="Consolas" FontSize="{StaticResource FontSizeMd}"/>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- Status bar -->
+        <Border Grid.Row="2" Padding="8,4" Background="{DynamicResource SidebarBrush}" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BorderBrush}">
+            <TextBlock x:Name="txtStatus" Text="Ready" FontSize="{StaticResource FontSizeSm}"
+                       Foreground="{DynamicResource InputHintBrush}"/>
+        </Border>
+    </Grid>
+</UserControl>

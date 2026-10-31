@@ -1,0 +1,54 @@
+{
+  "_readme": "Manual metadata keyed by sample id (ids are listed in manifest.json). The scanner merges these entries when generating the manifest. A sample without an entry still works but is treated as provenance=unknown / status=unverified / role=reference.",
+  "samples": {
+    "15.1.DB.DB_V0.1": {
+      "provenance": "tia_export",
+      "status": "exported",
+      "role": "reference",
+      "source_block": "TIA V15.1 export",
+      "notes": "Global DB sample."
+    },
+    "15.1.GRAPH.graph_V0.1": {
+      "provenance": "tia_export",
+      "status": "exported",
+      "role": "template",
+      "source_block": "TIA V15.1 export",
+      "notes": "GRAPH baseline template; embedded directly by the csproj (Link=Templates/GRAPH_V15_1.xml); no copy in the repository."
+    },
+    "15.1.LAD.LAD_V0.1": {
+      "provenance": "tia_export",
+      "status": "exported",
+      "role": "reference",
+      "source_block": "TIA V15.1 export",
+      "notes": "12 networks covering contacts, coils, OR branch, latching, timers, counters, and Move; interface sections are empty (no local variables)."
+    },
+    "15.1.SCL.SCL_V0.1": {
+      "provenance": "tia_export",
+      "status": "exported",
+      "role": "reference",
+      "source_block": "TIA V15.1 export",
+      "notes": ""
+    },
+    "15.1.UDT.plcType_UDT": {
+      "provenance": "tia_export",
+      "status": "exported",
+      "role": "reference",
+      "source_block": "TIA V15.1 export",
+      "notes": ""
+    },
+    "15.1.LAD.interface_io_contact_coil": {
+      "provenance": "authored",
+      "status": "schema_valid",
+      "role": "reference",
+      "source_block": "",
+      "notes": "Hand-authored minimal FC: Input Start/Stop, Output Running; one network Start AND NOT Stop -> Running; all operands use Scope=LocalVariable. Validated against the V15.1 official XSD only, not compiled in TIA; verify before use."
+    },
+    "15.1.LAD.interface_io_contact_coil_fb": {
+      "provenance": "authored",
+      "status": "schema_valid",
+      "role": "reference",
+      "source_block": "",
+      "notes": "Hand-authored minimal FB: Input Start/Stop, Output Running, Static Mem; one network (Start OR Mem) AND NOT Stop -> Running; all four operands use Scope=LocalVariable, with an OR branch and a static member reference. Mem is only a static-member example and is not written in the network. Validated against the V15.1 official XSD only, not compiled in TIA; verify before use."
+    }
+  }
+}

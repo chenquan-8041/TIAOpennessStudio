@@ -1,0 +1,105 @@
+# ---- .NET / WPF build output ----
+**/bin/
+**/obj/
+*.user
+*.suo
+*_wpftmp.csproj
+
+# ---- VS / IDE caches ----
+.vs/
+*.swp
+*.tmp
+Thumbs.db
+*.pdb
+
+# ---- Python backend runtime & cache ----
+# 嵌入式 Python 运行时(~230MB)和依赖缓存(~146MB),不入仓
+TIAAgent/python/
+TIAAgent/_pydeps/
+TIAAgent/__pycache__/
+TIAAgent/**/__pycache__/
+TIAAgent/logs/
+*.pyc
+
+# ---- Local Ollama runtime + models (~3.5GB) ----
+# ollama.exe + 本地 LLM 模型权重,部署时单独获取
+TIAOpennessStudio/Tools/Ollama/
+
+# ---- Reference docs (static PDFs, ~102MB) ----
+# Siemens 库类型 PDF 参考资料,后续可放共享存储或资料仓库
+Library Types/
+
+# ---- Local config & secrets ----
+*.env
+.env.*
+AIConfig.json
+ai_config.json
+
+# ---- Build/test transient outputs ----
+build_output.txt
+build_p*.txt
+build_current.txt
+staged_added.txt
+
+# ---- Sample exports / runtime data ----
+plc1.xml
+plc1.png
+Index/
+Backups/
+Exports/
+
+# ---- 外挂加密知识库：机密资产，绝不入开源仓库 ----
+# 1) 明文编码标准源（这是要保护的资产本身）
+docs/standards/
+# 2) 密钥秘密盐文件（也不应放这里，但双保险）
+**/kb.secret
+*.secret
+# 3) 加密知识库：官方库(已加密)作为发行资产随仓库分发；其余生成产物不入库。
+#    官方库 TIAOpennessStudio/Knowledge/standards.kb 是加密文件，可安全提交。
+out/
+*.kb
+!TIAOpennessStudio/Knowledge/standards.kb
+# 4) 打包/验证工具的构建产物
+StandardsKbTool/bin/
+StandardsKbTool/obj/
+StandardsKbTool/*.log
+
+# 5) 调试用打包脚本（随用随删，不入库；可能含私有标准 .md）
+tools-debug/
+
+# ---- 本地审计/验证临时目录(含大量构建 DLL) ----
+.tmp_audit/
+.tmp_verify/
+.tmp_stats/
+.tmp_*/
+.pytest_cache/
+
+# ---- Siemens 私有二进制：绝不可随仓库分发 ----
+# 使用者需从自己安装的 TIA Portal 中复制。
+TIAOpennessStudio/Siemens.Engineering.dll
+**/Siemens.Engineering*.dll
+**/Siemens.Engineering*.xml
+
+# ---- 私有工作区 / 交接笔记（含本机路径与客户信息，不公开） ----
+CLAUDE.md
+.trae/
+交接要点.md
+docs/会话上下文交接-*.md
+
+# ---- 契约探针运行报告（每次运行重新生成，只提交基线 JSON） ----
+docs/contract/contract-probe-report.txt
+
+# ---- Siemens OpenAPI 官方文档（90MB+，按需从本机 TIA 安装目录复制） ----
+# 契约探针所需的 V15.1 Sample 已单独入库；其余文档一律不入仓。
+docs/PublicAPI/
+
+# ---- 开源发布排除：本地一次性调试脚本（含明文 API Key，绝不入库） ----
+TIAAgent/_*.py
+TIAAgent/test_localsystem.txt
+
+# ---- 开源发布排除：生成产物 / 本地工作区 / 评审材料 ----
+GeneratedCode/
+.screenshots/
+.kiro/
+competition/
+录屏剧本-*.md

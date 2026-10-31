@@ -1,0 +1,1618 @@
+<Window
+    x:Class="TIAOpennessStudio.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:TIAOpennessStudio.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:TIAOpennessStudio.Helpers"
+    xmlns:lad="clr-namespace:TIAOpennessStudio.LadRendering.Controls"
+    xmlns:local="clr-namespace:TIAOpennessStudio"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:TIAOpennessStudio.Models"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+    xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+    Title="TIA Openness Studio"
+    Width="1400"
+    Height="900"
+    MinWidth="1100"
+    MinHeight="700"
+    Background="{DynamicResource BackgroundBrush}"
+    ResizeMode="CanResizeWithGrip"
+    UseLayoutRounding="True"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d">
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="30"
+            CornerRadius="0"
+            GlassFrameThickness="0" />
+    </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+        <Style x:Key="ExplorerTreeViewItemStyle" TargetType="{x:Type TreeViewItem}">
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="Margin" Value="0,1" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonHover}" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}" />
+                    <Setter Property="FontWeight" Value="SemiBold" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ActivityBarButtonStyle" TargetType="RadioButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border
+                            x:Name="border"
+                            Width="32"
+                            Height="32"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="2,0,0,0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource ButtonHover}" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource ActivityBarSelectedBrush}" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter Property="Foreground" Value="{DynamicResource MutedTextBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--
+            Chip style for the AI target group on the StatusBar.
+            The StatusBar itself is blue in both Light/Dark themes (#0067C0 / #007ACC), so the chip
+            cannot use the theme's ButtonBackground (gray), which would clash with the blue background.
+            A translucent white overlay keeps the look consistent across both themes (same idea as the
+            VSCode status bar chip).
+        -->
+        <Style x:Key="StatusBarChipStyle" TargetType="Border">
+            <Setter Property="Background" Value="#33FFFFFF" />
+            <Setter Property="BorderBrush" Value="#66FFFFFF" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Padding" Value="6,1" />
+            <Setter Property="Margin" Value="2,0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#55FFFFFF" />
+                    <Setter Property="BorderBrush" Value="#88FFFFFF" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="StatusBarChipClearButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="#CCFFFFFF" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Width" Value="14" />
+            <Setter Property="Height" Value="14" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="2">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#FFFFFFFF" />
+                    <Setter Property="Background" Value="#33000000" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Border x:Name="MainBorder" Background="{DynamicResource BackgroundBrush}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="25" />
+            </Grid.RowDefinitions>
+
+            <!--  Custom Title Bar  -->
+            <Grid
+                Grid.Row="0"
+                Background="{DynamicResource WindowTitleBarBrush}"
+                MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <StackPanel
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Button
+                        x:Name="btnToggleSidebar"
+                        Width="30"
+                        Height="30"
+                        Margin="0,0,10,0"
+                        Click="Sidebar_Toggle_Click"
+                        Content="&#xE700;"
+                        FontFamily="Segoe MDL2 Assets"
+                        Style="{StaticResource TitleBarButtonStyle}"
+                        ToolTip="Toggle Sidebar"
+                        WindowChrome.IsHitTestVisibleInChrome="True" />
+                    <Image
+                        Width="16"
+                        Height="16"
+                        Margin="0,0,10,0"
+                        Source="codeGenerator.ico" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="{StaticResource FontSizeMd}"
+                        Foreground="{DynamicResource WindowTitleTextBrush}"
+                        Text="TIA Portal Code Generator" />
+                </StackPanel>
+
+                <StackPanel
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Button
+                        Width="45"
+                        Height="30"
+                        Click="Minimize_Click"
+                        Content="&#xE921;"
+                        FontFamily="Segoe MDL2 Assets"
+                        Style="{StaticResource TitleBarButtonStyle}" />
+                    <Button
+                        Width="45"
+                        Height="30"
+                        Click="Maximize_Click"
+                        Content="&#xE922;"
+                        FontFamily="Segoe MDL2 Assets"
+                        Style="{StaticResource TitleBarButtonStyle}" />
+                    <Button
+                        Width="45"
+                        Height="30"
+                        Click="Close_Click"
+                        Content="&#xE8BB;"
+                        FontFamily="Segoe MDL2 Assets"
+                        Style="{StaticResource TitleBarCloseButtonStyle}" />
+                </StackPanel>
+            </Grid>
+
+            <!--  Menu Bar  -->
+            <Menu
+                Grid.Row="1"
+                Margin="0,0,0,1"
+                Background="{DynamicResource WindowTitleBarBrush}"
+                Foreground="{DynamicResource WindowTitleTextBrush}">
+                <MenuItem x:Name="mnuProject" Header="_Project">
+                    <MenuItem
+                        x:Name="mnuOpen"
+                        Click="OpenProject_Click"
+                        Header="_Open"
+                        InputGestureText="Ctrl+O">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE8E5;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        x:Name="mnuCompile"
+                        Click="CompileProject_Click"
+                        Header="_Compile"
+                        InputGestureText="F7">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE895;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        x:Name="mnuSave"
+                        Click="SaveProject_Click"
+                        Header="_Save"
+                        InputGestureText="Ctrl+S">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE74E;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        x:Name="mnuCacheManager"
+                        Click="OpenCacheManager_Click"
+                        Header="Knowledge _Cache Manager"
+                        InputGestureText="Ctrl+Shift+K">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE950;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem
+                        x:Name="mnuReload"
+                        Click="Reload_Click"
+                        Header="_Refresh Tree"
+                        InputGestureText="F5">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE72C;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        x:Name="mnuClose"
+                        Click="CloseProject_Click"
+                        Header="_Close">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE8BB;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        x:Name="mnuExit"
+                        Click="Exit_Click"
+                        Header="E_xit"
+                        InputGestureText="Alt+F4">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE7E8;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem x:Name="mnuImport" Header="_Import">
+                    <MenuItem
+                        x:Name="mnuImportBlock"
+                        Click="ImportBlock_Click"
+                        Header="PLC _Blocks"
+                        InputGestureText="Ctrl+I">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE8B5;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        x:Name="mnuImportType"
+                        Click="ImportType_Click"
+                        Header="PLC _Data types">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE943;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem
+                        x:Name="mnuImportTexts"
+                        Click="ImportProjectTexts_Click"
+                        Header="Project _Texts">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE8C8;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem x:Name="mnuExport" Header="_Export">
+                    <MenuItem
+                        x:Name="mnuExportSelected"
+                        Click="ExportBlock_Click"
+                        Header="Export _Selected"
+                        InputGestureText="Ctrl+E">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xEDE1;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        x:Name="mnuExportAllBlocks"
+                        Click="ExportAllBlocks_Click"
+                        Header="Export _All (Blocks + UDT + Tags, current PLC)">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE8B7;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        x:Name="mnuExportXml"
+                        Click="ExportXml_Click"
+                        Header="Export _XML">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE943;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem
+                        x:Name="mnuExportTexts"
+                        Click="ExportProjectTexts_Click"
+                        Header="Project _Texts">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE8C8;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem x:Name="mnuSettings" Header="_Settings">
+                    <MenuItem
+                        x:Name="mnuTargetPath"
+                        Click="AddPath_Click"
+                        Header="_Target Path">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE81E;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        x:Name="mnuAiConfig"
+                        Click="Config_Click"
+                        Header="_Model Config">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE713;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        x:Name="mnuStartBackend"
+                        Click="StartBackend_Click"
+                        Header="Start Python _Backend">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE7B7;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        x:Name="mnuLibraryBackupCompare"
+                        Click="OpenLibraryCompare_Click"
+                        Header="_Library Versioning"
+                        InputGestureText="Ctrl+Shift+B">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE81E;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem
+                        x:Name="mnuPreferences"
+                        Click="MnuPreferences_Click"
+                        Header="_Preferences">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE713;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem x:Name="mnuLanguage" Header="_Language">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE774;" />
+                        </MenuItem.Icon>
+                        <MenuItem
+                            Click="Language_Click"
+                            Header="English"
+                            Tag="EN" />
+                        <MenuItem
+                            Click="Language_Click"
+                            Header="Deutsch"
+                            Tag="DE" />
+                        <MenuItem
+                            Click="Language_Click"
+                            Header="中文"
+                            Tag="CN" />
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem x:Name="mnuView" Header="_View">
+                    <MenuItem
+                        x:Name="mnuShowOutput"
+                        Click="ShowOutput_Click"
+                        Header="Output Log"
+                        InputGestureText="Ctrl+L">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE7BA;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem x:Name="mnuTheme" Header="_Theme">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE790;" />
+                        </MenuItem.Icon>
+                        <MenuItem
+                            x:Name="mnuThemeDark"
+                            Click="Theme_Click"
+                            Header="_Dark"
+                            Tag="Dark" />
+                        <MenuItem
+                            x:Name="mnuThemeLight"
+                            Click="Theme_Click"
+                            Header="_Light"
+                            Tag="Light" />
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem x:Name="mnuHelp" Header="_Help">
+                    <MenuItem
+                        x:Name="mnuAbout"
+                        Click="About_Click"
+                        Header="_About"
+                        InputGestureText="F1">
+                        <MenuItem.Icon>
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeLg}"
+                                Text="&#xE897;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+
+            <!--  Main Layout  -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32" />
+                    <!--  Activity Bar  -->
+                    <ColumnDefinition
+                        x:Name="colSidebar"
+                        Width="250"
+                        MinWidth="0"
+                        MaxWidth="500" />
+                    <!--  Sidebar  -->
+                    <ColumnDefinition Width="4" />
+                    <!--  GridSplitter for Sidebar  -->
+                    <ColumnDefinition Width="*" MinWidth="300" />
+                    <!--  TreeView area (Code Viewer)  -->
+                    <ColumnDefinition Width="4" />
+                    <!--  GridSplitter for AI Chat  -->
+                    <ColumnDefinition Width="400" MinWidth="250" />
+                    <!--  AI Chat Area  -->
+                </Grid.ColumnDefinitions>
+
+                <!--  Activity Bar  -->
+                <Border
+                    Grid.Column="0"
+                    Background="{DynamicResource ActivityBarBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="0,0,1,0">
+                    <StackPanel Margin="0,10,0,0" Orientation="Vertical">
+                        <RadioButton
+                            x:Name="btnTabTiaPortal"
+                            Checked="ActivityBar_Checked"
+                            IsChecked="True"
+                            Style="{StaticResource ActivityBarButtonStyle}"
+                            ToolTip="TIA Portal">
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeXl}"
+                                Text="&#xE8B5;" />
+                        </RadioButton>
+                        <RadioButton
+                            x:Name="btnTabFileExplorer"
+                            Checked="ActivityBar_Checked"
+                            Style="{StaticResource ActivityBarButtonStyle}"
+                            ToolTip="Explorer">
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeXl}"
+                                Text="&#xE8E5;" />
+                        </RadioButton>
+                        <RadioButton
+                            x:Name="btnTabMcp"
+                            Checked="ActivityBar_Checked"
+                            Style="{StaticResource ActivityBarButtonStyle}"
+                            ToolTip="MCP">
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeXl}"
+                                Text="&#xE74C;" />
+                        </RadioButton>
+                        <RadioButton
+                            x:Name="btnTabOpcUa"
+                            Checked="ActivityBar_Checked"
+                            Style="{StaticResource ActivityBarButtonStyle}"
+                            ToolTip="OPC UA">
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeXl}"
+                                Text="&#xE7F4;" />
+                        </RadioButton>
+                        <RadioButton
+                            x:Name="btnTabKnowledge"
+                            Checked="ActivityBar_Checked"
+                            Style="{StaticResource ActivityBarButtonStyle}"
+                            ToolTip="Knowledge Base">
+                            <TextBlock
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeXl}"
+                                Text="&#xE8F1;" />
+                        </RadioButton>
+                    </StackPanel>
+                </Border>
+
+                <!--  Sidebar  -->
+                <Border
+                    x:Name="SidebarBorder"
+                    Grid.Column="1"
+                    Background="{DynamicResource SidebarBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="0,0,1,0">
+                    <Grid Margin="10">
+                        <Grid x:Name="gridTiaPortal">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <!--  Blocks Label  -->
+                                <RowDefinition Height="*" />
+                                <!--  Blocks Tree  -->
+                                <RowDefinition Height="Auto" />
+                                <!--  Devices Label  -->
+                                <RowDefinition Height="100" />
+                                <!--  Devices List  -->
+                                <RowDefinition Height="Auto" />
+                                <!--  Splitter/Label  -->
+                                <RowDefinition Height="100" />
+                                <!--  PLCs List  -->
+                                <RowDefinition Height="Auto" />
+                                <!--  HMIs Label  -->
+                                <RowDefinition Height="100" />
+                                <!--  HMIs List  -->
+                            </Grid.RowDefinitions>
+
+                            <!--  Blocks Tree  -->
+                            <StackPanel Grid.Row="0" Margin="0,0,0,5">
+                                <TextBlock
+                                    x:Name="lblBlocks"
+                                    VerticalAlignment="Center"
+                                    FontSize="{StaticResource FontSizeSm}"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource MutedTextBrush}"
+                                    Text="Blocks" />
+                            </StackPanel>
+                            <TreeView
+                                x:Name="treeBlocks"
+                                Grid.Row="1"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="{DynamicResource TextBrush}"
+                                MouseDoubleClick="treeBlocks_MouseDoubleClick"
+                                MouseMove="treeBlocks_MouseMove"
+                                PreviewMouseLeftButtonDown="treeBlocks_PreviewMouseLeftButtonDown"
+                                SelectedItemChanged="treeBlocks_SelectedItemChanged">
+                                <TreeView.Resources>
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{Binding Source={StaticResource AccentBrush}, Path=Color}" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{Binding Source={StaticResource AccentForegroundBrush}, Path=Color}" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{Binding Source={StaticResource AccentBrush}, Path=Color}" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="{Binding Source={StaticResource AccentForegroundBrush}, Path=Color}" />
+                                </TreeView.Resources>
+                                <TreeView.ItemContainerStyle>
+                                    <Style TargetType="{x:Type TreeViewItem}">
+                                        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Style.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="FontWeight" Value="SemiBold" />
+                                                <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}" />
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource ButtonHover}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TreeView.ItemContainerStyle>
+                            </TreeView>
+
+                            <!--  Region overlay scoped to the blocks tree only  -->
+                            <Border
+                                x:Name="treeBlocksOverlay"
+                                Grid.Row="1"
+                                Background="{DynamicResource OverlayBrush}"
+                                Visibility="Collapsed">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock
+                                        x:Name="txtTreeBlocksOverlayMessage"
+                                        Margin="0,0,0,8"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource FontSizeMd}"
+                                        Foreground="White"
+                                        Text="Loading blocks..." />
+                                    <ProgressBar
+                                        Width="120"
+                                        Height="3"
+                                        IsIndeterminate="True" />
+                                </StackPanel>
+                            </Border>
+
+                            <!--  Devices List  -->
+                            <Grid Grid.Row="2" Margin="0,0,0,5">
+                                <TextBlock
+                                    x:Name="lblDevice"
+                                    Margin="0,0,0,2"
+                                    Foreground="{DynamicResource TextBrush}"
+                                    Text="Device" />
+                            </Grid>
+                            <ListBox
+                                x:Name="listDevices"
+                                Grid.Row="3"
+                                Margin="0,0,0,10"
+                                VerticalAlignment="Stretch"
+                                ToolTip="List of all devices found in the project" />
+
+                            <!--  Region overlay scoped to the devices list only  -->
+                            <Border
+                                x:Name="listDevicesOverlay"
+                                Grid.Row="3"
+                                Margin="0,0,0,10"
+                                Background="{DynamicResource OverlayBrush}"
+                                Visibility="Collapsed">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock
+                                        x:Name="txtDevicesOverlayMessage"
+                                        Margin="0,0,0,6"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource FontSizeSm}"
+                                        Foreground="White"
+                                        Text="Loading devices..." />
+                                    <ProgressBar
+                                        Width="100"
+                                        Height="3"
+                                        IsIndeterminate="True" />
+                                </StackPanel>
+                            </Border>
+
+                            <!--  PLCs List  -->
+                            <Grid Grid.Row="4" Margin="0,5,0,5">
+                                <TextBlock
+                                    x:Name="lblPlc"
+                                    Margin="0,0,0,2"
+                                    Foreground="{DynamicResource TextBrush}"
+                                    Text="PLC" />
+                            </Grid>
+                            <ListBox
+                                x:Name="listPlcs"
+                                Grid.Row="5"
+                                Margin="0,0,0,10"
+                                VerticalAlignment="Stretch"
+                                SelectionChanged="Plc_SelectionChanged"
+                                ToolTip="List of Programmable Logic Controllers (CPUs) found" />
+
+                            <!--  Region overlay scoped to the PLCs list only  -->
+                            <Border
+                                x:Name="listPlcsOverlay"
+                                Grid.Row="5"
+                                Margin="0,0,0,10"
+                                Background="{DynamicResource OverlayBrush}"
+                                Visibility="Collapsed">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock
+                                        x:Name="txtPlcsOverlayMessage"
+                                        Margin="0,0,0,6"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource FontSizeSm}"
+                                        Foreground="White"
+                                        Text="Loading PLCs..." />
+                                    <ProgressBar
+                                        Width="100"
+                                        Height="3"
+                                        IsIndeterminate="True" />
+                                </StackPanel>
+                            </Border>
+
+                            <!--  HMIs Label  -->
+                            <Grid Grid.Row="6" Margin="0,5,0,5">
+                                <TextBlock
+                                    x:Name="lblHmi"
+                                    Margin="0,0,0,2"
+                                    Foreground="{DynamicResource TextBrush}"
+                                    Text="HMI" />
+                            </Grid>
+                            <ListBox
+                                x:Name="listHmis"
+                                Grid.Row="7"
+                                Margin="0,0,0,10"
+                                VerticalAlignment="Stretch"
+                                SelectionChanged="Hmi_SelectionChanged"
+                                ToolTip="HMI (WinCC) software found in the project; expanding shows screens and tag tables" />
+                        </Grid>
+
+                        <Grid x:Name="gridFileExplorer" Visibility="Collapsed">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <!--  Explorer Header  -->
+                            <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                                <TextBlock
+                                    x:Name="lblExplorer"
+                                    VerticalAlignment="Center"
+                                    FontSize="{StaticResource FontSizeSm}"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource MutedTextBrush}"
+                                    Text="Explorer" />
+                                <TextBox
+                                    x:Name="txtFileSearch"
+                                    Margin="0,5,0,0"
+                                    Padding="5"
+                                    Background="{DynamicResource PanelBrush}"
+                                    BorderBrush="{DynamicResource BorderBrush}"
+                                    BorderThickness="1"
+                                    Foreground="{DynamicResource TextBrush}"
+                                    TextChanged="txtFileSearch_TextChanged" />
+                            </StackPanel>
+
+                            <TreeView
+                                x:Name="treeFileExplorer"
+                                Grid.Row="1"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="{DynamicResource TextBrush}"
+                                ItemContainerStyle="{StaticResource ExplorerTreeViewItemStyle}"
+                                MouseDoubleClick="treeFileExplorer_MouseDoubleClick"
+                                PreviewMouseRightButtonDown="treeFileExplorer_PreviewMouseRightButtonDown">
+                                <TreeView.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem
+                                            x:Name="mnuFileExplorerOpen"
+                                            Click="FileExplorer_Open_Click"
+                                            Header="Open" />
+                                        <MenuItem
+                                            x:Name="mnuFileExplorerSave"
+                                            Click="FileExplorer_Save_Click"
+                                            Header="Save" />
+                                        <MenuItem
+                                            x:Name="mnuFileExplorerImport"
+                                            Click="FileExplorer_ImportToTia_Click"
+                                            Header="Import to TIA" />
+                                        <Separator />
+                                        <MenuItem
+                                            x:Name="mnuFileExplorerNewFile"
+                                            Click="FileExplorer_NewFile_Click"
+                                            Header="New SCL File" />
+                                        <MenuItem
+                                            x:Name="mnuFileExplorerNewFolder"
+                                            Click="FileExplorer_NewFolder_Click"
+                                            Header="New Folder" />
+                                        <MenuItem
+                                            x:Name="mnuFileExplorerRename"
+                                            Click="FileExplorer_Rename_Click"
+                                            Header="Rename" />
+                                        <MenuItem
+                                            x:Name="mnuFileExplorerDelete"
+                                            Click="FileExplorer_Delete_Click"
+                                            Header="Delete" />
+                                        <Separator />
+                                        <MenuItem
+                                            x:Name="mnuFileExplorerRefresh"
+                                            Click="FileExplorer_Refresh_Click"
+                                            Header="Refresh" />
+                                    </ContextMenu>
+                                </TreeView.ContextMenu>
+                            </TreeView>
+                        </Grid>
+
+                        <Grid x:Name="gridMcp" Visibility="Collapsed">
+                            <controls:McpManagementControl />
+                        </Grid>
+
+                        <Grid x:Name="gridOpcUa" Visibility="Collapsed">
+                            <controls:OpcUaManagementControl />
+                        </Grid>
+
+                        <Grid x:Name="gridKnowledge" Visibility="Collapsed">
+                            <controls:KnowledgeManagementControl />
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!--  Splitter between Sidebar and Code View  -->
+                <GridSplitter
+                    x:Name="SidebarSplitter"
+                    Grid.Column="2"
+                    Width="4"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Background="Transparent"
+                    ResizeBehavior="PreviousAndNext"
+                    ResizeDirection="Columns"
+                    ShowsPreview="False" />
+
+                <!--  Main Code View Area  -->
+                <Grid Grid.Column="3" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <!--  Header + LAD Tools  -->
+                        <RowDefinition Height="*" />
+                        <!--  Content  -->
+                    </Grid.RowDefinitions>
+
+                    <!--  Compact Header + LAD Tools  -->
+                    <StackPanel Grid.Row="0" Margin="0,0,0,5">
+                        <TextBlock
+                            x:Name="lblCodeViewer"
+                            VerticalAlignment="Center"
+                            FontSize="{StaticResource FontSizeSm}"
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource MutedTextBrush}"
+                            Text="Code Viewer" />
+
+                        
+                    </StackPanel>
+
+                    <TextBlock
+                        x:Name="lblNoCode"
+                        Grid.Row="1"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="{StaticResource FontSizeXl}"
+                        Foreground="{DynamicResource MutedTextBrush}"
+                        Text="Select a block or file to view code" />
+
+                    <TabControl
+                        x:Name="tabsCode"
+                        Grid.Row="1"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        ItemContainerStyle="{StaticResource CodeTabItemStyle}">
+                        <TabItem x:Name="tabOutput" Visibility="Collapsed">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        Margin="0,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Text="Output" />
+                                    <Button
+                                        Padding="2"
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="CloseOutput_Click"
+                                        Content="×"
+                                        FontSize="{StaticResource FontSizeXs}"
+                                        Foreground="{DynamicResource MutedTextBrush}"
+                                        ToolTip="Close Log" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <TextBox
+                                x:Name="txtOutputLog"
+                                Padding="10"
+                                AcceptsReturn="True"
+                                Background="{DynamicResource CodePanelBrush}"
+                                BorderThickness="0"
+                                FontFamily="Consolas"
+                                FontSize="{StaticResource FontSizeMd}"
+                                Foreground="{DynamicResource WindowTitleTextBrush}"
+                                HorizontalScrollBarVisibility="Auto"
+                                IsReadOnly="True"
+                                VerticalScrollBarVisibility="Auto" />
+                        </TabItem>
+                        <TabItem x:Name="tabSettings" Visibility="Collapsed">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        Margin="0,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Text="Settings" />
+                                    <Button
+                                        Padding="2"
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="CloseSettings_Click"
+                                        Content="×"
+                                        FontSize="{StaticResource FontSizeXs}"
+                                        Foreground="{DynamicResource MutedTextBrush}"
+                                        ToolTip="Close Settings" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <controls:SettingsCardControl x:Name="settingsCard" />
+                        </TabItem>
+                        <TabItem x:Name="tabPreferences" Visibility="Collapsed">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        Margin="0,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Text="Preferences" />
+                                    <Button
+                                        Padding="2"
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="ClosePreferences_Click"
+                                        Content="×"
+                                        FontSize="{StaticResource FontSizeXs}"
+                                        Foreground="{DynamicResource MutedTextBrush}"
+                                        ToolTip="Close Preferences" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <controls:PreferencesCardControl x:Name="preferencesCard" />
+                        </TabItem>
+                        <TabItem x:Name="tabChatHistory" Visibility="Collapsed">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        x:Name="lblChatHistoryTabTitle"
+                                        Margin="0,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Text="Chat History" />
+                                    <Button
+                                        Padding="2"
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="CloseChatHistory_Click"
+                                        Content="×"
+                                        FontSize="{StaticResource FontSizeXs}"
+                                        Foreground="{DynamicResource MutedTextBrush}"
+                                        ToolTip="Close Chat History" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <ListBox
+                                    x:Name="lstChatHistory"
+                                    Grid.Row="0"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Foreground="{DynamicResource TextBrush}"
+                                    MouseDoubleClick="ChatHistoryItem_DoubleClick">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="5">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <CheckBox
+                                                    x:Name="chkSelect"
+                                                    Grid.Column="0"
+                                                    Margin="0,0,10,0"
+                                                    VerticalAlignment="Center"
+                                                    IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    Visibility="{Binding IsManageMode, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                <StackPanel Grid.Column="1">
+                                                    <TextBlock
+                                                        FontWeight="SemiBold"
+                                                        Foreground="{DynamicResource TextBrush}"
+                                                        Text="{Binding Session.Title}" />
+                                                    <TextBlock
+                                                        FontSize="{StaticResource FontSizeSm}"
+                                                        Foreground="{DynamicResource MutedTextBrush}"
+                                                        Text="{Binding Session.UpdatedAt, StringFormat='yyyy-MM-dd HH:mm'}" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <StackPanel
+                                    Grid.Row="1"
+                                    Margin="10"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                                    <Button
+                                        x:Name="btnManageChatHistory"
+                                        Margin="0,0,10,0"
+                                        Padding="20,5"
+                                        Click="ManageChatHistory_Click" />
+                                    <Button
+                                        x:Name="btnSelectAllChatHistory"
+                                        Margin="0,0,10,0"
+                                        Padding="20,5"
+                                        Click="SelectAllChatHistory_Click"
+                                        Visibility="Collapsed" />
+                                    <Button
+                                        x:Name="btnInvertSelectionChatHistory"
+                                        Margin="0,0,10,0"
+                                        Padding="20,5"
+                                        Click="InvertSelectionChatHistory_Click"
+                                        Visibility="Collapsed" />
+                                    <Button
+                                        x:Name="btnDeleteSelectedChatHistory"
+                                        Margin="0,0,10,0"
+                                        Padding="20,5"
+                                        Click="DeleteSelectedChatHistory_Click"
+                                        Visibility="Collapsed" />
+                                    <Button
+                                        x:Name="btnFinishManageChatHistory"
+                                        Padding="20,5"
+                                        Click="FinishManageChatHistory_Click"
+                                        Visibility="Collapsed" />
+                                </StackPanel>
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="tabLibraryCompare" Visibility="Collapsed">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        Margin="0,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Text="Library Versioning" />
+                                    <Button
+                                        Padding="2"
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="CloseLibraryCompare_Click"
+                                        Content="×"
+                                        FontSize="{StaticResource FontSizeXs}"
+                                        Foreground="{DynamicResource MutedTextBrush}"
+                                        ToolTip="Close Library Versioning" />
+                                </StackPanel>
+                            </TabItem.Header>
+                        </TabItem>
+                        <TabItem x:Name="tabCacheManager" Visibility="Collapsed">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        Margin="0,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Text="Knowledge Cache" />
+                                    <Button
+                                        Padding="2"
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="CloseCacheManager_Click"
+                                        Content="×"
+                                        FontSize="{StaticResource FontSizeXs}"
+                                        Foreground="{DynamicResource MutedTextBrush}"
+                                        ToolTip="Close Knowledge Cache" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <controls:CacheManagerControl />
+                        </TabItem>
+                        <TabItem x:Name="tabDependencyAnalysis" Visibility="Collapsed">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        Margin="0,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Text="Dependency Analysis" />
+                                    <Button
+                                        Padding="2"
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="CloseDependencyAnalysis_Click"
+                                        Content="×"
+                                        FontSize="{StaticResource FontSizeXs}"
+                                        Foreground="{DynamicResource MutedTextBrush}"
+                                        ToolTip="Close Dependency Analysis" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <controls:DependencyAnalysisControl />
+                        </TabItem>
+                        <TabItem x:Name="tabDevTrace" Visibility="Collapsed">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        Margin="0,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Text="🐛 Dev Trace" />
+                                    <Button
+                                        Padding="2"
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="CloseDevTrace_Click"
+                                        Content="×"
+                                        FontSize="{StaticResource FontSizeXs}"
+                                        Foreground="{DynamicResource MutedTextBrush}"
+                                        ToolTip="Close Dev Trace" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <!--  Info Bar  -->
+                                <StackPanel
+                                    Grid.Row="0"
+                                    Margin="0,0,0,6"
+                                    Orientation="Horizontal">
+                                    <TextBlock
+                                        x:Name="DevTraceModelLabel"
+                                        VerticalAlignment="Center"
+                                        FontSize="{StaticResource FontSizeSm}"
+                                        Foreground="{DynamicResource MutedTextBrush}" />
+                                    <TextBlock
+                                        x:Name="DevTraceDurationLabel"
+                                        Margin="12,0,0,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="{StaticResource FontSizeSm}"
+                                        Foreground="{DynamicResource MutedTextBrush}" />
+                                </StackPanel>
+                                <!--  Tab Switch  -->
+                                <StackPanel
+                                    Grid.Row="1"
+                                    Margin="0,0,0,6"
+                                    Orientation="Horizontal">
+                                    <Button
+                                        x:Name="TabRawPrompt"
+                                        Padding="10,4"
+                                        Background="{DynamicResource AccentBrush}"
+                                        BorderThickness="0"
+                                        Click="DevTraceTab_Click"
+                                        Content="Raw Prompt"
+                                        FontSize="{StaticResource FontSizeSm}"
+                                        Foreground="White"
+                                        Tag="RawPrompt" />
+                                    <Button
+                                        x:Name="TabToolCalls"
+                                        Margin="4,0,0,0"
+                                        Padding="10,4"
+                                        Background="Transparent"
+                                        BorderBrush="{DynamicResource BorderBrush}"
+                                        BorderThickness="1"
+                                        Click="DevTraceTab_Click"
+                                        Content="Tool Calls"
+                                        FontSize="{StaticResource FontSizeSm}"
+                                        Foreground="{DynamicResource TextBrush}"
+                                        Tag="ToolCalls" />
+                                    <Button
+                                        x:Name="TabTiaApi"
+                                        Margin="4,0,0,0"
+                                        Padding="10,4"
+                                        Background="Transparent"
+                                        BorderBrush="{DynamicResource BorderBrush}"
+                                        BorderThickness="1"
+                                        Click="DevTraceTab_Click"
+                                        Content="TIA API"
+                                        FontSize="{StaticResource FontSizeSm}"
+                                        Foreground="{DynamicResource TextBrush}"
+                                        Tag="TiaApi" />
+                                </StackPanel>
+                                <!--  Content  -->
+                                <TextBox
+                                    x:Name="DevTraceContent"
+                                    Grid.Row="2"
+                                    Padding="10"
+                                    AcceptsReturn="True"
+                                    Background="{DynamicResource CodePanelBrush}"
+                                    BorderThickness="0"
+                                    FontFamily="Consolas"
+                                    FontSize="{StaticResource FontSizeMd}"
+                                    Foreground="{DynamicResource TextBrush}"
+                                    HorizontalScrollBarVisibility="Auto"
+                                    IsReadOnly="True"
+                                    TextWrapping="Wrap"
+                                    VerticalScrollBarVisibility="Auto" />
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="tabDiff" Visibility="Collapsed">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        Margin="0,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Text="Diff" />
+                                    <Button
+                                        Padding="2"
+                                        VerticalAlignment="Center"
+                                        AutomationProperties.Name="Close Diff"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="CloseDiff_Click"
+                                        Content="×"
+                                        FontSize="{StaticResource FontSizeXs}"
+                                        Foreground="{DynamicResource MutedTextBrush}"
+                                        ToolTip="Close Diff" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <controls:DiffPreviewControl x:Name="diffPreviewControl" />
+                        </TabItem>
+                    </TabControl>
+
+                    <!--  Region overlay scoped to the Code Viewer area only  -->
+                    <Border
+                        x:Name="codeViewerOverlay"
+                        Grid.Row="1"
+                        Background="{DynamicResource OverlayBrush}"
+                        Visibility="Collapsed">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock
+                                x:Name="txtCodeViewerOverlayMessage"
+                                Margin="0,0,0,12"
+                                HorizontalAlignment="Center"
+                                FontSize="{StaticResource FontSizeXl}"
+                                Foreground="White"
+                                Text="Loading block content..." />
+                            <ProgressBar
+                                Width="180"
+                                Height="4"
+                                IsIndeterminate="True" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!--  Splitter between TreeView and AI Chat  -->
+                <GridSplitter
+                    Grid.Column="4"
+                    Width="4"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Background="Transparent"
+                    ResizeBehavior="PreviousAndNext"
+                    ResizeDirection="Columns"
+                    ShowsPreview="False" />
+
+                <!--  AI Chat Area  -->
+                <Border
+                    Grid.Column="5"
+                    Background="{DynamicResource SidebarBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="1,0,0,0">
+                    <Grid>
+                        <controls:ChatPanelControl x:Name="ChatPanel" Margin="10" />
+
+                        <!--  Region overlay scoped to the AI Chat area only  -->
+                        <Border
+                            x:Name="aiChatOverlay"
+                            Background="{DynamicResource OverlayBrush}"
+                            Visibility="Collapsed">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock
+                                    x:Name="txtAiChatOverlayMessage"
+                                    Margin="0,0,0,10"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource FontSizeLg}"
+                                    Foreground="White"
+                                    Text="Processing..." />
+                                <ProgressBar
+                                    Width="150"
+                                    Height="3"
+                                    IsIndeterminate="True" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!--  Status Bar & Legend  -->
+            <StatusBar
+                Grid.Row="3"
+                Background="{DynamicResource StatusBarBackgroundBrush}"
+                Foreground="{DynamicResource StatusBarForegroundBrush}">
+                <StatusBarItem>
+                    <StackPanel Orientation="Horizontal">
+                        <Image
+                            Width="16"
+                            Height="16"
+                            Margin="0,0,5,0"
+                            Source="Ressources/Document_16x.png" />
+                        <TextBlock
+                            Margin="0,0,5,0"
+                            FontWeight="Bold"
+                            Text="Project Status:" />
+                        <TextBlock Text="{Binding StatusText}" />
+                    </StackPanel>
+                </StatusBarItem>
+                <Separator />
+                <StatusBarItem>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            Margin="0,0,5,0"
+                            FontWeight="Bold"
+                            Text="Saved:" />
+                        <TextBlock x:Name="txtSaveStatus" Text="{Binding FooterSaveStatusText}" />
+                    </StackPanel>
+                </StatusBarItem>
+                <Separator />
+
+                <!--  Global Progress Indicator (non-blocking, for background operations)  -->
+                <StatusBarItem x:Name="GlobalProgressItem" Visibility="{Binding IsGlobalProgressVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <ProgressBar
+                            x:Name="GlobalProgressBar"
+                            Width="120"
+                            Height="3"
+                            Margin="0,0,6,0"
+                            VerticalAlignment="Center"
+                            IsIndeterminate="{Binding IsGlobalProgressIndeterminate}"
+                            Maximum="100"
+                            Value="{Binding GlobalProgressPercent}" />
+                        <TextBlock
+                            x:Name="GlobalProgressText"
+                            VerticalAlignment="Center"
+                            FontSize="{StaticResource FontSizeSm}"
+                            Foreground="{DynamicResource StatusBarForegroundBrush}"
+                            Text="{Binding GlobalProgressMessage}" />
+                    </StackPanel>
+                </StatusBarItem>
+                <Separator Visibility="{Binding IsGlobalProgressVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                <!--  TIA Portal connection status  -->
+                <StatusBarItem>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse
+                            Width="8"
+                            Height="8"
+                            Margin="0,0,5,0"
+                            VerticalAlignment="Center"
+                            Fill="{Binding TiaStatusBrush}" />
+                        <TextBlock FontWeight="SemiBold" Text="{Binding TiaVersionText}" />
+                    </StackPanel>
+                </StatusBarItem>
+
+                <Separator />
+
+                <!--  AI write target group chip: Blocks  -->
+                <StatusBarItem>
+                    <Border
+                        x:Name="StatusBlockTargetChip"
+                        MouseLeftButtonUp="StatusBlockTargetChip_Click"
+                        Style="{StaticResource StatusBarChipStyle}"
+                        ToolTip="AI-generated/modified Blocks (FB / FC / DB / OB) are written into this group; click to switch">
+                        <StackPanel Orientation="Horizontal">
+                            <Image
+                                Width="14"
+                                Height="14"
+                                Margin="0,0,4,0"
+                                Source="Ressources/FolderClosed_16x.png" />
+                            <TextBlock
+                                x:Name="StatusBlockTargetText"
+                                FontWeight="SemiBold"
+                                Foreground="White"
+                                Text="Blocks: &lt;root&gt;" />
+                            <Button
+                                x:Name="StatusBlockTargetClearBtn"
+                                Margin="6,0,0,0"
+                                Click="StatusBlockTargetClear_Click"
+                                Content="×"
+                                Style="{StaticResource StatusBarChipClearButtonStyle}"
+                                ToolTip="Clear and go back to the project root"
+                                Visibility="Collapsed" />
+                        </StackPanel>
+                    </Border>
+                </StatusBarItem>
+
+                <!--  AI write target group chip: Types  -->
+                <StatusBarItem>
+                    <Border
+                        x:Name="StatusTypeTargetChip"
+                        MouseLeftButtonUp="StatusTypeTargetChip_Click"
+                        Style="{StaticResource StatusBarChipStyle}"
+                        ToolTip="AI-generated/modified Types (UDT) are written into this group; click to switch">
+                        <StackPanel Orientation="Horizontal">
+                            <Image
+                                Width="14"
+                                Height="14"
+                                Margin="0,0,4,0"
+                                Source="Ressources/DataType.png" />
+                            <TextBlock
+                                x:Name="StatusTypeTargetText"
+                                FontWeight="SemiBold"
+                                Foreground="White"
+                                Text="Types: &lt;root&gt;" />
+                            <Button
+                                x:Name="StatusTypeTargetClearBtn"
+                                Margin="6,0,0,0"
+                                Click="StatusTypeTargetClear_Click"
+                                Content="×"
+                                Style="{StaticResource StatusBarChipClearButtonStyle}"
+                                ToolTip="Clear and go back to the project root"
+                                Visibility="Collapsed" />
+                        </StackPanel>
+                    </Border>
+                </StatusBarItem>
+
+                <Separator />
+                <!--  Legend  -->
+                <StatusBarItem HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal">
+                        <Image
+                            Width="16"
+                            Height="16"
+                            Margin="5,0,2,0"
+                            Source="Ressources/OB.png" />
+                        <TextBlock FontWeight="SemiBold" Text="OB: " />
+                        <TextBlock
+                            x:Name="cntOB"
+                            Margin="0,0,5,0"
+                            Text="0" />
+                        <Image
+                            Width="16"
+                            Height="16"
+                            Margin="5,0,2,0"
+                            Source="Ressources/FB.png" />
+                        <TextBlock FontWeight="SemiBold" Text="FB: " />
+                        <TextBlock
+                            x:Name="cntFB"
+                            Margin="0,0,5,0"
+                            Text="0" />
+                        <Image
+                            Width="16"
+                            Height="16"
+                            Margin="5,0,2,0"
+                            Source="Ressources/FC.png" />
+                        <TextBlock FontWeight="SemiBold" Text="FC: " />
+                        <TextBlock
+                            x:Name="cntFC"
+                            Margin="0,0,5,0"
+                            Text="0" />
+                        <Image
+                            Width="16"
+                            Height="16"
+                            Margin="5,0,2,0"
+                            Source="Ressources/DB.png" />
+                        <TextBlock FontWeight="SemiBold" Text="DB: " />
+                        <TextBlock
+                            x:Name="cntDB"
+                            Margin="0,0,5,0"
+                            Text="0" />
+                        <Image
+                            Width="16"
+                            Height="16"
+                            Margin="5,0,2,0"
+                            Source="Ressources/DataType.png" />
+                        <TextBlock FontWeight="SemiBold" Text="Type: " />
+                        <TextBlock
+                            x:Name="cntType"
+                            Margin="0,0,5,0"
+                            Text="0" />
+                    </StackPanel>
+                </StatusBarItem>
+            </StatusBar>
+
+            <!--  AI target group selection Popup (shared by Block / Type; Kind set in code-behind)  -->
+            <Popup
+                x:Name="StatusTargetGroupPopup"
+                AllowsTransparency="True"
+                Placement="Top"
+                PopupAnimation="Fade"
+                StaysOpen="False">
+                <Border
+                    Width="320"
+                    MaxHeight="320"
+                    Background="{DynamicResource PanelBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Border
+                            Grid.Row="0"
+                            Padding="10,6"
+                            Background="{DynamicResource WindowTitleBarBrush}">
+                            <TextBlock
+                                x:Name="StatusTargetPopupTitle"
+                                FontSize="{StaticResource FontSizeMd}"
+                                FontWeight="SemiBold"
+                                Foreground="{DynamicResource TextBrush}"
+                                Text="Select target group" />
+                        </Border>
+
+                        <TreeView
+                            x:Name="StatusTargetGroupTreeView"
+                            Grid.Row="1"
+                            Padding="4"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="{DynamicResource TextBrush}"
+                            SelectedItemChanged="StatusTargetGroupTreeView_SelectedItemChanged">
+                            <TreeView.ItemTemplate>
+                                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                    <StackPanel Margin="2" Orientation="Horizontal">
+                                        <Image
+                                            Width="14"
+                                            Height="14"
+                                            Margin="0,0,4,0"
+                                            VerticalAlignment="Center">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Setter Property="Source" Value="Ressources/FolderClosed_16x.png" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsRoot}" Value="True">
+                                                            <Setter Property="Source" Value="Ressources/Document_16x.png" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            FontSize="{StaticResource FontSizeMd}"
+                                            Foreground="{DynamicResource TextBrush}"
+                                            Text="{Binding Name}" />
+                                        <TextBlock
+                                            Margin="8,0,0,0"
+                                            VerticalAlignment="Center"
+                                            FontSize="{StaticResource FontSizeXs}"
+                                            Foreground="{DynamicResource InputHintBrush}"
+                                            Text="{Binding Path}" />
+                                    </StackPanel>
+                                </HierarchicalDataTemplate>
+                            </TreeView.ItemTemplate>
+                        </TreeView>
+                    </Grid>
+                </Border>
+            </Popup>
+            <!--  Overlay  -->
+            <Grid
+                x:Name="OverlayGrid"
+                Grid.RowSpan="4"
+                Background="{DynamicResource OverlayBrush}"
+                Visibility="Collapsed">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock
+                        x:Name="txtOverlayMessage"
+                        Margin="0,0,0,20"
+                        HorizontalAlignment="Center"
+                        FontSize="18"
+                        Foreground="White"
+                        Text="Processing..." />
+                    <ProgressBar
+                        Width="200"
+                        Height="5"
+                        IsIndeterminate="True" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

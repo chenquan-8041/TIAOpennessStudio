@@ -1,0 +1,275 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:helpers="clr-namespace:TIAOpennessStudio.Helpers"
+    xmlns:local="clr-namespace:TIAOpennessStudio">
+
+    <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <helpers:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    <helpers:ExecutionStateToColorConverter x:Key="ExecutionStateToColorConverter" />
+    <helpers:ExecutionStateToIconConverter x:Key="ExecutionStateToIconConverter" />
+    <local:RoleToAlignmentConverter x:Key="RoleToAlignmentConverter" />
+    <local:RoleToBackgroundConverter x:Key="RoleToBackgroundConverter" />
+    <local:StringVisibilityConverter x:Key="StringVisibilityConverter" />
+    <local:RoleToVisibilityConverter x:Key="RoleToVisibilityConverter" />
+    <local:Base64ToImageConverter x:Key="Base64ToImageConverter" />
+
+    <DataTemplate x:Key="ChatMessageTemplate">
+        <Grid Margin="0,4">
+            <Border Style="{DynamicResource ChatBubbleStyle}">
+                <StackPanel>
+                    <!--  Role Icon/Label (Hidden per request)  -->
+                    <Grid Margin="0,0,0,8" Visibility="{Binding Role, Converter={StaticResource RoleToVisibilityConverter}, ConverterParameter=assistant}">
+                        <!--  We only show the Copy/Undo buttons for assistant  -->
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Button
+                                Padding="5,0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Command="{Binding DataContext.CopyCodeCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                CommandParameter="{Binding}"
+                                Content="&#xE8C8;"
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeMd}"
+                                Foreground="{DynamicResource MutedTextBrush}"
+                                ToolTip="Copy content" />
+                            <!--  Undo write-back button: visible only when this message has a snapshot AND no generation is running  -->
+                            <Button
+                                Padding="5,0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Command="{Binding DataContext.UndoMessageCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                CommandParameter="{Binding}"
+                                Content="&#xE7A7;"
+                                FontFamily="Segoe MDL2 Assets"
+                                FontSize="{StaticResource FontSizeMd}"
+                                Foreground="{DynamicResource MutedTextBrush}"
+                                IsEnabled="{Binding CanUndo}"
+                                ToolTip="{Binding DataContext.UndoButtonTooltip, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                Visibility="{Binding CanUndo, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <!--  Thinking Process Section (Antigravity Style Card)  -->
+                    <Border
+                        x:Name="ThinkingSection"
+                        Margin="0,0,0,12"
+                        Padding="10"
+                        Background="{DynamicResource OverlayBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Visibility="{Binding Thinking, Converter={StaticResource StringVisibilityConverter}}">
+                        <StackPanel>
+                            <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
+                                <TextBlock
+                                    Margin="0,0,5,0"
+                                    VerticalAlignment="Center"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    Foreground="{DynamicResource AccentBrush}"
+                                    Text="&#xEA37;" />
+                                <TextBlock
+                                    FontSize="{StaticResource FontSizeSm}"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource InputHintBrush}"
+                                    Text="Thinking Process" />
+                            </StackPanel>
+                            <TextBox
+                                Padding="0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                FontSize="{StaticResource FontSizeSm}"
+                                FontStyle="Italic"
+                                Foreground="{DynamicResource MutedTextBrush}"
+                                IsReadOnly="True"
+                                Text="{Binding Thinking}"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <!--  Attached Images (user messages only)  -->
+                    <ItemsControl
+                        Margin="0,0,0,8"
+                        Visibility="{Binding HasImages, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        ItemsSource="{Binding Images}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border
+                                    Width="80"
+                                    Height="80"
+                                    Margin="0,0,6,6"
+                                    Background="{DynamicResource PanelBrush}"
+                                    BorderBrush="{DynamicResource BorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4">
+                                    <Image
+                                        Source="{Binding Converter={StaticResource Base64ToImageConverter}}"
+                                        Stretch="UniformToFill" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!--  Content Body (Regular Text)  -->
+                    <TextBox
+                        Padding="0"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        FontFamily="Segoe UI"
+                        FontSize="{StaticResource FontSizeXl}"
+                        Foreground="{DynamicResource TextBrush}"
+                        IsReadOnly="True"
+                        Text="{Binding DisplayContent}"
+                        TextWrapping="Wrap"
+                        Visibility="{Binding DisplayContent, Converter={StaticResource StringVisibilityConverter}}" />
+
+                    <!--  Agent Action Plan Section  -->
+                    <Border
+                        x:Name="PlanSection"
+                        Margin="0,10,0,0"
+                        Padding="12"
+                        Background="{DynamicResource PanelBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Visibility="{Binding Plan, Converter={StaticResource NullToVisibilityConverter}}">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,10"
+                                FontSize="{StaticResource FontSizeMd}"
+                                FontWeight="Bold"
+                                Foreground="{DynamicResource SoftTextBrush}"
+                                Text="Execution Plan" />
+                            <ItemsControl ItemsSource="{Binding Plan.Steps}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="24" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                FontFamily="Segoe MDL2 Assets"
+                                                FontSize="{StaticResource FontSizeXl}"
+                                                Foreground="{Binding State, Converter={StaticResource ExecutionStateToColorConverter}}"
+                                                Text="{Binding State, Converter={StaticResource ExecutionStateToIconConverter}}" />
+
+                                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                                <TextBlock
+                                                    FontSize="{StaticResource FontSizeMd}"
+                                                    Foreground="{DynamicResource TextBrush}"
+                                                    Text="{Binding Description}" />
+                                                <TextBlock
+                                                    FontSize="{StaticResource FontSizeXs}"
+                                                    Foreground="{DynamicResource MutedTextBrush}"
+                                                    Text="{Binding Output}"
+                                                    TextWrapping="Wrap"
+                                                    Visibility="{Binding Output, Converter={StaticResource StringVisibilityConverter}}" />
+                                            </StackPanel>
+
+                                            <TextBlock
+                                                Grid.Column="2"
+                                                VerticalAlignment="Top"
+                                                FontSize="{StaticResource FontSizeXs}"
+                                                Foreground="{DynamicResource InputHintBrush}"
+                                                Text="{Binding State}" />
+
+                                            <!--  Confirm Button for WaitingConfirmation state  -->
+                                            <Button
+                                                x:Name="ConfirmBtn"
+                                                Grid.Column="1"
+                                                Margin="10,5,0,0"
+                                                Padding="12,4"
+                                                HorizontalAlignment="Left"
+                                                Background="{DynamicResource AccentBrush}"
+                                                BorderThickness="0"
+                                                Command="{Binding DataContext.ConfirmStepCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Content="Confirm Execution"
+                                                Foreground="White"
+                                                Visibility="Collapsed" />
+                                        </Grid>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding State}" Value="WaitingConfirmation">
+                                                <Setter TargetName="ConfirmBtn" Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!--  Code Hint (Collapsed by default, open in center viewer on demand)  -->
+                    <Border
+                        Margin="0,10,0,0"
+                        Padding="10,8"
+                        Background="{DynamicResource CodePanelBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Visibility="{Binding HasCode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <DockPanel LastChildFill="False">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="{StaticResource FontSizeSm}"
+                                Foreground="{DynamicResource MutedTextBrush}"
+                                Text="检测到生成代码。点击“在中间展开”查看。" />
+                            <Button
+                                Margin="10,0,0,0"
+                                Padding="8,2"
+                                VerticalAlignment="Center"
+                                Background="{DynamicResource PanelBrush}"
+                                BorderBrush="{DynamicResource BorderBrush}"
+                                Command="{Binding DataContext.PreviewCodeCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                CommandParameter="{Binding}"
+                                Content="在中间展开"
+                                DockPanel.Dock="Right"
+                                Foreground="{DynamicResource SoftTextBrush}" />
+                        </DockPanel>
+                    </Border>
+
+                    <!--  Typing/Thinking Pulse  -->
+                    <Grid Margin="0,10,0,0" Visibility="{Binding IsThinking, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <ProgressBar
+                            Height="2"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="{DynamicResource AccentBrush}"
+                            IsIndeterminate="True" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DataTemplate>
+
+    <Style x:Key="ChatBubbleStyle" TargetType="Border">
+        <Setter Property="CornerRadius" Value="{StaticResource BubbleCornerRadius}" />
+        <Setter Property="Padding" Value="{StaticResource ChatBubblePadding}" />
+        <Setter Property="Margin" Value="{StaticResource ControlMargin}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Role}" Value="user">
+                <Setter Property="HorizontalAlignment" Value="Right" />
+                <Setter Property="Background" Value="{DynamicResource PanelBrush}" />
+                <Setter Property="Margin" Value="40,8,4,8" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Role}" Value="assistant">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="Background" Value="{DynamicResource PanelAltBrush}" />
+                <Setter Property="Margin" Value="4,8,40,8" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>

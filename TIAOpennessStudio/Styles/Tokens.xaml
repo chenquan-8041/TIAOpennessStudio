@@ -1,0 +1,34 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <!--  Design Tokens: Common sizes, margins, corner radii  -->
+    <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
+    <CornerRadius x:Key="ButtonCornerRadius">8</CornerRadius>
+    <CornerRadius x:Key="BubbleCornerRadius">12</CornerRadius>
+    <Thickness x:Key="ControlPadding">14,7</Thickness>
+    <Thickness x:Key="ChatBubblePadding">16,12</Thickness>
+    <Thickness x:Key="ControlMargin">4,8</Thickness>
+    <sys:Double x:Key="ControlFontSize">11</sys:Double>
+
+    <!--  Typography scale: keeps page-level font sizes from drifting between 10/11/12/13/14  -->
+    <sys:Double x:Key="FontSizeXs">10</sys:Double>
+    <sys:Double x:Key="FontSizeSm">11</sys:Double>
+    <sys:Double x:Key="FontSizeMd">12</sys:Double>
+    <sys:Double x:Key="FontSizeLg">13</sys:Double>
+    <sys:Double x:Key="FontSizeXl">14</sys:Double>
+    <sys:Double x:Key="FontSizeXxl">16</sys:Double>
+
+    <!--  Shared keyboard focus ring: themed, so keyboard navigation stays visible  -->
+    <Style x:Key="ControlFocusVisualStyle">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border
+                        Margin="-2"
+                        BorderBrush="{DynamicResource AccentBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        SnapsToDevicePixels="True" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,125 @@
+<UserControl x:Class="TIAOpennessStudio.Controls.OpcUaManagementControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:helpers="clr-namespace:TIAOpennessStudio.Helpers"
+             xmlns:vm="clr-namespace:TIAOpennessStudio.ViewModels">
+    <UserControl.Resources>
+        <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
+            <Rectangle Width="4" Height="16" RadiusX="2" RadiusY="2" Fill="{DynamicResource GridAccentTextBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <TextBlock x:Name="lblTitle" Text="OPC UA" FontWeight="Bold" VerticalAlignment="Center" FontSize="{StaticResource FontSizeLg}" Foreground="{DynamicResource WindowTitleTextBrush}"/>
+            <Button x:Name="btnConnect" Content="Connect" Command="{Binding ConnectCommand}" Width="80" Height="28" Margin="14,0,8,0"/>
+            <Button x:Name="btnDisconnect" Content="Disconnect" Command="{Binding DisconnectCommand}" Width="96" Height="28"/>
+            <Button x:Name="btnMonitorChecked" Content="Monitor" Command="{Binding OpenMonitorCommand}" Width="80" Height="28" Margin="8,0,0,0"/>
+        </StackPanel>
+        <Grid Grid.Row="1" Margin="0,0,0,5">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <TextBlock x:Name="lblEndpoint" Grid.Column="0" Text="Endpoint:" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="{DynamicResource TextBrush}"/>
+            <TextBox Grid.Column="1" Text="{Binding EndpointUrl, UpdateSourceTrigger=PropertyChanged}" FontSize="{StaticResource FontSizeSm}" Foreground="{DynamicResource TextBrush}"/>
+        </Grid>
+        <Grid Grid.Row="2" Margin="0,0,0,5" Height="22">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <Ellipse Width="8" Height="8" Margin="0,0,5,0" VerticalAlignment="Center">
+                    <Ellipse.Style><Style TargetType="Ellipse"><Setter Property="Fill" Value="{DynamicResource NeutralBrush}"/><Style.Triggers><DataTrigger Binding="{Binding IsConnected}" Value="True"><Setter Property="Fill" Value="{DynamicResource SuccessBrush}"/></DataTrigger></Style.Triggers></Style></Ellipse.Style>
+                </Ellipse>
+                <TextBlock Text="{Binding StatusMessage}" FontSize="{StaticResource FontSizeSm}" VerticalAlignment="Center" Foreground="{DynamicResource MutedTextBrush}"/>
+            </StackPanel>
+            <!-- Write-enable safety switch: off by default; PLC writes to a running system (high risk) are only allowed after enabling -->
+            <CheckBox x:Name="chkWriteEnabled" Grid.Column="1"
+                      VerticalAlignment="Center" VerticalContentAlignment="Center"
+                      IsChecked="{Binding WriteEnabled, Mode=TwoWay}"
+                      Foreground="{DynamicResource WarningBrush}" FontSize="{StaticResource FontSizeXs}" Padding="4,0,0,0"
+                      Content="Allow write"
+                      ToolTip="Safety switch: only when checked can values be written to the running PLC (high-risk). Off by default."/>
+        </Grid>
+        <TreeView Grid.Row="3" x:Name="NodeTree" ItemsSource="{Binding Nodes}"
+                  BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}"
+                  Background="{DynamicResource PanelBrush}"
+                  Foreground="{DynamicResource TextBrush}"
+                  TreeViewItem.Expanded="NodeTree_Expanded"
+                  SelectedItemChanged="NodeTree_SelectedItemChanged">
+            <TreeView.Resources>
+                <!-- Override the system selection highlight to transparent; ItemContainerStyle triggers apply theme colors,
+                     avoiding unreadable default blue-on-black in the dark theme. -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Transparent"/>
+            </TreeView.Resources>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Padding" Value="2,1"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource CodePanelBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource ButtonHover}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <Grid MinHeight="24">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <!-- Show checkbox only on variable nodes to support multi-select monitoring -->
+                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                      VerticalAlignment="Center" Margin="0,0,6,0"
+                                      Visibility="{Binding IsVariable, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <!-- UaExpert-style type icons: container = amber square / variable = teal dot -->
+                            <Grid Width="12" Height="12" Margin="0,0,6,0" VerticalAlignment="Center">
+                                <Rectangle Width="10" Height="10" RadiusX="2" RadiusY="2"
+                                           Fill="{Binding IconColor}"
+                                           Visibility="{Binding IsVariable, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}"/>
+                                <Ellipse Width="9" Height="9"
+                                         Fill="{Binding IconColor}"
+                                         Visibility="{Binding IsVariable, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            </Grid>
+                            <TextBlock Text="{Binding DisplayName}" FontSize="{StaticResource FontSizeMd}" VerticalAlignment="Center"
+                                       Foreground="{DynamicResource TextBrush}"/>
+                            <TextBlock Text="{Binding DataType}" FontSize="{StaticResource FontSizeXs}" VerticalAlignment="Center"
+                                       Foreground="{DynamicResource MutedTextBrush}" Margin="8,0,0,0"
+                                       FontFamily="Consolas"/>
+                            <!-- Current value: shown inline once read -->
+                            <TextBlock Text="{Binding Value}" FontSize="{StaticResource FontSizeXs}" VerticalAlignment="Center"
+                                       Foreground="{DynamicResource TextBrush}" Margin="8,0,0,0"
+                                       FontFamily="Consolas"
+                                       Visibility="{Binding IsVariable, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                        </StackPanel>
+                    </Grid>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <!-- Row 4: inline read/write moved into the node template; Monitor moved next to the top Connect button. This row remains for manual NodeId monitoring. -->
+        <Grid Grid.Row="4" Margin="0,4,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="txtManualNode" Grid.Column="0" Text="{Binding ManualNodeId, UpdateSourceTrigger=PropertyChanged}"
+                     Height="22" FontSize="{StaticResource FontSizeSm}" Foreground="{DynamicResource TextBrush}"/>
+            <Button x:Name="btnMonitorManual" Grid.Column="1" Content="Monitor" Command="{Binding MonitorManualCommand}"
+                    Width="80" Height="28" Margin="8,0,0,0"/>
+        </Grid>
+        <TextBlock x:Name="lblHint" Grid.Row="5" TextWrapping="Wrap" FontSize="{StaticResource FontSizeXs}" VerticalAlignment="Top" Margin="0,4,0,0"
+                   Foreground="{DynamicResource MutedTextBrush}"/>
+    </Grid>
+</UserControl>

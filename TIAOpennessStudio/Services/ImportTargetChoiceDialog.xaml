@@ -1,0 +1,116 @@
+<Window x:Class="TIAOpennessStudio.Services.ImportTargetChoiceDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Where to write the generated code?"
+        Width="460" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="{DynamicResource PanelBrush}"
+        Foreground="{DynamicResource TextBrush}">
+    <StackPanel Margin="20">
+
+        <TextBlock x:Name="txtHeading"
+                   Text="Code generation complete"
+                   FontSize="{StaticResource FontSizeXl}"
+                   FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextBrush}"
+                   Margin="0,0,0,6"/>
+
+        <TextBlock x:Name="txtSubtitle"
+                   Text="You have not selected a target group in the StatusBar yet. Choose how to proceed:"
+                   FontSize="{StaticResource FontSizeMd}"
+                   Foreground="{DynamicResource SoftTextBrush}"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,16"/>
+
+        <Button x:Name="btnTiaRoot"
+                Click="BtnTiaRoot_Click"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Left"
+                Padding="14,10"
+                Margin="0,0,0,8"
+                Background="{DynamicResource ButtonBackground}"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="1"
+                Cursor="Hand">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="🎯" FontSize="{StaticResource FontSizeXxl}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                <StackPanel>
+                    <TextBlock x:Name="txtTiaRootTitle"
+                               Text="Write to the TIA project root"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextBrush}"/>
+                    <TextBlock x:Name="txtTiaRootHint"
+                               Text="The code is written to PlcSoftware.BlockGroup (project root) via Openness"
+                               FontSize="{StaticResource FontSizeSm}"
+                               Foreground="{DynamicResource SoftTextBrush}"
+                               Margin="0,2,0,0"/>
+                </StackPanel>
+            </StackPanel>
+        </Button>
+
+        <Button x:Name="btnPickGroup"
+                Click="BtnPickGroup_Click"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Left"
+                Padding="14,10"
+                Margin="0,0,0,8"
+                Background="{DynamicResource ButtonBackground}"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="1"
+                Cursor="Hand">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="📁" FontSize="{StaticResource FontSizeXxl}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                <StackPanel>
+                    <TextBlock x:Name="txtPickGroupTitle"
+                               Text="Choose a TIA target group"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextBrush}"/>
+                    <TextBlock x:Name="txtPickGroupHint"
+                               Text="Open the StatusBar Blocks chip and pick a specific subgroup from the tree, then import"
+                               FontSize="{StaticResource FontSizeSm}"
+                               Foreground="{DynamicResource SoftTextBrush}"
+                               Margin="0,2,0,0"/>
+                </StackPanel>
+            </StackPanel>
+        </Button>
+
+        <Button x:Name="btnLocalFile"
+                Click="BtnLocalFile_Click"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Left"
+                Padding="14,10"
+                Margin="0,0,0,16"
+                Background="{DynamicResource ButtonBackground}"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="1"
+                Cursor="Hand">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="💾" FontSize="{StaticResource FontSizeXxl}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                <StackPanel>
+                    <TextBlock x:Name="txtLocalFileTitle"
+                               Text="Save to a local file"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextBrush}"/>
+                    <TextBlock x:Name="txtLocalFileHint"
+                               Text="Default: GeneratedCode\&lt;BlockName&gt;.scl; the path can be changed in the save dialog"
+                               FontSize="{StaticResource FontSizeSm}"
+                               Foreground="{DynamicResource SoftTextBrush}"
+                               Margin="0,2,0,0"/>
+                </StackPanel>
+            </StackPanel>
+        </Button>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="btnCancel"
+                    Content="Cancel"
+                    Click="BtnCancel_Click"
+                    Padding="20,5"
+                    Background="{DynamicResource ButtonBackground}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="1"
+                    Foreground="{DynamicResource TextBrush}"
+                    Cursor="Hand"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

@@ -1,0 +1,1490 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": "T0",
+  "generatedAtUtc": "2026-10-31T04:45:11.4959673Z",
+  "description": "Frozen read-side contract (block XML -> IR projection). Any diff means a contract change: review it, then re-run with --contract-probe --write-baseline.",
+  "fixtures": [
+    {
+      "id": "docs\\samples\\V15.1\\DB\\DB_V0.1.xml",
+      "origin": "file",
+      "version": "15.1",
+      "xmlSha256": "04d32d7c45d7fceb22c94a31d85f8bac38f1e5d1869b847a25cabae57a876d58",
+      "xmlLength": 3245,
+      "xmlBlockElement": "SW.Blocks.GlobalDB",
+      "xmlLanguage": "DB",
+      "xmlName": "考试db",
+      "xmlNumber": 11,
+      "xmlNetworkCount": 0,
+      "parsedNetworkCount": 0,
+      "blockAttributes": [
+        "Interface=<Interface:1>",
+        "Name=考试db",
+        "Number=11",
+        "ProgrammingLanguage=DB"
+      ],
+      "snapshot": {
+        "parsed": true,
+        "blockType": "DB",
+        "xmlBlockKind": "GlobalDB",
+        "language": "DB",
+        "name": "考试db",
+        "isInstanceDb": false,
+        "instanceOfName": "",
+        "sourceProfile": "V15.1",
+        "revision": "b1b5e8bd3f3d78ec35860625c6f2711c9f642e880821aede4758c4a8cd6b737b",
+        "stableAcrossExports": true,
+        "attributes": [
+          "Interface=<Interface:1>",
+          "Name=考试db",
+          "Number=11",
+          "ProgrammingLanguage=DB"
+        ],
+        "consistent": true
+      },
+      "xmlTextNetworkCount": 0,
+      "projections": {
+        "xmlSha256": "04d32d7c45d7fceb22c94a31d85f8bac38f1e5d1869b847a25cabae57a876d58",
+        "interfaceSha256": "4da0bc23863ef734fc080f64fd7ea947aa218a5be35c96b070d7870dccdd2728",
+        "sourceSha256": "",
+        "sourceLength": 0,
+        "sourceNetworks": 0,
+        "consistent": true
+      },
+      "reference": {
+        "format": "ir",
+        "length": 1377,
+        "consistent": true
+      },
+      "patches": {
+        "networkApplicable": false,
+        "networkOk": false,
+        "interfaceApplicable": true,
+        "interfaceOk": true,
+        "negativeOk": true,
+        "consistent": true,
+        "errors": []
+      },
+      "writeGuards": {
+        "truncated": true,
+        "instance": true,
+        "memoryLayout": true,
+        "consistent": true,
+        "errors": []
+      },
+      "capabilities": {
+        "consistent": true,
+        "errors": []
+      },
+      "memberCount": 5,
+      "members": [
+        "Static:s1:Bool",
+        "Static:s2:Bool",
+        "Static:s3:Bool",
+        "Static:s4:Bool",
+        "Static:自动模式:Bool"
+      ],
+      "irParsed": true,
+      "irKind": "GlobalDB",
+      "irLanguage": "DB",
+      "blockName": "考试db",
+      "blockNumber": 11,
+      "irNetworkCount": 0,
+      "irXmlBlockKind": "GlobalDB",
+      "irIsInstanceDb": false,
+      "irInstanceOfName": "",
+      "irBlockAttributes": [
+        "Interface=<Interface:1>",
+        "Name=考试db",
+        "Number=11",
+        "ProgrammingLanguage=DB"
+      ],
+      "irMemberCount": 5,
+      "irMembers": [
+        "Static:s1:Bool",
+        "Static:s2:Bool",
+        "Static:s3:Bool",
+        "Static:s4:Bool",
+        "Static:自动模式:Bool"
+      ],
+      "fidelity": {
+        "truncated": false,
+        "totalNetworks": 0,
+        "returnedCount": 0
+      },
+      "interfaceHash": "4da0bc23863ef734fc080f64fd7ea947aa218a5be35c96b070d7870dccdd2728",
+      "bodyHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "irLength": 964,
+      "checks": {
+        "membersMatch": true,
+        "fidelityConsistent": true,
+        "rangePageApplicable": false,
+        "rangePageOk": true,
+        "snapshotConsistent": true,
+        "projectionsConsistent": true,
+        "referencePolicyConsistent": true,
+        "irMetadataConsistent": true,
+        "patchChecksPassed": true,
+        "writeGuardsPassed": true,
+        "capabilityChecksOk": true,
+        "passed": true
+      },
+      "checkFailures": []
+    },
+    {
+      "id": "docs\\samples\\V15.1\\GRAPH\\graph_V0.1.xml",
+      "origin": "file",
+      "version": "15.1",
+      "xmlSha256": "f5f8f279b5d27da2791f2d850d717f5dafa0d1b846e0b97ccb667753e3236974",
+      "xmlLength": 42398,
+      "xmlBlockElement": "SW.Blocks.FB",
+      "xmlLanguage": "GRAPH",
+      "xmlName": "练习_graph",
+      "xmlNumber": 2,
+      "xmlNetworkCount": 1,
+      "parsedNetworkCount": 1,
+      "blockAttributes": [
+        "Interface=<Interface:1>",
+        "Name=练习_graph",
+        "Number=2",
+        "ProgrammingLanguage=GRAPH"
+      ],
+      "snapshot": {
+        "parsed": true,
+        "blockType": "FB",
+        "xmlBlockKind": "FB",
+        "language": "GRAPH",
+        "name": "练习_graph",
+        "isInstanceDb": false,
+        "instanceOfName": "",
+        "sourceProfile": "V15.1",
+        "revision": "ed99852acd2185e6101aa7cdff9bb26ea44c3274ccc9e836af5ea39ca223f80a",
+        "stableAcrossExports": true,
+        "attributes": [
+          "Interface=<Interface:1>",
+          "Name=练习_graph",
+          "Number=2",
+          "ProgrammingLanguage=GRAPH"
+        ],
+        "consistent": true
+      },
+      "xmlTextNetworkCount": 0,
+      "projections": {
+        "xmlSha256": "f5f8f279b5d27da2791f2d850d717f5dafa0d1b846e0b97ccb667753e3236974",
+        "interfaceSha256": "",
+        "sourceSha256": "",
+        "sourceLength": 0,
+        "sourceNetworks": 0,
+        "consistent": true
+      },
+      "reference": {
+        "format": "ir",
+        "length": 6820,
+        "consistent": true
+      },
+      "patches": {
+        "networkApplicable": false,
+        "networkOk": false,
+        "interfaceApplicable": false,
+        "interfaceOk": false,
+        "negativeOk": true,
+        "consistent": true,
+        "errors": []
+      },
+      "writeGuards": {
+        "truncated": true,
+        "instance": true,
+        "memoryLayout": true,
+        "consistent": true,
+        "errors": []
+      },
+      "capabilities": {
+        "consistent": true,
+        "errors": []
+      },
+      "memberCount": 0,
+      "members": [],
+      "irParsed": true,
+      "irKind": "FB",
+      "irLanguage": "GRAPH",
+      "blockName": "练习_graph",
+      "blockNumber": 2,
+      "irNetworkCount": 1,
+      "irXmlBlockKind": "",
+      "irIsInstanceDb": false,
+      "irInstanceOfName": "",
+      "irBlockAttributes": [],
+      "irMemberCount": 0,
+      "irMembers": [],
+      "fidelity": {
+        "truncated": false,
+        "totalNetworks": 1,
+        "returnedCount": 1
+      },
+      "interfaceHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bodyHash": "6eae751191ada0e31a5cb93d0bc975abe4b4c47d609215db089254c2c2508343",
+      "irLength": 6359,
+      "checks": {
+        "membersMatch": true,
+        "fidelityConsistent": true,
+        "rangePageApplicable": false,
+        "rangePageOk": true,
+        "snapshotConsistent": true,
+        "projectionsConsistent": true,
+        "referencePolicyConsistent": true,
+        "irMetadataConsistent": true,
+        "patchChecksPassed": true,
+        "writeGuardsPassed": true,
+        "capabilityChecksOk": true,
+        "passed": true
+      },
+      "checkFailures": []
+    },
+    {
+      "id": "docs\\samples\\V15.1\\LAD\\interface_io_contact_coil.xml",
+      "origin": "file",
+      "version": "15.1",
+      "xmlSha256": "bcfa170b41ee9edf42c80de2f155b1162410c7266cecf01efd10bbcc0319cce5",
+      "xmlLength": 4653,
+      "xmlBlockElement": "SW.Blocks.FC",
+      "xmlLanguage": "LAD",
+      "xmlName": "FC_LadInterfaceIO",
+      "xmlNumber": 1,
+      "xmlNetworkCount": 1,
+      "parsedNetworkCount": 1,
+      "blockAttributes": [
+        "Interface=<Interface:1>",
+        "Name=FC_LadInterfaceIO",
+        "Number=1",
+        "ProgrammingLanguage=LAD"
+      ],
+      "snapshot": {
+        "parsed": true,
+        "blockType": "FC",
+        "xmlBlockKind": "FC",
+        "language": "LAD",
+        "name": "FC_LadInterfaceIO",
+        "isInstanceDb": false,
+        "instanceOfName": "",
+        "sourceProfile": "V15.1",
+        "revision": "3b59272f340ae166bdae065b5ef2a1e55656dfa4328d4ff2e4375a24f54db77b",
+        "stableAcrossExports": true,
+        "attributes": [
+          "Interface=<Interface:1>",
+          "Name=FC_LadInterfaceIO",
+          "Number=1",
+          "ProgrammingLanguage=LAD"
+        ],
+        "consistent": true
+      },
+      "xmlTextNetworkCount": 0,
+      "projections": {
+        "xmlSha256": "bcfa170b41ee9edf42c80de2f155b1162410c7266cecf01efd10bbcc0319cce5",
+        "interfaceSha256": "6287d60fafb2458f3d2aacaf6f8c96fc7b833c36f7545757abe29334145a8e00",
+        "sourceSha256": "",
+        "sourceLength": 0,
+        "sourceNetworks": 0,
+        "consistent": true
+      },
+      "reference": {
+        "format": "ir",
+        "length": 3609,
+        "consistent": true
+      },
+      "patches": {
+        "networkApplicable": true,
+        "networkOk": true,
+        "interfaceApplicable": true,
+        "interfaceOk": true,
+        "negativeOk": true,
+        "consistent": true,
+        "errors": []
+      },
+      "writeGuards": {
+        "truncated": true,
+        "instance": true,
+        "memoryLayout": true,
+        "consistent": true,
+        "errors": []
+      },
+      "capabilities": {
+        "consistent": true,
+        "errors": []
+      },
+      "memberCount": 4,
+      "members": [
+        "Input:Start:Bool",
+        "Input:Stop:Bool",
+        "Output:Running:Bool",
+        "Return:Ret_Val:Void"
+      ],
+      "irParsed": true,
+      "irKind": "FC",
+      "irLanguage": "LAD",
+      "blockName": "FC_LadInterfaceIO",
+      "blockNumber": 1,
+      "irNetworkCount": 1,
+      "irXmlBlockKind": "FC",
+      "irIsInstanceDb": false,
+      "irInstanceOfName": "",
+      "irBlockAttributes": [
+        "Interface=<Interface:1>",
+        "Name=FC_LadInterfaceIO",
+        "Number=1",
+        "ProgrammingLanguage=LAD"
+      ],
+      "irMemberCount": 4,
+      "irMembers": [
+        "Input:Start:Bool",
+        "Input:Stop:Bool",
+        "Output:Running:Bool",
+        "Return:Ret_Val:Void"
+      ],
+      "fidelity": {
+        "truncated": false,
+        "totalNetworks": 1,
+        "returnedCount": 1
+      },
+      "interfaceHash": "6287d60fafb2458f3d2aacaf6f8c96fc7b833c36f7545757abe29334145a8e00",
+      "bodyHash": "98de0c43ab0319babd230a1aa1e997160e32ab8ba77cce35121397e7a573be3d",
+      "irLength": 3169,
+      "checks": {
+        "membersMatch": true,
+        "fidelityConsistent": true,
+        "rangePageApplicable": false,
+        "rangePageOk": true,
+        "snapshotConsistent": true,
+        "projectionsConsistent": true,
+        "referencePolicyConsistent": true,
+        "irMetadataConsistent": true,
+        "patchChecksPassed": true,
+        "writeGuardsPassed": true,
+        "capabilityChecksOk": true,
+        "passed": true
+      },
+      "checkFailures": []
+    },
+    {
+      "id": "docs\\samples\\V15.1\\LAD\\interface_io_contact_coil_fb.xml",
+      "origin": "file",
+      "version": "15.1",
+      "xmlSha256": "312261a363b2ff2f117101853b2439c86603d8413d7a509aa51694e3a7371fd8",
+      "xmlLength": 5342,
+      "xmlBlockElement": "SW.Blocks.FB",
+      "xmlLanguage": "LAD",
+      "xmlName": "FB_LadInterfaceIO",
+      "xmlNumber": 2,
+      "xmlNetworkCount": 1,
+      "parsedNetworkCount": 1,
+      "blockAttributes": [
+        "Interface=<Interface:1>",
+        "Name=FB_LadInterfaceIO",
+        "Number=2",
+        "ProgrammingLanguage=LAD"
+      ],
+      "snapshot": {
+        "parsed": true,
+        "blockType": "FB",
+        "xmlBlockKind": "FB",
+        "language": "LAD",
+        "name": "FB_LadInterfaceIO",
+        "isInstanceDb": false,
+        "instanceOfName": "",
+        "sourceProfile": "V15.1",
+        "revision": "3165da3cf8e2aad1755b497254f6eda4be14549bddbb9139f4bb81a67ed5abdd",
+        "stableAcrossExports": true,
+        "attributes": [
+          "Interface=<Interface:1>",
+          "Name=FB_LadInterfaceIO",
+          "Number=2",
+          "ProgrammingLanguage=LAD"
+        ],
+        "consistent": true
+      },
+      "xmlTextNetworkCount": 0,
+      "projections": {
+        "xmlSha256": "312261a363b2ff2f117101853b2439c86603d8413d7a509aa51694e3a7371fd8",
+        "interfaceSha256": "8145d410c20769ade961d2af2c8fc5e9a88bd2f450ee6a80369b7a2a42462f23",
+        "sourceSha256": "",
+        "sourceLength": 0,
+        "sourceNetworks": 0,
+        "consistent": true
+      },
+      "reference": {
+        "format": "ir",
+        "length": 4608,
+        "consistent": true
+      },
+      "patches": {
+        "networkApplicable": true,
+        "networkOk": true,
+        "interfaceApplicable": true,
+        "interfaceOk": true,
+        "negativeOk": true,
+        "consistent": true,
+        "errors": []
+      },
+      "writeGuards": {
+        "truncated": true,
+        "instance": true,
+        "memoryLayout": true,
+        "consistent": true,
+        "errors": []
+      },
+      "capabilities": {
+        "consistent": true,
+        "errors": []
+      },
+      "memberCount": 4,
+      "members": [
+        "Input:Start:Bool",
+        "Input:Stop:Bool",
+        "Output:Running:Bool",
+        "Static:Mem:Bool"
+      ],
+      "irParsed": true,
+      "irKind": "FB",
+      "irLanguage": "LAD",
+      "blockName": "FB_LadInterfaceIO",
+      "blockNumber": 2,
+      "irNetworkCount": 1,
+      "irXmlBlockKind": "FB",
+      "irIsInstanceDb": false,
+      "irInstanceOfName": "",
+      "irBlockAttributes": [
+        "Interface=<Interface:1>",
+        "Name=FB_LadInterfaceIO",
+        "Number=2",
+        "ProgrammingLanguage=LAD"
+      ],
+      "irMemberCount": 4,
+      "irMembers": [
+        "Input:Start:Bool",
+        "Input:Stop:Bool",
+        "Output:Running:Bool",
+        "Static:Mem:Bool"
+      ],
+      "fidelity": {
+        "truncated": false,
+        "totalNetworks": 1,
+        "returnedCount": 1
+      },
+      "interfaceHash": "8145d410c20769ade961d2af2c8fc5e9a88bd2f450ee6a80369b7a2a42462f23",
+      "bodyHash": "06549f32b2b37ea178aa5827ad6adbb5b683f61081e3999d9d15c5cf24508777",
+      "irLength": 4165,
+      "checks": {
+        "membersMatch": true,
+        "fidelityConsistent": true,
+        "rangePageApplicable": false,
+        "rangePageOk": true,
+        "snapshotConsistent": true,
+        "projectionsConsistent": true,
+        "referencePolicyConsistent": true,
+        "irMetadataConsistent": true,
+        "patchChecksPassed": true,
+        "writeGuardsPassed": true,
+        "capabilityChecksOk": true,
+        "passed": true
+      },
+      "checkFailures": []
+    },
+    {
+      "id": "docs\\samples\\V15.1\\LAD\\LAD_V0.1.xml",
+      "origin": "file",
+      "version": "15.1",
+      "xmlSha256": "4cd2eba6eba9ff49966a0970893a294bcd691119400b0b316419b1d6294d421a",
+      "xmlLength": 74863,
+      "xmlBlockElement": "SW.Blocks.FC",
+      "xmlLanguage": "LAD",
+      "xmlName": "考试",
+      "xmlNumber": 1,
+      "xmlNetworkCount": 12,
+      "parsedNetworkCount": 11,
+      "blockAttributes": [
+        "Interface=<Interface:1>",
+        "Name=考试",
+        "Number=1",
+        "ProgrammingLanguage=LAD"
+      ],
+      "snapshot": {
+        "parsed": true,
+        "blockType": "FC",
+        "xmlBlockKind": "FC",
+        "language": "LAD",
+        "name": "考试",
+        "isInstanceDb": false,
+        "instanceOfName": "",
+        "sourceProfile": "V15.1",
+        "revision": "32caf31615b45bff6de7ceeb9d950a6aa1e14473bbab6a42d222ffa42a59617b",
+        "stableAcrossExports": true,
+        "attributes": [
+          "Interface=<Interface:1>",
+          "Name=考试",
+          "Number=1",
+          "ProgrammingLanguage=LAD"
+        ],
+        "consistent": true
+      },
+      "xmlTextNetworkCount": 0,
+      "projections": {
+        "xmlSha256": "4cd2eba6eba9ff49966a0970893a294bcd691119400b0b316419b1d6294d421a",
+        "interfaceSha256": "21fc7d2561c41655d5a29cd07edac1966b31b12ac1bea40da3f1b08e037113b6",
+        "sourceSha256": "",
+        "sourceLength": 0,
+        "sourceNetworks": 0,
+        "consistent": true
+      },
+      "reference": {
+        "format": "ir",
+        "length": 81325,
+        "consistent": true
+      },
+      "patches": {
+        "networkApplicable": true,
+        "networkOk": true,
+        "interfaceApplicable": true,
+        "interfaceOk": true,
+        "negativeOk": true,
+        "consistent": true,
+        "errors": []
+      },
+      "writeGuards": {
+        "truncated": true,
+        "instance": true,
+        "memoryLayout": true,
+        "consistent": true,
+        "errors": []
+      },
+      "capabilities": {
+        "consistent": true,
+        "errors": []
+      },
+      "memberCount": 1,
+      "members": [
+        "Return:Ret_Val:Void"
+      ],
+      "irParsed": true,
+      "irKind": "FC",
+      "irLanguage": "LAD",
+      "blockName": "考试",
+      "blockNumber": 1,
+      "irNetworkCount": 11,
+      "irXmlBlockKind": "FC",
+      "irIsInstanceDb": false,
+      "irInstanceOfName": "",
+      "irBlockAttributes": [
+        "Interface=<Interface:1>",
+        "Name=考试",
+        "Number=1",
+        "ProgrammingLanguage=LAD"
+      ],
+      "irMemberCount": 1,
+      "irMembers": [
+        "Return:Ret_Val:Void"
+      ],
+      "fidelity": {
+        "truncated": false,
+        "totalNetworks": 11,
+        "returnedCount": 11
+      },
+      "interfaceHash": "21fc7d2561c41655d5a29cd07edac1966b31b12ac1bea40da3f1b08e037113b6",
+      "bodyHash": "c414a101f2f982f254bcf9ed0e7037560f91c832190a46442840cd930f20e94e",
+      "irLength": 80915,
+      "checks": {
+        "membersMatch": true,
+        "fidelityConsistent": true,
+        "rangePageApplicable": true,
+        "rangePageOk": true,
+        "snapshotConsistent": true,
+        "projectionsConsistent": true,
+        "referencePolicyConsistent": true,
+        "irMetadataConsistent": true,
+        "patchChecksPassed": true,
+        "writeGuardsPassed": true,
+        "capabilityChecksOk": true,
+        "passed": true
+      },
+      "checkFailures": []
+    },
+    {
+      "id": "docs\\samples\\V15.1\\SCL\\SCL_V0.1.xml",
+      "origin": "file",
+      "version": "15.1",
+      "xmlSha256": "0edb4e16d0e349f9995359acf42b13c16ceb70254ffa04e410259b29980bf47c",
+      "xmlLength": 11433,
+      "xmlBlockElement": "SW.Blocks.FC",
+      "xmlLanguage": "SCL",
+      "xmlName": "V2_FC_Scaling",
+      "xmlNumber": 7,
+      "xmlNetworkCount": 1,
+      "parsedNetworkCount": 1,
+      "blockAttributes": [
+        "CheckArrayLimits=False",
+        "ExtendedStatus=False",
+        "Interface=<Interface:1>",
+        "Name=V2_FC_Scaling",
+        "Number=7",
+        "ProgrammingLanguage=SCL",
+        "SetENOAutomatically=False"
+      ],
+      "snapshot": {
+        "parsed": true,
+        "blockType": "FC",
+        "xmlBlockKind": "FC",
+        "language": "SCL",
+        "name": "V2_FC_Scaling",
+        "isInstanceDb": false,
+        "instanceOfName": "",
+        "sourceProfile": "V15.1",
+        "revision": "047ac00ae8b08d38ff3386b720de3ceac641fcd1f1ce23819cc5deadd1966cd9",
+        "stableAcrossExports": true,
+        "attributes": [
+          "CheckArrayLimits=False",
+          "ExtendedStatus=False",
+          "Interface=<Interface:1>",
+          "Name=V2_FC_Scaling",
+          "Number=7",
+          "ProgrammingLanguage=SCL",
+          "SetENOAutomatically=False"
+        ],
+        "consistent": true
+      },
+      "xmlTextNetworkCount": 1,
+      "projections": {
+        "xmlSha256": "0edb4e16d0e349f9995359acf42b13c16ceb70254ffa04e410259b29980bf47c",
+        "interfaceSha256": "604be41dfd20b7bde01ab9a0f1ab2a14f8cadbcc4219accaf9da4998c96d0e60",
+        "sourceSha256": "3f925505b8b580f98b811bd8e4b2ab64475883c440fe88c6faa15900aded481c",
+        "sourceLength": 441,
+        "sourceNetworks": 1,
+        "consistent": true
+      },
+      "reference": {
+        "format": "source",
+        "length": 729,
+        "consistent": true
+      },
+      "patches": {
+        "networkApplicable": true,
+        "networkOk": true,
+        "interfaceApplicable": true,
+        "interfaceOk": true,
+        "negativeOk": true,
+        "consistent": true,
+        "errors": []
+      },
+      "writeGuards": {
+        "truncated": true,
+        "instance": true,
+        "memoryLayout": true,
+        "consistent": true,
+        "errors": []
+      },
+      "capabilities": {
+        "consistent": true,
+        "errors": []
+      },
+      "memberCount": 12,
+      "members": [
+        "Input:EngMax:Real",
+        "Input:EngMin:Real",
+        "Input:RawMax:Int",
+        "Input:RawMin:Int",
+        "Input:RawValue:Int",
+        "Output:ScaledValue:Real",
+        "Return:Ret_Val:Void",
+        "Temp:RawMaxReal:Real",
+        "Temp:RawMinReal:Real",
+        "Temp:RawValueReal:Real",
+        "Temp:SpanEng:Real",
+        "Temp:SpanRaw:Real"
+      ],
+      "irParsed": true,
+      "irKind": "FC",
+      "irLanguage": "SCL",
+      "blockName": "V2_FC_Scaling",
+      "blockNumber": 7,
+      "irNetworkCount": 1,
+      "irXmlBlockKind": "FC",
+      "irIsInstanceDb": false,
+      "irInstanceOfName": "",
+      "irBlockAttributes": [
+        "CheckArrayLimits=False",
+        "ExtendedStatus=False",
+        "Interface=<Interface:1>",
+        "Name=V2_FC_Scaling",
+        "Number=7",
+        "ProgrammingLanguage=SCL",
+        "SetENOAutomatically=False"
+      ],
+      "irMemberCount": 12,
+      "irMembers": [
+        "Input:EngMax:Real",
+        "Input:EngMin:Real",
+        "Input:RawMax:Int",
+        "Input:RawMin:Int",
+        "Input:RawValue:Int",
+        "Output:ScaledValue:Real",
+        "Return:Ret_Val:Void",
+        "Temp:RawMaxReal:Real",
+        "Temp:RawMinReal:Real",
+        "Temp:RawValueReal:Real",
+        "Temp:SpanEng:Real",
+        "Temp:SpanRaw:Real"
+      ],
+      "fidelity": {
+        "truncated": false,
+        "totalNetworks": 1,
+        "returnedCount": 1
+      },
+      "interfaceHash": "604be41dfd20b7bde01ab9a0f1ab2a14f8cadbcc4219accaf9da4998c96d0e60",
+      "bodyHash": "4bec6006541ffb2d6f637e463e63e9d76567fb060884d20fb323e93aabe28488",
+      "irLength": 10731,
+      "checks": {
+        "membersMatch": true,
+        "fidelityConsistent": true,
+        "rangePageApplicable": false,
+        "rangePageOk": true,
+        "snapshotConsistent": true,
+        "projectionsConsistent": true,
+        "referencePolicyConsistent": true,
+        "irMetadataConsistent": true,
+        "patchChecksPassed": true,
+        "writeGuardsPassed": true,
+        "capabilityChecksOk": true,
+        "passed": true
+      },
+      "checkFailures": []
+    },
+    {
+      "id": "docs\\samples\\V15.1\\UDT\\plcType_UDT.xml",
+      "origin": "file",
+      "version": "15.1",
+      "xmlSha256": "f4278df3d7e2ae2500ac198d2daa0ea7a941aff47ce4be197817ed289142b987",
+      "xmlLength": 3016,
+      "xmlBlockElement": "SW.Types.PlcStruct",
+      "xmlLanguage": "UDT",
+      "xmlName": "ValveParam",
+      "xmlNumber": 0,
+      "xmlNetworkCount": 0,
+      "parsedNetworkCount": 0,
+      "blockAttributes": [
+        "Interface=<Interface:1>",
+        "Name=ValveParam"
+      ],
+      "snapshot": {
+        "parsed": true,
+        "blockType": "UDT",
+        "xmlBlockKind": "PlcStruct",
+        "language": "UDT",
+        "name": "ValveParam",
+        "isInstanceDb": false,
+        "instanceOfName": "",
+        "sourceProfile": "V15.1",
+        "revision": "8f386e0c81cd86986eba1b43e7d7e44a5d51bd7f356386db0647eb9df163f223",
+        "stableAcrossExports": true,
+        "attributes": [
+          "Interface=<Interface:1>",
+          "Name=ValveParam"
+        ],
+        "consistent": true
+      },
+      "xmlTextNetworkCount": 0,
+      "projections": {
+        "xmlSha256": "f4278df3d7e2ae2500ac198d2daa0ea7a941aff47ce4be197817ed289142b987",
+        "interfaceSha256": "f319be7f6cce73f9d15864dc827c09d571a0d3ec9e46009c227dfdd4880b59f5",
+        "sourceSha256": "",
+        "sourceLength": 0,
+        "sourceNetworks": 0,
+        "consistent": true
+      },
+      "reference": {
+        "format": "ir",
+        "length": 1110,
+        "consistent": true
+      },
+      "patches": {
+        "networkApplicable": false,
+        "networkOk": false,
+        "interfaceApplicable": true,
+        "interfaceOk": true,
+        "negativeOk": true,
+        "consistent": true,
+        "errors": []
+      },
+      "writeGuards": {
+        "truncated": true,
+        "instance": true,
+        "memoryLayout": true,
+        "consistent": true,
+        "errors": []
+      },
+      "capabilities": {
+        "consistent": true,
+        "errors": []
+      },
+      "memberCount": 3,
+      "members": [
+        "None:PositionFeedback:Bool",
+        "None:SwitchState:Bool",
+        "None:Timeout:Time"
+      ],
+      "irParsed": true,
+      "irKind": "UDT",
+      "irLanguage": "UDT",
+      "blockName": "ValveParam",
+      "blockNumber": 0,
+      "irNetworkCount": 0,
+      "irXmlBlockKind": "PlcStruct",
+      "irIsInstanceDb": false,
+      "irInstanceOfName": "",
+      "irBlockAttributes": [
+        "Interface=<Interface:1>",
+        "Name=ValveParam"
+      ],
+      "irMemberCount": 3,
+      "irMembers": [
+        "None:PositionFeedback:Bool",
+        "None:SwitchState:Bool",
+        "None:Timeout:Time"
+      ],
+      "fidelity": {
+        "truncated": false,
+        "totalNetworks": 0,
+        "returnedCount": 0
+      },
+      "interfaceHash": "f319be7f6cce73f9d15864dc827c09d571a0d3ec9e46009c227dfdd4880b59f5",
+      "bodyHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "irLength": 690,
+      "checks": {
+        "membersMatch": true,
+        "fidelityConsistent": true,
+        "rangePageApplicable": false,
+        "rangePageOk": true,
+        "snapshotConsistent": true,
+        "projectionsConsistent": true,
+        "referencePolicyConsistent": true,
+        "irMetadataConsistent": true,
+        "patchChecksPassed": true,
+        "writeGuardsPassed": true,
+        "capabilityChecksOk": true,
+        "passed": true
+      },
+      "checkFailures": []
+    },
+    {
+      "id": "synthetic/GlobalDb_Optimized",
+      "origin": "synthetic",
+      "version": "15.1",
+      "xmlSha256": "95142e9de9f32f0616c7961bcc1d2de990783ba4b981756aaa3199d9b538c923",
+      "xmlLength": 3245,
+      "xmlBlockElement": "SW.Blocks.GlobalDB",
+      "xmlLanguage": "DB",
+      "xmlName": "考试db",
+      "xmlNumber": 11,
+      "xmlNetworkCount": 0,
+      "parsedNetworkCount": 0,
+      "blockAttributes": [
+        "Interface=<Interface:1>",
+        "MemoryLayout=Optimized",
+        "Name=考试db",
+        "Number=11",
+        "ProgrammingLanguage=DB"
+      ],
+      "snapshot": {
+        "parsed": true,
+        "blockType": "DB",
+        "xmlBlockKind": "GlobalDB",
+        "language": "DB",
+        "name": "考试db",
+        "isInstanceDb": false,
+        "instanceOfName": "",
+        "sourceProfile": "V15.1",
+        "revision": "4a2cab02b969f0f88c8aaf1a2dd2db7ec32e73a05ab2a84c95be979778a363b5",
+        "stableAcrossExports": true,
+        "attributes": [
+          "Interface=<Interface:1>",
+          "MemoryLayout=Optimized",
+          "Name=考试db",
+          "Number=11",
+          "ProgrammingLanguage=DB"
+        ],
+        "consistent": true
+      },
+      "xmlTextNetworkCount": 0,
+      "projections": {
+        "xmlSha256": "95142e9de9f32f0616c7961bcc1d2de990783ba4b981756aaa3199d9b538c923",
+        "interfaceSha256": "4da0bc23863ef734fc080f64fd7ea947aa218a5be35c96b070d7870dccdd2728",
+        "sourceSha256": "",
+        "sourceLength": 0,
+        "sourceNetworks": 0,
+        "consistent": true
+      },
+      "reference": {
+        "format": "ir",
+        "length": 1399,
+        "consistent": true
+      },
+      "patches": {
+        "networkApplicable": false,
+        "networkOk": false,
+        "interfaceApplicable": true,
+        "interfaceOk": true,
+        "negativeOk": true,
+        "consistent": true,
+        "errors": []
+      },
+      "writeGuards": {
+        "truncated": true,
+        "instance": true,
+        "memoryLayout": true,
+        "consistent": true,
+        "errors": []
+      },
+      "capabilities": {
+        "consistent": true,
+        "errors": []
+      },
+      "memberCount": 5,
+      "members": [
+        "Static:s1:Bool",
+        "Static:s2:Bool",
+        "Static:s3:Bool",
+        "Static:s4:Bool",
+        "Static:自动模式:Bool"
+      ],
+      "irParsed": true,
+      "irKind": "GlobalDB",
+      "irLanguage": "DB",
+      "blockName": "考试db",
+      "blockNumber": 11,
+      "irNetworkCount": 0,
+      "irXmlBlockKind": "GlobalDB",
+      "irIsInstanceDb": false,
+      "irInstanceOfName": "",
+      "irBlockAttributes": [
+        "Interface=<Interface:1>",
+        "MemoryLayout=Optimized",
+        "Name=考试db",
+        "Number=11",
+        "ProgrammingLanguage=DB"
+      ],
+      "irMemberCount": 5,
+      "irMembers": [
+        "Static:s1:Bool",
+        "Static:s2:Bool",
+        "Static:s3:Bool",
+        "Static:s4:Bool",
+        "Static:自动模式:Bool"
+      ],
+      "fidelity": {
+        "truncated": false,
+        "totalNetworks": 0,
+        "returnedCount": 0
+      },
+      "interfaceHash": "4da0bc23863ef734fc080f64fd7ea947aa218a5be35c96b070d7870dccdd2728",
+      "bodyHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "irLength": 991,
+      "checks": {
+        "membersMatch": true,
+        "fidelityConsistent": true,
+        "rangePageApplicable": false,
+        "rangePageOk": true,
+        "snapshotConsistent": true,
+        "projectionsConsistent": true,
+        "referencePolicyConsistent": true,
+        "irMetadataConsistent": true,
+        "patchChecksPassed": true,
+        "writeGuardsPassed": true,
+        "capabilityChecksOk": true,
+        "passed": true
+      },
+      "checkFailures": []
+    },
+    {
+      "id": "synthetic/InstanceDb",
+      "origin": "synthetic",
+      "version": "15.1",
+      "xmlSha256": "0fa46675eec7b929c81758b6d318299a43df88fe0eb3ea0c4711dab504a69a72",
+      "xmlLength": 3253,
+      "xmlBlockElement": "SW.Blocks.InstanceDB",
+      "xmlLanguage": "DB",
+      "xmlName": "考试db",
+      "xmlNumber": 11,
+      "xmlNetworkCount": 0,
+      "parsedNetworkCount": 0,
+      "blockAttributes": [
+        "InstanceOfName=FB_Sample",
+        "Interface=<Interface:1>",
+        "Name=考试db",
+        "Number=11",
+        "ProgrammingLanguage=DB"
+      ],
+      "snapshot": {
+        "parsed": true,
+        "blockType": "DB",
+        "xmlBlockKind": "InstanceDB",
+        "language": "DB",
+        "name": "考试db",
+        "isInstanceDb": true,
+        "instanceOfName": "FB_Sample",
+        "sourceProfile": "V15.1",
+        "revision": "6435686dfe5186a74302c59aada989ec0a7954a2354028e8ded157dc3f4b31ac",
+        "stableAcrossExports": true,
+        "attributes": [
+          "InstanceOfName=FB_Sample",
+          "Interface=<Interface:1>",
+          "Name=考试db",
+          "Number=11",
+          "ProgrammingLanguage=DB"
+        ],
+        "consistent": true
+      },
+      "xmlTextNetworkCount": 0,
+      "projections": {
+        "xmlSha256": "0fa46675eec7b929c81758b6d318299a43df88fe0eb3ea0c4711dab504a69a72",
+        "interfaceSha256": "4da0bc23863ef734fc080f64fd7ea947aa218a5be35c96b070d7870dccdd2728",
+        "sourceSha256": "",
+        "sourceLength": 0,
+        "sourceNetworks": 0,
+        "consistent": true
+      },
+      "reference": {
+        "format": "ir",
+        "length": 1427,
+        "consistent": true
+      },
+      "patches": {
+        "networkApplicable": false,
+        "networkOk": false,
+        "interfaceApplicable": true,
+        "interfaceOk": true,
+        "negativeOk": true,
+        "consistent": true,
+        "errors": []
+      },
+      "writeGuards": {
+        "truncated": true,
+        "instance": true,
+        "memoryLayout": true,
+        "consistent": true,
+        "errors": []
+      },
+      "capabilities": {
+        "consistent": true,
+        "errors": []
+      },
+      "memberCount": 5,
+      "members": [
+        "Static:s1:Bool",
+        "Static:s2:Bool",
+        "Static:s3:Bool",
+        "Static:s4:Bool",
+        "Static:自动模式:Bool"
+      ],
+      "irParsed": true,
+      "irKind": "InstanceDB",
+      "irLanguage": "DB",
+      "blockName": "考试db",
+      "blockNumber": 11,
+      "irNetworkCount": 0,
+      "irXmlBlockKind": "InstanceDB",
+      "irIsInstanceDb": true,
+      "irInstanceOfName": "FB_Sample",
+      "irBlockAttributes": [
+        "InstanceOfName=FB_Sample",
+        "Interface=<Interface:1>",
+        "Name=考试db",
+        "Number=11",
+        "ProgrammingLanguage=DB"
+      ],
+      "irMemberCount": 5,
+      "irMembers": [
+        "Static:s1:Bool",
+        "Static:s2:Bool",
+        "Static:s3:Bool",
+        "Static:s4:Bool",
+        "Static:自动模式:Bool"
+      ],
+      "fidelity": {
+        "truncated": false,
+        "totalNetworks": 0,
+        "returnedCount": 0
+      },
+      "interfaceHash": "4da0bc23863ef734fc080f64fd7ea947aa218a5be35c96b070d7870dccdd2728",
+      "bodyHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "irLength": 1025,
+      "checks": {
+        "membersMatch": true,
+        "fidelityConsistent": true,
+        "rangePageApplicable": false,
+        "rangePageOk": true,
+        "snapshotConsistent": true,
+        "projectionsConsistent": true,
+        "referencePolicyConsistent": true,
+        "irMetadataConsistent": true,
+        "patchChecksPassed": true,
+        "writeGuardsPassed": true,
+        "capabilityChecksOk": true,
+        "passed": true
+      },
+      "checkFailures": []
+    },
+    {
+      "id": "synthetic/Fc_BlockAttributes",
+      "origin": "synthetic",
+      "version": "15.1",
+      "xmlSha256": "c0e3de205b781f104493a3e81b48b66e3de0dba040dad01401f9d6639f8f8bba",
+      "xmlLength": 74914,
+      "xmlBlockElement": "SW.Blocks.FC",
+      "xmlLanguage": "LAD",
+      "xmlName": "考试",
+      "xmlNumber": 1,
+      "xmlNetworkCount": 12,
+      "parsedNetworkCount": 11,
+      "blockAttributes": [
+        "CheckArrayLimits=True",
+        "Interface=<Interface:1>",
+        "Name=考试",
+        "Number=1",
+        "ProgrammingLanguage=LAD",
+        "SetENOAutomatically=false"
+      ],
+      "snapshot": {
+        "parsed": true,
+        "blockType": "FC",
+        "xmlBlockKind": "FC",
+        "language": "LAD",
+        "name": "考试",
+        "isInstanceDb": false,
+        "instanceOfName": "",
+        "sourceProfile": "V15.1",
+        "revision": "b4374a291c1f592726ba349577b358bc2dc532f066a5e78540aa6e98b4098a60",
+        "stableAcrossExports": true,
+        "attributes": [
+          "CheckArrayLimits=True",
+          "Interface=<Interface:1>",
+          "Name=考试",
+          "Number=1",
+          "ProgrammingLanguage=LAD",
+          "SetENOAutomatically=false"
+        ],
+        "consistent": true
+      },
+      "xmlTextNetworkCount": 0,
+      "projections": {
+        "xmlSha256": "c0e3de205b781f104493a3e81b48b66e3de0dba040dad01401f9d6639f8f8bba",
+        "interfaceSha256": "21fc7d2561c41655d5a29cd07edac1966b31b12ac1bea40da3f1b08e037113b6",
+        "sourceSha256": "",
+        "sourceLength": 0,
+        "sourceNetworks": 0,
+        "consistent": true
+      },
+      "reference": {
+        "format": "ir",
+        "length": 81374,
+        "consistent": true
+      },
+      "patches": {
+        "networkApplicable": true,
+        "networkOk": true,
+        "interfaceApplicable": true,
+        "interfaceOk": true,
+        "negativeOk": true,
+        "consistent": true,
+        "errors": []
+      },
+      "writeGuards": {
+        "truncated": true,
+        "instance": true,
+        "memoryLayout": true,
+        "consistent": true,
+        "errors": []
+      },
+      "capabilities": {
+        "consistent": true,
+        "errors": []
+      },
+      "memberCount": 1,
+      "members": [
+        "Return:Ret_Val:Void"
+      ],
+      "irParsed": true,
+      "irKind": "FC",
+      "irLanguage": "LAD",
+      "blockName": "考试",
+      "blockNumber": 1,
+      "irNetworkCount": 11,
+      "irXmlBlockKind": "FC",
+      "irIsInstanceDb": false,
+      "irInstanceOfName": "",
+      "irBlockAttributes": [
+        "CheckArrayLimits=True",
+        "Interface=<Interface:1>",
+        "Name=考试",
+        "Number=1",
+        "ProgrammingLanguage=LAD",
+        "SetENOAutomatically=false"
+      ],
+      "irMemberCount": 1,
+      "irMembers": [
+        "Return:Ret_Val:Void"
+      ],
+      "fidelity": {
+        "truncated": false,
+        "totalNetworks": 11,
+        "returnedCount": 11
+      },
+      "interfaceHash": "21fc7d2561c41655d5a29cd07edac1966b31b12ac1bea40da3f1b08e037113b6",
+      "bodyHash": "c414a101f2f982f254bcf9ed0e7037560f91c832190a46442840cd930f20e94e",
+      "irLength": 80971,
+      "checks": {
+        "membersMatch": true,
+        "fidelityConsistent": true,
+        "rangePageApplicable": true,
+        "rangePageOk": true,
+        "snapshotConsistent": true,
+        "projectionsConsistent": true,
+        "referencePolicyConsistent": true,
+        "irMetadataConsistent": true,
+        "patchChecksPassed": true,
+        "writeGuardsPassed": true,
+        "capabilityChecksOk": true,
+        "passed": true
+      },
+      "checkFailures": []
+    },
+    {
+      "id": "synthetic/Udt_ExternalWritable",
+      "origin": "synthetic",
+      "version": "15.1",
+      "xmlSha256": "77dc08b0d3297ea0d3eb389cdf8214f8974e0e6f8c588d75c0ad827801531ffd",
+      "xmlLength": 3102,
+      "xmlBlockElement": "SW.Types.PlcStruct",
+      "xmlLanguage": "UDT",
+      "xmlName": "ValveParam",
+      "xmlNumber": 0,
+      "xmlNetworkCount": 0,
+      "parsedNetworkCount": 0,
+      "blockAttributes": [
+        "Interface=<Interface:1>",
+        "Name=ValveParam"
+      ],
+      "snapshot": {
+        "parsed": true,
+        "blockType": "UDT",
+        "xmlBlockKind": "PlcStruct",
+        "language": "UDT",
+        "name": "ValveParam",
+        "isInstanceDb": false,
+        "instanceOfName": "",
+        "sourceProfile": "V15.1",
+        "revision": "1894f521582c8e947202587b85e09098710e9116317c5332d62896552c7de006",
+        "stableAcrossExports": true,
+        "attributes": [
+          "Interface=<Interface:1>",
+          "Name=ValveParam"
+        ],
+        "consistent": true
+      },
+      "xmlTextNetworkCount": 0,
+      "projections": {
+        "xmlSha256": "77dc08b0d3297ea0d3eb389cdf8214f8974e0e6f8c588d75c0ad827801531ffd",
+        "interfaceSha256": "fab5f87aeebdc9b50d21f42e253b53b4e3578b364108211580109d6d8ce260ba",
+        "sourceSha256": "",
+        "sourceLength": 0,
+        "sourceNetworks": 0,
+        "consistent": true
+      },
+      "reference": {
+        "format": "ir",
+        "length": 1284,
+        "consistent": true
+      },
+      "patches": {
+        "networkApplicable": false,
+        "networkOk": false,
+        "interfaceApplicable": true,
+        "interfaceOk": true,
+        "negativeOk": true,
+        "consistent": true,
+        "errors": []
+      },
+      "writeGuards": {
+        "truncated": true,
+        "instance": true,
+        "memoryLayout": true,
+        "consistent": true,
+        "errors": []
+      },
+      "capabilities": {
+        "consistent": true,
+        "errors": []
+      },
+      "memberCount": 3,
+      "members": [
+        "None:PositionFeedback:Bool",
+        "None:SwitchState:Bool",
+        "None:Timeout:Time"
+      ],
+      "irParsed": true,
+      "irKind": "UDT",
+      "irLanguage": "UDT",
+      "blockName": "ValveParam",
+      "blockNumber": 0,
+      "irNetworkCount": 0,
+      "irXmlBlockKind": "PlcStruct",
+      "irIsInstanceDb": false,
+      "irInstanceOfName": "",
+      "irBlockAttributes": [
+        "Interface=<Interface:1>",
+        "Name=ValveParam"
+      ],
+      "irMemberCount": 3,
+      "irMembers": [
+        "None:PositionFeedback:Bool",
+        "None:SwitchState:Bool",
+        "None:Timeout:Time"
+      ],
+      "fidelity": {
+        "truncated": false,
+        "totalNetworks": 0,
+        "returnedCount": 0
+      },
+      "interfaceHash": "fab5f87aeebdc9b50d21f42e253b53b4e3578b364108211580109d6d8ce260ba",
+      "bodyHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "irLength": 872,
+      "checks": {
+        "membersMatch": true,
+        "fidelityConsistent": true,
+        "rangePageApplicable": false,
+        "rangePageOk": true,
+        "snapshotConsistent": true,
+        "projectionsConsistent": true,
+        "referencePolicyConsistent": true,
+        "irMetadataConsistent": true,
+        "patchChecksPassed": true,
+        "writeGuardsPassed": true,
+        "capabilityChecksOk": true,
+        "passed": true
+      },
+      "checkFailures": []
+    },
+    {
+      "id": "synthetic/Lad_Large_Truncated",
+      "origin": "synthetic",
+      "version": "15.1",
+      "xmlSha256": "3f69955b735b4b2a727e320b4b8878a08ddfa1f4177355f070ef4886eaff2391",
+      "xmlLength": 358565,
+      "xmlBlockElement": "SW.Blocks.FC",
+      "xmlLanguage": "LAD",
+      "xmlName": "考试",
+      "xmlNumber": 1,
+      "xmlNetworkCount": 72,
+      "parsedNetworkCount": 71,
+      "blockAttributes": [
+        "Interface=<Interface:1>",
+        "Name=考试",
+        "Number=1",
+        "ProgrammingLanguage=LAD"
+      ],
+      "snapshot": {
+        "parsed": true,
+        "blockType": "FC",
+        "xmlBlockKind": "FC",
+        "language": "LAD",
+        "name": "考试",
+        "isInstanceDb": false,
+        "instanceOfName": "",
+        "sourceProfile": "V15.1",
+        "revision": "a9f6773959fe0a525109256edb5a8cf29b2721795a2ef72b5bda75609777ba8d",
+        "stableAcrossExports": true,
+        "attributes": [
+          "Interface=<Interface:1>",
+          "Name=考试",
+          "Number=1",
+          "ProgrammingLanguage=LAD"
+        ],
+        "consistent": true
+      },
+      "xmlTextNetworkCount": 0,
+      "projections": {
+        "xmlSha256": "3f69955b735b4b2a727e320b4b8878a08ddfa1f4177355f070ef4886eaff2391",
+        "interfaceSha256": "21fc7d2561c41655d5a29cd07edac1966b31b12ac1bea40da3f1b08e037113b6",
+        "sourceSha256": "",
+        "sourceLength": 0,
+        "sourceNetworks": 0,
+        "consistent": true
+      },
+      "reference": {
+        "format": "ir",
+        "length": 198170,
+        "consistent": true
+      },
+      "patches": {
+        "networkApplicable": true,
+        "networkOk": true,
+        "interfaceApplicable": true,
+        "interfaceOk": true,
+        "negativeOk": true,
+        "consistent": true,
+        "errors": []
+      },
+      "writeGuards": {
+        "truncated": true,
+        "instance": true,
+        "memoryLayout": true,
+        "consistent": true,
+        "errors": []
+      },
+      "capabilities": {
+        "consistent": true,
+        "errors": []
+      },
+      "memberCount": 1,
+      "members": [
+        "Return:Ret_Val:Void"
+      ],
+      "irParsed": true,
+      "irKind": "FC",
+      "irLanguage": "LAD",
+      "blockName": "考试",
+      "blockNumber": 1,
+      "irNetworkCount": 34,
+      "irXmlBlockKind": "FC",
+      "irIsInstanceDb": false,
+      "irInstanceOfName": "",
+      "irBlockAttributes": [
+        "Interface=<Interface:1>",
+        "Name=考试",
+        "Number=1",
+        "ProgrammingLanguage=LAD"
+      ],
+      "irMemberCount": 1,
+      "irMembers": [
+        "Return:Ret_Val:Void"
+      ],
+      "fidelity": {
+        "truncated": true,
+        "totalNetworks": 71,
+        "returnedCount": 34
+      },
+      "interfaceHash": "21fc7d2561c41655d5a29cd07edac1966b31b12ac1bea40da3f1b08e037113b6",
+      "bodyHash": "fb4609264fe14fac9b78f8cf4b38b45116ea59d47cde9e33edad9f2735e8281e",
+      "irLength": 197754,
+      "checks": {
+        "membersMatch": true,
+        "fidelityConsistent": true,
+        "rangePageApplicable": true,
+        "rangePageOk": true,
+        "snapshotConsistent": true,
+        "projectionsConsistent": true,
+        "referencePolicyConsistent": true,
+        "irMetadataConsistent": true,
+        "patchChecksPassed": true,
+        "writeGuardsPassed": true,
+        "capabilityChecksOk": true,
+        "passed": true
+      },
+      "checkFailures": []
+    }
+  ]
+}
