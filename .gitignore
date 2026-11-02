@@ -22,8 +22,10 @@ TIAAgent/logs/
 *.pyc
 
 # ---- Local Ollama runtime + models (~3.5GB) ----
-# ollama.exe + 本地 LLM 模型权重,部署时单独获取
-TIAOpennessStudio/Tools/Ollama/
+# ollama.exe + 本地 LLM 模型权重,部署时单独获取。
+# 仓库只保留下载脚本，运行时与模型一律不入库。
+TIAOpennessStudio/Tools/Ollama/*
+!TIAOpennessStudio/Tools/Ollama/download-ollama.ps1
 
 # ---- Reference docs (static PDFs, ~102MB) ----
 # Siemens 库类型 PDF 参考资料,后续可放共享存储或资料仓库
