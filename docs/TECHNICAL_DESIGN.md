@@ -1,7 +1,6 @@
 # Technical design
 
 > Aligned with v1.36.0 (2026-11). The code is authoritative; this document explains how the pieces fit together.
-> Internal engineering logs and raw dependency notes are kept outside the repository.
 
 ## 1. Design principles
 
@@ -10,7 +9,6 @@
 - **STA affinity.** Every Openness COM call runs on a dedicated STA thread. The WPF UI thread never touches COM.
 - **Process isolation.** TIA attach, indexing and cache maintenance run in `TIAKnowledgeWorker.exe`, so the UI stays responsive and the TIA runtime is isolated.
 - **Human approval before writes.** Block writes go through `WriteGate`; generated code is previewed in a diff tab before it is applied.
-- **No vector database.** Retrieval is a structured SQLite index with keyword/path matching plus canonical operand paths.
 
 ## 2. Solution layout
 
@@ -45,6 +43,8 @@ Python backend :8000 (cloud only)
 ![System architecture](assets/diagram-architecture.svg)
 
 ## 4. Agent execution
+
+![Agent internals](assets/diagram-agent-internals.svg)
 
 ### 4.1 C# routing
 

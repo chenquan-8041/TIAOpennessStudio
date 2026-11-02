@@ -59,6 +59,8 @@ Python backend (TIAAgent/, FastAPI :8000)
 - All Openness COM access runs on a dedicated STA thread (`TiaStaHost`). Do not add `Task.Run` or `Dispatcher.InvokeAsync` around COM objects.
 - Writeshaping tools are gated by `WriteGate`; the user approves writes in the chat drawer before they reach TIA.
 
+![Agent internals](docs/assets/diagram-agent-internals.svg)
+
 For the full layering, agent paths, tool surface, RAG schema, standards packaging and version matrix, see [Technical design](docs/TECHNICAL_DESIGN.md).
 
 ## Knowledge index (RAG)

@@ -1,7 +1,6 @@
 # 技术方案设计
 
 > 与 v1.36.0（2026-11）代码对齐。以代码为准，本文说明各模块如何协作。
-> 内部迭代日志与原始依赖盘点不在公开仓库中维护。
 
 ## 1. 设计原则
 
@@ -10,7 +9,6 @@
 - **STA 亲和**：所有 Openness COM 调用都在专用 STA 线程执行，WPF UI 线程不接触 COM。
 - **进程隔离**：TIA attach、索引与缓存维护放在 `TIAKnowledgeWorker.exe`，降低 UI 卡顿并隔离 TIA 运行时。
 - **写入前人工确认**：块写入经 `WriteGate` 审批；AI 生成内容先在 Diff 页签预览，再决定应用。
-- **不引入向量库**：检索基于结构化 SQLite 索引 + 关键词/路径匹配 + 规范操作数路径。
 
 ## 2. 解决方案结构
 
@@ -45,6 +43,8 @@ Python 后端 :8000（仅云端）
 ![系统架构](assets/diagram-architecture.svg)
 
 ## 4. Agent 执行
+
+![Agent 内部工作流](assets/diagram-agent-internals.svg)
 
 ### 4.1 C# 路由
 
