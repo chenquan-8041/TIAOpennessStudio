@@ -61,15 +61,30 @@ Python 后端（TIAAgent/，FastAPI :8000）
 
 ![Agent 内部工作流](docs/assets/diagram-agent-internals.svg)
 
-完整分层、Agent 路径、工具面、RAG 表结构、标准库打包与版本矩阵见 [技术方案设计](docs/TECHNICAL_DESIGN-CN.md)。
+**Agent 路径。** 本地模型走 C# 的 ReAct 循环；云端模型走 Python 的 LangGraph supervisor；Python 后端拒绝本地端点，两条路径互不回退。两条路径的工具调用都经过 MCP 工具面（`127.0.0.1:8001`），所有写入最终汇聚到 `WriteGate` → Diff → Openness 导入 + 编译，并落在 STA 线程上。
+
+### 解决方案结构
+
+| 工程 | 目标框架 | 职责 |
+|---|---|---|
+| `TIAOpennessStudio.csproj` | net48 | 主 WPF 应用 |
+| `TIAOpennessStudio.V21.csproj` | net48（`TIA_V21`） | V21 构建变体，启用 in-process Portal 桥接 |
+| `TIAKnowledgeWorker.csproj` | net48 / x64 | 知识缓存 Worker 子进程 |
+| `StandardsKbTool.csproj` | net48 | 加密标准库打包/校验 CLI |
+| `TIAAgent/` | Python 3.11 | FastAPI + LangGraph 后端（仅云端模型） |
 
 ## 知识索引（RAG）
 
 Agent 不直接读取 TIA 工程：独立的 `TIAKnowledgeWorker.exe` 把工程事实抽取到本地 SQLite 索引，再由内建 MCP 服务（`127.0.0.1:8001`）暴露查询工具。
 
 - **索引对象**：目录/分组、PLC 块、LAD/SCL 网络、接口成员、符号交叉引用、块调用图、块快照、规划经验、修复经验与脏块跟踪。
+- **Worker**：`TIAKnowledgeWorker.exe` 通过本地 HTTP（`127.0.0.1:19530`，带令牌校验）提供索引服务，UI 经代理访问。
+- **检索模型**：结构化 SQLite，不是向量检索；规范操作数路径（如 `DB_Main.Line01.RunCmd`）是引用与影响查询的主键。
+- **数据表**：`plc_container`、`plc_block`、`plc_network_lad`、`plc_network_scl`、`plc_interface_member`、`plc_symbol_ref`、`plc_call_edge`、`project_index_state`、`planning_knowledge`、`project_cache_state`、`project_dirty_entry`、`plc_block_snapshot`，另有 `repair_experience`。
 - **缓存位置**：`%LOCALAPPDATA%\TIAOpennessStudio\KnowledgeCache`。
 - **数据字典**：[`docs/schema/RAG数据表结构说明.md`](docs/schema/RAG数据表结构说明.md) 逐表说明字段；改表结构时必须同步更新该文档。
+
+![知识管线](docs/assets/diagram-knowledge.svg)
 
 ## 行业标准库（加密）
 
@@ -77,7 +92,7 @@ Agent 不直接读取 TIA 工程：独立的 `TIAKnowledgeWorker.exe` 把工程�
 
 - **容器格式**：`TKB1` 头 + AES-256-CBC 密文 + HMAC-SHA256 校验；密钥由 PBKDF2-SHA256（12 万次迭代）从外部注入的 secret salt（`TIA_STD_KB_SECRET`）派生，可选绑定机器指纹，复制到其他机器后无法解密。
 - **访问模型**：先校验 HMAC，再在内存解密，落到临时只读 SQLite 库使用后即删除；只提供检索、不支持导出，并带频率限制与结果条数上限。
-- **Agent 接口**：`search_coding_standard` 返回规则片段，重写为约束指令后注入生成提示词，使生成的 SCL/LAD 遵循挂载标准。
+- **Agent 接口**：MCP 暴露 `list_standard_topics` / `read_standard_section` 供自主浏览；本地 C# Agent 使用 `search_coding_standard`。命中的规则会转成约束指令注入生成提示词，使生成的 SCL/LAD 遵循挂载标准。
 - **打包工具**：`StandardsKbTool build <md 目录或文件> <输出.kb>` 把明文 Markdown 规范加密成 `.kb`，`verify` 可验证加密/解密闭环；仓库只分发加密文件，明文源与 `*.secret` 不入库。
 
 ## 变更预览与 Diff
@@ -86,7 +101,16 @@ AI 生成的内容不会直接写入工程：
 
 - 生成或修改后的代码先进入 **Diff 页签**（基于 DiffPlex），支持并排/统一两种视图与逐行变更着色。
 - 用户必须点 **应用** 或 **拒绝**；这是独立的人工确认点；经 MCP 工具发起的写入还会再经过 `WriteGate` 审批。
+- `PatchService` 生成 unified diff，按 manifest 批量原子写入，失败回滚。
 - **库对比** 生成供人阅读的 XML 报告，不是可导入 TIA 的工程产物。
+
+![写入链路](docs/assets/diagram-write-flow.svg)
+
+## 上下文与 Token 预算
+
+- C# `TokenBudget` 按模型家族为本地 ReAct 提示词分配预算；未知本地模型使用小预算兜底。
+- Python 后端按模型的真实上下文窗口为云端请求分配预算，回退值为 128k。
+- 两侧都保留响应预留，并在窗口溢出前压缩历史；system 摘要独立于滑窗保留。
 
 ## 环境要求
 
@@ -94,8 +118,17 @@ AI 生成的内容不会直接写入工程：
 - .NET Framework 4.8 运行时（使用 .NET SDK / MSBuild 构建）
 - 已安装 TIA Portal 与 Openness
   - 已支持：V15.1、V16、V17。V15.1 为参考基线；V16/V17 的 schema 已与官方 XSD 对齐。
-  - V18–V21 档位为实验性：按命名规律推导，尚未经 XSD/样例验证。
+  - V18–V21 档位为实验性：按命名规律推导，尚未经 XSD/样例验证。`TIA_V21` 构建变体另提供实验性的 in-process Portal 桥接。
 - Python 3.11（云端 Agent 后端，可使用仓库附带的嵌入式解释器）
+
+### 本地服务与端口
+
+| 端口 | 服务 |
+|---|---|
+| 8000 | Python FastAPI 后端 |
+| 8001 | TIA 上下文 REST + 内置 MCP Server |
+| 19530 | 知识 Worker（默认） |
+| 11434 | Ollama |
 
 ## 快速开始
 
@@ -177,7 +210,7 @@ cd TIAAgent
 python -m pytest tests -q
 ```
 
-当前测试仅覆盖 plan 模型的序列化、持久化与拓扑排序（33 个用例，`tests/test_plan_models.py`）。C# 侧暂无单元测试工程。
+当前测试覆盖 plan 模型、工具面一致性与提示词契约。C# 侧暂无单元测试工程。
 
 ## 参与贡献
 
