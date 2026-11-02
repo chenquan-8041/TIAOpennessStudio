@@ -234,4 +234,4 @@ MIT — 见 [LICENSE](LICENSE)。
 联系方式：扫描下方微信二维码添加维护者。注意个人「添加我为朋友」二维码约 7 天失效，
 若已过期请提 Issue，我们会更新。
 
-![微信联系方式](docs/assets/contact-wechat.png)
+<img src="docs/assets/contact-wechat.png" width="240" alt="微信联系方式">

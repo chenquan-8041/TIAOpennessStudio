@@ -235,4 +235,4 @@ Contact: scan the WeChat QR code below to reach the maintainer. A personal
 "add me as friend" code expires after about 7 days; if it no longer works, open an issue
 and we will refresh it.
 
-![WeChat contact](docs/assets/contact-wechat.png)
+<img src="docs/assets/contact-wechat.png" width="240" alt="WeChat contact">
