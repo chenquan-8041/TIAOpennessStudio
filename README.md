@@ -57,6 +57,8 @@ Python backend (TIAAgent/, FastAPI :8000)
 - All Openness COM access runs on a dedicated STA thread (`TiaStaHost`). Do not add `Task.Run` or `Dispatcher.InvokeAsync` around COM objects.
 - Writeshaping tools are gated by `WriteGate`; the user approves writes in the chat drawer before they reach TIA.
 
+For the full layering, agent paths, tool surface, RAG schema, standards packaging and version matrix, see [Technical design](docs/TECHNICAL_DESIGN.md).
+
 ## Knowledge index (RAG)
 
 The agent never reads TIA Portal directly. A separate `TIAKnowledgeWorker.exe` extracts project facts into a local SQLite index, and the built-in MCP server (`127.0.0.1:8001`) exposes query tools over that index.

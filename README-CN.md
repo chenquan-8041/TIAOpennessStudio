@@ -57,6 +57,8 @@ Python 后端（TIAAgent/，FastAPI :8000）
 - 所有 Openness COM 调用都跑在独立 STA 线程（`TiaStaHost`）上；不要在 COM 对象外使用 `Task.Run` 或 `Dispatcher.InvokeAsync`。
 - 写操作由 `WriteGate` 拦截，用户在聊天抽屉中批卡后才会真正写入 TIA。
 
+完整分层、Agent 路径、工具面、RAG 表结构、标准库打包与版本矩阵见 [技术方案设计](docs/TECHNICAL_DESIGN-CN.md)。
+
 ## 知识索引（RAG）
 
 Agent 不直接读取 TIA 工程：独立的 `TIAKnowledgeWorker.exe` 把工程事实抽取到本地 SQLite 索引，再由内建 MCP 服务（`127.0.0.1:8001`）暴露查询工具。
