@@ -1,6 +1,10 @@
 # TIA Openness Studio
 
-AI-assisted engineering automation for Siemens TIA Portal (WPF / .NET Framework 4.8): engineering intent becomes generated PLC blocks and schema-checked XML that are imported and compiled through Openness — grounded in a project knowledge index, executed against the live project by a local tool surface, and gated by human approval before any write.
+**Make AI a trusted engineering partner for PLC teams — not a code-snippet generator.**
+
+We believe industrial control is not measured by how much code is generated, but by whether every change is understandable, verifiable and traceable. AI should raise what an engineer can deliver without lowering the bar for what ships.
+
+TIA Openness Studio turns engineering intent into compiled, reviewable and reversible changes in a real Siemens TIA Portal project (WPF / .NET Framework 4.8). Technical boundaries stay explicit; accountability stays human.
 
 ## Disclaimer
 

@@ -1,6 +1,10 @@
 # TIA Openness Studio
 
-面向 Siemens TIA Portal 的 AI 辅助工程自动化（WPF / .NET Framework 4.8）：把工程意图转化为 PLC 块生成与 schema 校验后的 XML，再经 Openness 导入并编译——以项目知识索引为依据，由本地工具面在实时工程上执行，任何写入都需人工审批。
+**让 AI 成为 PLC 工程师可信赖的工程伙伴，而不是代码片段生成器。**
+
+我们相信，工业控制的价值不在于生成了多少代码，而在于每一次变更是否可理解、可验证、可追溯。AI 应该抬高工程师能交付的上限，而不是降低交付的底线。
+
+TIA Openness Studio 面向 Siemens TIA Portal（WPF / .NET Framework 4.8），把工程意图转化为可编译、可审核、可回滚的真实工程变更。技术有边界，责任始终在人。
 
 ## 免责声明
 
