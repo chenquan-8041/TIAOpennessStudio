@@ -14,6 +14,7 @@
 - **项目与设备**：打开/保存/关闭/编译 TIA 项目，加载设备与 PLC 树。
 - **块与类型**：导入 PLC Blocks / PLC Data Types，导出对象 XML，项目文本导入导出。
 - **原生 PLC 生成**：离线构建 UDT、全局 DB、FC、FB、LAD（FlgNet）块，再经 Openness 导入。
+- **S7-GRAPH 生成**：`build_graph_fb` 从 JSON 规格构建原生 GRAPH FB（步骤、转换、分支、跳转、动作与互锁/监控标注），再经 Openness 导入。
 - **AI 工作流**：聊天式 SCL/XML 生成、流式输出、项目索引辅助上下文检索。
 - **离线 SCL 助手**：推荐本地模型 [`LisyNeko/qwen3.8-9b-coder`](https://ollama.com/LisyNeko/qwen3.8-9b-coder)——由 2.4 万亿参数（A95B）的 Qwen3.8 全参数蒸馏到 9B，并做编码向微调；离线写 SCL 表现突出，断网、无 API Key 也能用，适合内网或保密工程。
 - **云端 Agent**：Python FastAPI + LangGraph supervisor，项目级 DAG 规划、逐块执行、里程碑审批与断点续跑。

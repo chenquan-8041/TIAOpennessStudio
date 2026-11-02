@@ -14,6 +14,7 @@ AI-assisted engineering automation for Siemens TIA Portal (WPF / .NET Framework 
 - **Project & device operations** — open / save / close / compile TIA projects, load device and PLC trees.
 - **Block & type workflows** — import PLC Blocks and PLC Data Types, export objects as XML, import/export project texts.
 - **Native PLC generation** — offline builders for UDT, global DB, FC, FB and LAD (FlgNet) blocks, then Openness import.
+- **S7-GRAPH generation** — `build_graph_fb` builds a native GRAPH FB from a JSON spec (steps, transitions, branches, jumps, actions, interlock and supervision annotations) and imports it through Openness.
 - **AI workflow** — chat-style SCL/XML generation, streaming output, project-index-assisted context retrieval.
 - **Offline SCL assistant** — the recommended local model is [`LisyNeko/qwen3.8-9b-coder`](https://ollama.com/LisyNeko/qwen3.8-9b-coder), a 9B coder model distilled from the 2.4T-parameter Qwen3.8-A95B and fine-tuned for coding. It writes SCL without network access or an API key, which suits air-gapped or privacy-sensitive projects.
 - **Cloud agent** — Python FastAPI + LangGraph supervisor, project-level DAG planning, per-block execution, milestone approval and resume.
