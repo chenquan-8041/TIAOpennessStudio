@@ -105,3 +105,7 @@ GeneratedCode/
 .kiro/
 competition/
 录屏剧本-*.md
+
+# ---- 内部记录 / 构建输出（仅本地，不公开） ----
+docs/项目*.md
+build_out*.txt
