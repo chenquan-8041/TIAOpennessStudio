@@ -42,6 +42,8 @@ Python 后端 :8000（仅云端）
   └─ core/context       Token 预算、历史压缩、流解析
 ```
 
+![系统架构](assets/diagram-architecture.svg)
+
 ## 4. Agent 执行
 
 ### 4.1 C# 路由
@@ -85,6 +87,8 @@ Python 后端 :8000（仅云端）
 
 **WriteGate** 对写入类工具分级；用户在审批卡上看到块名、类型、分组路径与内容哈希后，才会真正写入 TIA。
 
+![写入链路](assets/diagram-write-flow.svg)
+
 ### 新增工具的步骤
 
 1. 在 `_mcpToolDefinitions` 声明工具；
@@ -100,6 +104,8 @@ Python 后端 :8000（仅云端）
 - 已登记表：`plc_container`、`plc_block`、`plc_network_lad`、`plc_network_scl`、`plc_interface_member`、`plc_symbol_ref`、`plc_call_edge`、`project_index_state`、`planning_knowledge`、`project_cache_state`、`project_dirty_entry`、`plc_block_snapshot`，另有 `repair_experience`。
 - 数据字典见 `docs/schema/RAG数据表结构说明.md`；修改任何 `CREATE TABLE` 必须同步更新 `KnowledgeSchemaDoc.cs` 与该文档。
 - 规划知识属于"建议"：历史成功计划作为独立字段 `planning_knowledge` 传入，不混入工程事实。
+
+![知识管线](assets/diagram-knowledge.svg)
 
 ## 8. 加密标准库
 

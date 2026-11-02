@@ -42,6 +42,8 @@ Python backend :8000 (cloud only)
   └─ core/context       token budgeting, history compression, stream parsing
 ```
 
+![System architecture](assets/diagram-architecture.svg)
+
 ## 4. Agent execution
 
 ### 4.1 C# routing
@@ -85,6 +87,8 @@ Knowledge tools (`search_project`, `build_context_pack`, `query_variable_referen
 
 **WriteGate** classifies write tools; the user sees an approval card with block name, type, group path and content hash before anything reaches TIA.
 
+![Write path](assets/diagram-write-flow.svg)
+
 ### Adding a tool
 
 1. Declare it in `_mcpToolDefinitions`.
@@ -100,6 +104,8 @@ Knowledge tools (`search_project`, `build_context_pack`, `query_variable_referen
 - Documented tables: `plc_container`, `plc_block`, `plc_network_lad`, `plc_network_scl`, `plc_interface_member`, `plc_symbol_ref`, `plc_call_edge`, `project_index_state`, `planning_knowledge`, `project_cache_state`, `project_dirty_entry`, `plc_block_snapshot`, plus `repair_experience`.
 - The data dictionary lives in `docs/schema/RAG数据表结构说明.md`; changing any `CREATE TABLE` requires updating `KnowledgeSchemaDoc.cs` and that document together.
 - Planning knowledge is advisory: successful historical plans are recalled as a separate `planning_knowledge` field, never merged into project facts.
+
+![Knowledge pipelines](assets/diagram-knowledge.svg)
 
 ## 8. Encrypted standards library
 

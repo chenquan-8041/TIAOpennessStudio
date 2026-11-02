@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 540" width="100%" height="auto" role="img" aria-label="TIA Openness Studio system architecture">
+  <style>
+    .bg { fill: #F7F7F8; }
+    .box { fill: #FFFFFF; stroke: #D8D8DE; stroke-width: 1; }
+    .focal { fill: #FFFFFF; stroke: #0AB861; stroke-width: 2; }
+    .t { fill: #171717; font-family: 'Segoe UI', 'PingFang SC', sans-serif; font-size: 14px; font-weight: 600; }
+    .s { fill: #52525B; font-family: 'Segoe UI', 'PingFang SC', sans-serif; font-size: 12px; }
+    .title { fill: #171717; font-family: 'Segoe UI', 'PingFang SC', sans-serif; font-size: 18px; font-weight: 600; }
+    .cap { fill: #52525B; font-family: 'Segoe UI', 'PingFang SC', sans-serif; font-size: 12px; }
+    .arr { stroke: #8A8A94; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  </style>
+  <defs>
+    <marker id="a1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#8A8A94"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1000" height="540"/>
+  <text class="title" x="40" y="44">TIA Openness Studio — system architecture</text>
+  <text class="cap" x="40" y="66">C# fact layer · cloud reasoning · human-approved writes</text>
+
+  <rect class="box" x="40" y="96" width="660" height="64" rx="8"/>
+  <text class="t" x="56" y="126">WPF UI</text>
+  <text class="s" x="56" y="146">Prism + MVVM · Chat / Diff / Graph / Tree</text>
+
+  <rect class="box" x="40" y="184" width="660" height="64" rx="8"/>
+  <text class="t" x="56" y="214">AgentOrchestrator</text>
+  <text class="s" x="56" y="234">UnifiedAgentEngine · ReActLoopEngine · context assembly</text>
+
+  <rect class="focal" x="40" y="272" width="660" height="64" rx="8"/>
+  <text class="t" x="56" y="302">TiaContextHttpServer :8001</text>
+  <text class="s" x="56" y="322">REST + built-in MCP · WriteGate approval</text>
+
+  <path class="arr" d="M370 160 V184" marker-end="url(#a1)"/>
+  <path class="arr" d="M370 248 V272" marker-end="url(#a1)"/>
+
+  <rect class="box" x="740" y="96" width="220" height="60" rx="8"/>
+  <text class="t" x="756" y="124">Ollama :11434</text>
+  <text class="s" x="756" y="144">local ReAct loop</text>
+
+  <rect class="box" x="740" y="186" width="220" height="60" rx="8"/>
+  <text class="t" x="756" y="214">Python Agent :8000</text>
+  <text class="s" x="756" y="234">cloud models only</text>
+
+  <rect class="box" x="740" y="276" width="220" height="60" rx="8"/>
+  <text class="t" x="756" y="304">Knowledge Worker</text>
+  <text class="s" x="756" y="324">:19530 · SQLite RAG</text>
+
+  <rect class="box" x="740" y="366" width="220" height="60" rx="8"/>
+  <text class="t" x="756" y="394">TIA Portal + Openness</text>
+  <text class="s" x="756" y="414">STA thread · Siemens DLL</text>
+
+  <path class="arr" d="M700 208 L740 126" marker-end="url(#a1)"/>
+  <path class="arr" d="M740 226 L700 292" marker-end="url(#a1)"/>
+  <path class="arr" d="M700 318 L740 306" marker-end="url(#a1)"/>
+  <path class="arr" d="M700 330 L740 396" marker-end="url(#a1)"/>
+
+  <text class="cap" x="40" y="510">Ports: 8000 Python · 8001 MCP/REST · 19530 worker · 11434 Ollama</text>
+</svg>

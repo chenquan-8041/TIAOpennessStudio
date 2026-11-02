@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400" width="100%" height="auto" role="img" aria-label="Project knowledge and encrypted standards pipelines">
+  <style>
+    .bg { fill: #F7F7F8; }
+    .box { fill: #FFFFFF; stroke: #D8D8DE; stroke-width: 1; }
+    .focal { fill: #FFFFFF; stroke: #0AB861; stroke-width: 2; }
+    .t { fill: #171717; font-family: 'Segoe UI', 'PingFang SC', sans-serif; font-size: 14px; font-weight: 600; }
+    .s { fill: #52525B; font-family: 'Segoe UI', 'PingFang SC', sans-serif; font-size: 12px; }
+    .label { fill: #171717; font-family: 'Segoe UI', 'PingFang SC', sans-serif; font-size: 12px; font-weight: 600; }
+    .title { fill: #171717; font-family: 'Segoe UI', 'PingFang SC', sans-serif; font-size: 18px; font-weight: 600; }
+    .cap { fill: #52525B; font-family: 'Segoe UI', 'PingFang SC', sans-serif; font-size: 12px; }
+    .arr { stroke: #8A8A94; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  </style>
+  <defs>
+    <marker id="a3" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#8A8A94"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1000" height="400"/>
+  <text class="title" x="40" y="44">Knowledge pipelines</text>
+  <text class="cap" x="40" y="66">Structured project facts and encrypted standards stay separate.</text>
+
+  <text class="label" x="40" y="112">PROJECT KNOWLEDGE (RAG)</text>
+  <rect class="box" x="40" y="128" width="156" height="84" rx="8"/>
+  <text class="t" x="54" y="164">Blocks / XML</text>
+  <text class="s" x="54" y="184">TIA project export</text>
+
+  <rect class="box" x="220" y="128" width="156" height="84" rx="8"/>
+  <text class="t" x="234" y="164">Knowledge Worker</text>
+  <text class="s" x="234" y="184">:19530 · STA</text>
+
+  <rect class="focal" x="400" y="128" width="156" height="84" rx="8"/>
+  <text class="t" x="414" y="164">SQLite index</text>
+  <text class="s" x="414" y="184">12 tables + repair</text>
+
+  <rect class="box" x="580" y="128" width="156" height="84" rx="8"/>
+  <text class="t" x="594" y="164">MCP query tools</text>
+  <text class="s" x="594" y="184">search · call chain</text>
+
+  <rect class="box" x="760" y="128" width="156" height="84" rx="8"/>
+  <text class="t" x="774" y="164">Agent</text>
+  <text class="s" x="774" y="184">cloud or local</text>
+
+  <path class="arr" d="M196 170 H220" marker-end="url(#a3)"/>
+  <path class="arr" d="M376 170 H400" marker-end="url(#a3)"/>
+  <path class="arr" d="M556 170 H580" marker-end="url(#a3)"/>
+  <path class="arr" d="M736 170 H760" marker-end="url(#a3)"/>
+
+  <text class="label" x="40" y="258">ENCRYPTED STANDARDS</text>
+  <rect class="box" x="40" y="274" width="156" height="84" rx="8"/>
+  <text class="t" x="54" y="310">Markdown rules</text>
+  <text class="s" x="54" y="330">plaintext (local)</text>
+
+  <rect class="box" x="220" y="274" width="156" height="84" rx="8"/>
+  <text class="t" x="234" y="310">StandardsKbTool</text>
+  <text class="s" x="234" y="330">build / verify</text>
+
+  <rect class="focal" x="400" y="274" width="156" height="84" rx="8"/>
+  <text class="t" x="414" y="310">TKB1 library</text>
+  <text class="s" x="414" y="330">AES-256 + HMAC</text>
+
+  <rect class="box" x="580" y="274" width="156" height="84" rx="8"/>
+  <text class="t" x="594" y="310">list / read tools</text>
+  <text class="s" x="594" y="330">topic + section</text>
+
+  <rect class="box" x="760" y="274" width="156" height="84" rx="8"/>
+  <text class="t" x="774" y="310">Agent</text>
+  <text class="s" x="774" y="330">bounded, read-only</text>
+
+  <path class="arr" d="M196 316 H220" marker-end="url(#a3)"/>
+  <path class="arr" d="M376 316 H400" marker-end="url(#a3)"/>
+  <path class="arr" d="M556 316 H580" marker-end="url(#a3)"/>
+  <path class="arr" d="M736 316 H760" marker-end="url(#a3)"/>
+</svg>

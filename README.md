@@ -53,6 +53,8 @@ Python backend (TIAAgent/, FastAPI :8000)
   └─ converters/  data conversion
 ```
 
+![System architecture](docs/assets/diagram-architecture.svg)
+
 - The built-in MCP server on `127.0.0.1:8001` is the only tool surface for Openness operations. The Python agent never touches COM directly.
 - All Openness COM access runs on a dedicated STA thread (`TiaStaHost`). Do not add `Task.Run` or `Dispatcher.InvokeAsync` around COM objects.
 - Writeshaping tools are gated by `WriteGate`; the user approves writes in the chat drawer before they reach TIA.

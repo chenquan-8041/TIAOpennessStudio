@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" width="100%" height="auto" role="img" aria-label="Write path with approval before TIA write">
+  <style>
+    .bg { fill: #F7F7F8; }
+    .box { fill: #FFFFFF; stroke: #D8D8DE; stroke-width: 1; }
+    .focal { fill: #FFFFFF; stroke: #0AB861; stroke-width: 2; }
+    .t { fill: #171717; font-family: 'Segoe UI', 'PingFang SC', sans-serif; font-size: 14px; font-weight: 600; }
+    .s { fill: #52525B; font-family: 'Segoe UI', 'PingFang SC', sans-serif; font-size: 12px; }
+    .title { fill: #171717; font-family: 'Segoe UI', 'PingFang SC', sans-serif; font-size: 18px; font-weight: 600; }
+    .cap { fill: #52525B; font-family: 'Segoe UI', 'PingFang SC', sans-serif; font-size: 12px; }
+    .arr { stroke: #8A8A94; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  </style>
+  <defs>
+    <marker id="a2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M1 1 L7 4 L1 7 Z" fill="#8A8A94"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1000" height="300"/>
+  <text class="title" x="40" y="44">Write path — review before TIA</text>
+  <text class="cap" x="40" y="66">Generated code never writes directly; approval is part of the product.</text>
+
+  <rect class="box" x="40" y="110" width="160" height="96" rx="8"/>
+  <text class="t" x="54" y="146">User intent</text>
+  <text class="s" x="54" y="168">prompt + target</text>
+
+  <rect class="box" x="230" y="110" width="160" height="96" rx="8"/>
+  <text class="t" x="244" y="146">Generate code</text>
+  <text class="s" x="244" y="168">cloud or local</text>
+
+  <rect class="box" x="420" y="110" width="160" height="96" rx="8"/>
+  <text class="t" x="434" y="146">MCP tool call</text>
+  <text class="s" x="434" y="168">block / type write</text>
+
+  <rect class="focal" x="610" y="110" width="160" height="96" rx="8"/>
+  <text class="t" x="624" y="146">WriteGate</text>
+  <text class="s" x="624" y="168">approval card</text>
+
+  <rect class="box" x="800" y="110" width="160" height="96" rx="8"/>
+  <text class="t" x="814" y="146">Diff → Apply</text>
+  <text class="s" x="814" y="168">import + compile</text>
+
+  <path class="arr" d="M200 158 H230" marker-end="url(#a2)"/>
+  <path class="arr" d="M390 158 H420" marker-end="url(#a2)"/>
+  <path class="arr" d="M580 158 H610" marker-end="url(#a2)"/>
+  <path class="arr" d="M770 158 H800" marker-end="url(#a2)"/>
+
+  <text class="cap" x="40" y="256">Reject cancels the call; Apply imports the block and triggers compile.</text>
+</svg>

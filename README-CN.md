@@ -53,6 +53,8 @@ Python 后端（TIAAgent/，FastAPI :8000）
   └─ converters/  数据转换
 ```
 
+![系统架构](docs/assets/diagram-architecture.svg)
+
 - 内建 MCP 服务（`127.0.0.1:8001`）是唯一面向 Openness 的工具面，Python Agent 不直接访问 COM。
 - 所有 Openness COM 调用都跑在独立 STA 线程（`TiaStaHost`）上；不要在 COM 对象外使用 `Task.Run` 或 `Dispatcher.InvokeAsync`。
 - 写操作由 `WriteGate` 拦截，用户在聊天抽屉中批卡后才会真正写入 TIA。
