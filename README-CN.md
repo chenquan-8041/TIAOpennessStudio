@@ -36,8 +36,6 @@ TIA Openness Studio 面向 Siemens TIA Portal（WPF / .NET Framework 4.8），�
 - **示例块导出** — [docs/samples](docs/samples/README.md)
 - **RAG 数据字典** — [docs/schema/RAG数据表结构说明.md](docs/schema/RAG数据表结构说明.md)
 
-运行时压缩包作为 Release 附件分发，不进入 git。
-
 ## 界面截图
 
 左侧项目树 + LAD 代码视图 + 代码生成面板：
@@ -135,7 +133,7 @@ AI 生成的内容不会直接写入工程：
 - 已安装 TIA Portal 与 Openness
   - 已支持：V15.1、V16、V17。V15.1 为参考基线；V16/V17 的 schema 已与官方 XSD 对齐。
   - V18–V21 档位为实验性：按命名规律推导，尚未经 XSD/样例验证。`TIA_V21` 构建变体另提供实验性的 in-process Portal 桥接。
-- Python 3.11（云端 Agent 后端）。嵌入式运行时作为 Release 附件分发（`TIAAgent/python` 与 `TIAAgent/_pydeps`），不提交到 git。
+- Python 3.11（云端 Agent 后端）。嵌入式运行时作为 Release 附件分发（`TIAAgent/python` 与 `TIAAgent/_pydeps`）。
 
 ### 本地服务与端口
 
@@ -185,8 +183,6 @@ dotnet build .\TIAOpennessStudio.sln
 ```powershell
 .\TIAAgent\python\python.exe .\TIAAgent\run.py --port 8000
 ```
-
-这些压缩包作为 Release 附件分发，不进入 git 历史，因此仓库保持轻量，运行时更新也不需要新增提交。
 
 **方式 B — 使用你自己的 Python 3.11。**
 
