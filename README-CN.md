@@ -1,5 +1,20 @@
 # TIA Openness Studio
 
+<p align="center">
+  <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg">
+  <img alt="Platform: Windows 10 / 11 x64" src="https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011%20x64-blue.svg">
+  <img alt="TIA Portal V15.1 | V16 | V17" src="https://img.shields.io/badge/TIA%20Portal-V15.1%20%7C%20V16%20%7C%20V17-14A38B.svg">
+  <img alt=".NET Framework 4.8" src="https://img.shields.io/badge/.NET%20Framework-4.8-512BD4.svg">
+</p>
+
+<p align="center">
+  <a href="#核心能力">核心能力</a> ·
+  <a href="#界面截图">界面截图</a> ·
+  <a href="#架构">架构</a> ·
+  <a href="#下载">下载</a> ·
+  <a href="#快速开始">快速开始</a>
+</p>
+
 **让 AI 成为 PLC 工程师可信赖的工程伙伴，而不是代码片段生成器。**
 
 我们相信，工业控制的价值不在于生成了多少代码，而在于每一次变更是否可理解、可验证、可追溯。AI 应该抬高工程师能交付的上限，而不是降低交付的底线。

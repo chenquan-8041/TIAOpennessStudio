@@ -1,5 +1,20 @@
 # TIA Openness Studio
 
+<p align="center">
+  <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg">
+  <img alt="Platform: Windows 10 / 11 x64" src="https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011%20x64-blue.svg">
+  <img alt="TIA Portal V15.1 | V16 | V17" src="https://img.shields.io/badge/TIA%20Portal-V15.1%20%7C%20V16%20%7C%20V17-14A38B.svg">
+  <img alt=".NET Framework 4.8" src="https://img.shields.io/badge/.NET%20Framework-4.8-512BD4.svg">
+</p>
+
+<p align="center">
+  <a href="#features">Features</a> ·
+  <a href="#screenshots">Screenshots</a> ·
+  <a href="#architecture">Architecture</a> ·
+  <a href="#downloads">Downloads</a> ·
+  <a href="#getting-started">Getting started</a>
+</p>
+
 **Make AI a trusted engineering partner for PLC teams — not a code-snippet generator.**
 
 We believe industrial control is not measured by how much code is generated, but by whether every change is understandable, verifiable and traceable. AI should raise what an engineer can deliver without lowering the bar for what ships.
