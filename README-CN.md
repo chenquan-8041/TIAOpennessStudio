@@ -124,7 +124,7 @@ AI 生成的内容不会直接写入工程：
 - 已安装 TIA Portal 与 Openness
   - 已支持：V15.1、V16、V17。V15.1 为参考基线；V16/V17 的 schema 已与官方 XSD 对齐。
   - V18–V21 档位为实验性：按命名规律推导，尚未经 XSD/样例验证。`TIA_V21` 构建变体另提供实验性的 in-process Portal 桥接。
-- Python 3.11（云端 Agent 后端，可使用仓库附带的嵌入式解释器）
+- Python 3.11（云端 Agent 后端）。嵌入式运行时作为 Release 附件分发（`TIAAgent/python` 与 `TIAAgent/_pydeps`），不提交到 git。
 
 ### 本地服务与端口
 
@@ -165,6 +165,19 @@ dotnet build .\TIAOpennessStudio.sln
 若应用正在运行并锁住 exe（`MSB3021` / `MSB3027`），关闭应用或加 `-p:UseAppHost=false`。
 
 ### 3. 启动 Python 后端（可选，用于云端 AI）
+
+**方式 A — 内置运行时（推荐，可离线）。** 从仓库 Releases 页面（标签 `v1.36.0`）下载两个附件，并都解压到 `TIAAgent\`：
+
+- `tias-python-runtime-v1.36.0.zip` 会释放出 `TIAAgent\python`
+- `tias-pydeps-v1.36.0.zip` 会释放出 `TIAAgent\_pydeps`
+
+```powershell
+.\TIAAgent\python\python.exe .\TIAAgent\run.py --port 8000
+```
+
+这些压缩包作为 Release 附件分发，不进入 git 历史，因此仓库保持轻量，运行时更新也不需要新增提交。
+
+**方式 B — 使用你自己的 Python 3.11。**
 
 ```powershell
 cd TIAAgent
