@@ -27,6 +27,17 @@ TIA Openness Studio turns engineering intent into compiled, reviewable and rever
 - **Library backup & compare** — create backups, inspect history, restore with a safety copy, and compare types/master copies via Openness.
 - **Localization** — English / German / Chinese.
 
+## Downloads
+
+- **Python runtime (v1.36.0)** — [GitHub Releases](https://github.com/chenquan-8041/TIAOpennessStudio/releases/tag/v1.36.0) · [Gitee Releases](https://gitee.com/heimisa/TIAOpennessStudio/releases/tag/v1.36.0)
+  - `tias-python-runtime-v1.36.0.zip` (92.9 MB) → extract into `TIAAgent\`
+  - `tias-pydeps-v1.36.0.zip` (81.5 MB) → extract into `TIAAgent\`
+- **Offline SCL model** — [LisyNeko/qwen3.8-9b-coder](https://ollama.com/LisyNeko/qwen3.8-9b-coder) (6.7 GB, 256K context)
+- **Sample block exports** — [docs/samples](docs/samples/README.md)
+- **RAG data dictionary** — [docs/schema/RAG数据表结构说明.md](docs/schema/RAG数据表结构说明.md)
+
+Runtime archives are distributed as Release assets, not git content.
+
 ## Screenshots
 
 Project tree with the LAD code view and the code-generator panel:
@@ -166,7 +177,7 @@ If the app is running and locks the executable (`MSB3021` / `MSB3027`), close it
 
 ### 3. Start the Python backend (optional, for cloud AI)
 
-**Option A — bundled runtime (recommended, works offline).** Download these two assets from the repository's Releases page (tag `v1.36.0`) and extract both into `TIAAgent\`:
+**Option A — bundled runtime (recommended, works offline).** Download both archives from [Downloads](#downloads) and extract them into `TIAAgent\`:
 
 - `tias-python-runtime-v1.36.0.zip` creates `TIAAgent\python`
 - `tias-pydeps-v1.36.0.zip` creates `TIAAgent\_pydeps`

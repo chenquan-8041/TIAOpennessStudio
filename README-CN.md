@@ -27,6 +27,17 @@ TIA Openness Studio 面向 Siemens TIA Portal（WPF / .NET Framework 4.8），�
 - **库备份与对比**：创建备份、查看历史、带安全副本的恢复、基于 Openness 的类型/主副本比较。
 - **多语言**：English / Deutsch / 中文。
 
+## 下载
+
+- **Python 运行时（v1.36.0）** — [GitHub Releases](https://github.com/chenquan-8041/TIAOpennessStudio/releases/tag/v1.36.0) · [Gitee Releases](https://gitee.com/heimisa/TIAOpennessStudio/releases/tag/v1.36.0)
+  - `tias-python-runtime-v1.36.0.zip`（92.9 MB）→ 解压到 `TIAAgent\`
+  - `tias-pydeps-v1.36.0.zip`（81.5 MB）→ 解压到 `TIAAgent\`
+- **离线 SCL 模型** — [LisyNeko/qwen3.8-9b-coder](https://ollama.com/LisyNeko/qwen3.8-9b-coder)（6.7 GB，256K 上下文）
+- **示例块导出** — [docs/samples](docs/samples/README.md)
+- **RAG 数据字典** — [docs/schema/RAG数据表结构说明.md](docs/schema/RAG数据表结构说明.md)
+
+运行时压缩包作为 Release 附件分发，不进入 git。
+
 ## 界面截图
 
 左侧项目树 + LAD 代码视图 + 代码生成面板：
@@ -166,7 +177,7 @@ dotnet build .\TIAOpennessStudio.sln
 
 ### 3. 启动 Python 后端（可选，用于云端 AI）
 
-**方式 A — 内置运行时（推荐，可离线）。** 从仓库 Releases 页面（标签 `v1.36.0`）下载两个附件，并都解压到 `TIAAgent\`：
+**方式 A — 内置运行时（推荐，可离线）。** 从[下载](#下载)获取两个压缩包，并都解压到 `TIAAgent\`：
 
 - `tias-python-runtime-v1.36.0.zip` 会释放出 `TIAAgent\python`
 - `tias-pydeps-v1.36.0.zip` 会释放出 `TIAAgent\_pydeps`
